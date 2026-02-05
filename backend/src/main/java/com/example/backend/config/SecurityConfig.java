@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +22,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration // Đánh dấu lớp này là lớp cấu hình
 @EnableWebSecurity
@@ -72,6 +78,22 @@ public class SecurityConfig {
         return new CustomAccessDeniedHandler();
     }
 
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+    }
+
     // Cấu hình chuỗi lọc bảo mật
     @Bean
     public SecurityFilterChain filterChain(
@@ -80,11 +102,17 @@ public class SecurityConfig {
     ) throws Exception {
 
         http
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable) // Tắt CSRF vì API không cần
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/v1/api/login").permitAll() // Cho phép mọi người truy cập login API
+                        .requestMatchers("/v1/api/products").permitAll()
+                        .requestMatchers("/v1/api/products/top8Trailer").permitAll()
+                        .requestMatchers("/v1/api/payment/savePayment").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers("/vnpay_return").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/api/products/detail/").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers("/oauth2/**").permitAll() // Cho phép mọi người truy cập login API
-                        .requestMatchers(HttpMethod.GET, "/v1/api/**").hasAnyRole("ADMIN", "USER") // GET yêu cầu quyền USER hoặc ADMIN
+                        .requestMatchers(HttpMethod.GET, "/v1/api/**").hasAnyRole("ADMIN", "CUSTOMER") // GET yêu cầu quyền USER hoặc ADMIN
                         .requestMatchers(HttpMethod.POST, "/v1/api/**").hasRole("ADMIN") // POST chỉ ADMIN mới có quyền
                         .requestMatchers(HttpMethod.DELETE, "/v1/api/**").hasRole("ADMIN") // DELETE chỉ ADMIN mới có quyền
                         .anyRequest().authenticated() // Các request khác yêu cầu đăng nhập

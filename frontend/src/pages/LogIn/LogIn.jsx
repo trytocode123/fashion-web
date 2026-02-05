@@ -28,9 +28,8 @@ const LogIn = () => {
             setError(data);
         } else {
             dispatch(loginSuccess(data));
-            toast.success(`Login successful. Welcome, ${data.name}!`);
+            toast.success(`Login successfully. Welcome, ${data.name}!`);
             navigate("/home");
-            console.log(data);
         }
     }
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
+@Table(name = "order_items")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

@@ -73,6 +73,7 @@ public class GoogleOAuthService {
                 jwt,
                 customer.getAccount().getUsername(),
                 customer.getFullName(),
+                userInfo.getEmail(),
                 roles
         );
     }

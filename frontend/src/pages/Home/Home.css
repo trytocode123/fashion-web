@@ -48,7 +48,7 @@
 
 .swiper-pagination-bullet-active {
     width: 28px;
-    background: #ffffff;
+    background: #000000;
 }
 
 @media (max-width: 768px) {

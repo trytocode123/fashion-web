@@ -21,8 +21,12 @@ public class Product {
     private String description;
     private String img;
     private String hashImg;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
     @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "sub_category_id")
+    private SubCategory subCategory;
+    @Enumerated(EnumType.STRING)
+    private Size size;
     private Long price;
 }

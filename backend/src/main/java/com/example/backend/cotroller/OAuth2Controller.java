@@ -47,7 +47,7 @@ public class OAuth2Controller {
         LoginResponseDTO login = googleOAuthService.loginWithGoogle(code);
 
         Customer customer = customerService
-                .findByEmail(login.getUsername());
+                .findByEmail(login.getEmail());
 
         Account account = customer.getAccount();
 
