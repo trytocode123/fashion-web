@@ -73,14 +73,14 @@ public class PaymentController {
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-        List fieldNames = new ArrayList(vnp_Params.keySet());
+        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
-        // Build hash data and query string
-        for (String fieldName : (List<String>) fieldNames) {
+
+        for (String fieldName : fieldNames) {
             String fieldValue = vnp_Params.get(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
+            if ((fieldValue != null) && (!fieldValue.isEmpty())) {
                 // 1. URL Encode the value
                 String encodedValue = URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString());
 
@@ -103,10 +103,6 @@ public class PaymentController {
         String queryUrl = query.toString();
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-
-        System.out.println("VNP Final Hash String: " + hashData.toString());
-
-        System.out.println("VNP Raw Hash Data: " + hashData.toString()); // Debug on Railway logs
 
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         return ResponseEntity.ok(paymentUrl);
