@@ -75,34 +75,34 @@ public class PaymentController {
 
         List fieldNames = new ArrayList(vnp_Params.keySet());
         Collections.sort(fieldNames);
-        StringBuilder hashData = new StringBuilder();
-        StringBuilder query = new StringBuilder();
         // Build hash data and query string
         for (String fieldName : (List<String>) fieldNames) {
             String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                // Build hash data (RAW values)
-                hashData.append(fieldName);
-                hashData.append('=');
-                hashData.append(fieldValue);
+                // 1. URL Encode the value
+                String encodedValue = URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString());
 
-                // Build query string (URL Encoded values)
+                // 2. VNPay 2.1.0 requires %20 instead of +
+                encodedValue = encodedValue.replace("+", "%20");
+
+                // 3. Build hash data (using ENCODED values for 2.1.0)
+                if (hashData.length() > 0) hashData.append('&');
+                hashData.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
+                hashData.append('=');
+                hashData.append(encodedValue);
+
+                // 4. Build query string
+                if (query.length() > 0) query.append('&');
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
                 query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
-
-                if (fieldNames.indexOf(fieldName) < fieldNames.size() - 1) {
-                    query.append('&');
-                    hashData.append('&');
-                }
+                query.append(encodedValue);
             }
         }
         String queryUrl = query.toString();
-        // Fix for space encoding: Java uses '+', VNPay prefers '%20'
-        queryUrl = queryUrl.replace("+", "%20");
-
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+
+        System.out.println("VNP Final Hash String: " + hashData.toString());
 
         System.out.println("VNP Raw Hash Data: " + hashData.toString()); // Debug on Railway logs
 
