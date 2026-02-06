@@ -8,8 +8,8 @@ import Register from "./pages/Register/Register.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Detail from "./pages/Detail/Detail.jsx";
 import PaymentForm from "./pages/PaymentForm/PaymentForm.jsx";
-import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess.jsx";
-import PaymentFail from "./pages/PaymentFail/PaymentFail.jsx";
+import PaymentSuccess from "./pages/PaymentResult/PaymentSuccess/PaymentSuccess.jsx";
+import PaymentFail from "./pages/PaymentResult/PaymentFail/PaymentFail.jsx";
 
 
 function App() {

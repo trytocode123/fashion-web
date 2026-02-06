@@ -39,7 +39,7 @@ const PaymentFail = () => {
                 )}
 
                 <p className="text-sm text-gray-400 mt-4">
-                    Please try again or choose a different payment method
+                    Please try again
                 </p>
 
                 <div className="mt-6 space-y-3">
