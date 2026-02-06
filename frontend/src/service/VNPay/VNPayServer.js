@@ -15,5 +15,4 @@ export async function savePayment(data, token) {
     } catch (e) {
         console.error(e.message);
     }
-
 }

@@ -123,7 +123,7 @@ const Detail = () => {
                         <div>
                             <button onClick={handlePay}
                                 disabled={currentSize === "" || quantity === 0}
-                                className={`flex items-center justify-center text-white lg:w-[200px] lg:p-4 rounded-3xl
+                                className={`flex items-center justify-center text-white lg:w-[200px] lg:p-4 rounded-3xl cursor-pointer
                                 ${currentSize === "" || quantity === 0
                                         ? "bg-gray-500 cursor-not-allowed"
                                         : "bg-black hover:bg-gray-700 cursor-pointer"
