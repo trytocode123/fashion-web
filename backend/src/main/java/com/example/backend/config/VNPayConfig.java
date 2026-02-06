@@ -9,7 +9,7 @@ import java.util.*;
 
 public class VNPayConfig {
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "/vnpay_return";
+    public static String vnp_ReturnUrl = "http://localhost:8080/vnpay_return";
     public static String vnp_TmnCode = "Z97NTLAX";
     public static String vnp_HashSecret = "FYZ7XDDGBK2FKJRKQ1Q9GH4D5PCZXH25";
 
@@ -26,7 +26,7 @@ public class VNPayConfig {
             byte[] result = hmac512.doFinal(dataBytes);
             StringBuilder sb = new StringBuilder(2 * result.length);
             for (byte b : result) {
-                sb.append(String.format("%02X", b & 0xff));
+                sb.append(String.format("%02x", b & 0xff));
             }
             return sb.toString();
         } catch (Exception ex) {
@@ -38,19 +38,11 @@ public class VNPayConfig {
         String ipAdress;
         try {
             ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null || ipAdress.isEmpty()) {
+            if (ipAdress == null) {
                 ipAdress = request.getRemoteAddr();
             }
-            
-            if ("0:0:0:0:0:0:0:1".equals(ipAdress)) {
-                ipAdress = "127.0.0.1";
-            }
-            
-            if (ipAdress != null && ipAdress.contains(",")) {
-                ipAdress = ipAdress.split(",")[0].trim();
-            }
         } catch (Exception e) {
-            ipAdress = "127.0.0.1";
+            ipAdress = "Invalid IP:" + e.getMessage();
         }
         return ipAdress;
     }

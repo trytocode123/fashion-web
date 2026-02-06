@@ -45,7 +45,7 @@ public class PaymentController {
             vnp_Params.put("vnp_BankCode", bankCode);
         }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang " + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
 
         String locate = paymentInputDTO.getLanguage();
@@ -54,18 +54,11 @@ public class PaymentController {
         } else {
             vnp_Params.put("vnp_Locale", "vn");
         }
-
-        // Get request base URL to build the return URL dynamically
-        String baseUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
-        String vnp_ReturnUrl = baseUrl + VNPayConfig.vnp_ReturnUrl;
-
-        vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
-        TimeZone tz = TimeZone.getTimeZone("Asia/Ho_Chi_Minh");
-        Calendar cld = Calendar.getInstance(tz);
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        formatter.setTimeZone(tz);
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
 
@@ -73,31 +66,32 @@ public class PaymentController {
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
+        List fieldNames = new ArrayList(vnp_Params.keySet());
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
-        // Build hash data (RAW) and query string (ENCODED)
-        for (String fieldName : fieldNames) {
+        Iterator itr = fieldNames.iterator();
+        while (itr.hasNext()) {
+            String fieldName = (String) itr.next();
             String fieldValue = vnp_Params.get(fieldName);
-            if ((fieldValue != null) && (!fieldValue.isEmpty())) {
-                // 1. Build hash data (using RAW values for 2.1.0)
-                if (hashData.length() > 0) hashData.append('&');
-                hashData.append(fieldName).append('=').append(fieldValue);
+            if ((fieldValue != null) && (fieldValue.length() > 0)) {
 
-                // 2. Build query string (URL Encoded)
-                if (query.length() > 0) query.append('&');
+                hashData.append(fieldName);
+                hashData.append('=');
+                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
+
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
                 query.append('=');
                 query.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
+                if (itr.hasNext()) {
+                    query.append('&');
+                    hashData.append('&');
+                }
             }
         }
-        String queryUrl = query.toString().replace("+", "%20");
+        String queryUrl = query.toString();
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-
-        System.out.println("VNP Raw Hash Data: " + hashData.toString());
-
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         return ResponseEntity.ok(paymentUrl);
     }
