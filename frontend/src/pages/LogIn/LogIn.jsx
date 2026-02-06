@@ -8,11 +8,13 @@ import {loginSuccess, logOut} from "../../redux/Reducer/authSlice.js";
 import {toast} from "react-toastify";
 import * as Yup from "yup";
 import {Link, useNavigate} from "react-router-dom";
+import {FaSpinner} from "react-icons/fa";
 
 const LogIn = () => {
     const [error, setError] = useState();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [disable, setDisable] = useState(false);
     const user = {
         username: "",
         password: ""
@@ -23,6 +25,7 @@ const LogIn = () => {
     }, [dispatch]);
 
     const handleLogin = async (value) => {
+        setDisable(prevState => !prevState);
         const data = await logIn(value);
         if (data.message) {
             setError(data);
@@ -31,6 +34,7 @@ const LogIn = () => {
             toast.success(`Login successfully. Welcome, ${data.name}!`);
             navigate("/home");
         }
+        setDisable(prevState => !prevState);
     }
 
     const handleOnchange = () => {
@@ -74,11 +78,16 @@ const LogIn = () => {
                                       className={"text-red-800 text-[13px] font-bold"}/>
                     </div>
                     {error && <p className={"text-red-800 text-[13px] font-bold"}>{error.message}</p>}
-                    <Button
-                        type={"submit"}
-                        className={"w-[100%] bg-gray-900 h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700"}>
-                        Continue
-                    </Button>
+                    {disable ?
+                        <div className={"lg:flex items-center justify-center lg:mt-5 lg:h-[50px]"}>
+                            <FaSpinner className={"animate-spin text-[20px]"}/>
+                        </div>
+                        : <Button
+                            type={"submit"}
+                            className={"w-[100%] bg-gray-900 lg:h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700 "}>
+                            Continue
+                        </Button>
+                    }
 
                     <div className={"lg:mt-3"}>
                         <p>New user? <Link to={"/register"} className={"text-blue-600"}>Create an account!</Link></p>

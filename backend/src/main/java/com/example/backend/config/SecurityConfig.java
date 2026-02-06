@@ -84,7 +84,7 @@ public class SecurityConfig {
 
         String frontendUrl = System.getenv("FRONTEND_URL");
         if (frontendUrl == null || frontendUrl.isEmpty()) {
-            frontendUrl = "http://localhost:5173";
+            frontendUrl = "http://localhost:5174";
         }
 
         config.setAllowedOrigins(List.of(frontendUrl));
