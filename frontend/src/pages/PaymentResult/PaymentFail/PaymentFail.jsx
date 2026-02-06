@@ -44,7 +44,7 @@ const PaymentFail = () => {
 
                 <div className="mt-6 space-y-3">
                     <Link
-                        to={"/fashion-web-omega.vercel.app/home"}
+                        to={"/home"}
                         className="
                             flex items-center justify-center gap-2 w-full
                             bg-black text-white py-3 rounded-xl
