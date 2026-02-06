@@ -30,7 +30,7 @@ public class PaymentController {
 
         long amount = (long) Double.parseDouble(amountStr) * 100;
 
-        String vnp_TxnRef = paymentInputDTO.getOrderId();
+        String vnp_TxnRef = "TEST" + System.currentTimeMillis();;
 //        long amount = 50000 * 100;
 //        String vnp_TxnRef = "1238";
         String vnp_IpAddr = VNPayConfig.getIpAddress(req);
