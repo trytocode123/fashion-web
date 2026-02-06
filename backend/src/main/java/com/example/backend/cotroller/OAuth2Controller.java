@@ -33,8 +33,12 @@ public class OAuth2Controller {
             @RequestParam String code,
             HttpServletResponse response
     ) throws IOException {
+        String frontendUrl = System.getenv("FRONTEND_URL");
+        if (frontendUrl == null || frontendUrl.isEmpty()) {
+            frontendUrl = "http://localhost:5173";
+        }
 
-        String redirectUrl = "http://localhost:5173/home?code=" +
+        String redirectUrl = frontendUrl + "/home?code=" +
                 URLEncoder.encode(code, StandardCharsets.UTF_8);
 
         response.sendRedirect(redirectUrl);
