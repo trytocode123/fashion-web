@@ -1,5 +1,5 @@
-import { FiXCircle, FiRefreshCcw } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import {FiXCircle, FiRefreshCcw} from "react-icons/fi";
+import {Link} from "react-router-dom";
 
 const PaymentFail = () => {
     const params = new URLSearchParams(window.location.search);
@@ -17,7 +17,7 @@ const PaymentFail = () => {
             >
                 <div className="flex justify-center mb-4">
                     <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                        <FiXCircle className="text-red-600 text-3xl" />
+                        <FiXCircle className="text-red-600 text-3xl"/>
                     </div>
                 </div>
 
@@ -39,7 +39,7 @@ const PaymentFail = () => {
                 )}
 
                 <p className="text-sm text-gray-400 mt-4">
-                    Please try again
+                    Please try other products
                 </p>
 
                 <div className="mt-6 space-y-3">
@@ -51,7 +51,7 @@ const PaymentFail = () => {
                             font-semibold hover:bg-gray-800 transition
                         "
                     >
-                        <FiRefreshCcw className="text-lg" />
+                        <FiRefreshCcw className="text-lg"/>
                         Try Again
                     </Link>
 
