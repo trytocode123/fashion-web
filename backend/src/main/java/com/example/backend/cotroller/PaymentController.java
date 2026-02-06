@@ -77,24 +77,18 @@ public class PaymentController {
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
-        Iterator itr = fieldNames.iterator();
-        while (itr.hasNext()) {
-            String fieldName = (String) itr.next();
+        for (String fieldName : (List<String>) fieldNames) {
             String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (fieldValue.length() > 0)) {
+                // Build Hash Data (Raw)
+                if (hashData.length() > 0) hashData.append('&');
+                hashData.append(fieldName).append('=').append(fieldValue);
 
-                hashData.append(fieldName);
-                hashData.append('=');
-                hashData.append(fieldValue); // VNPay 2.1.0 uses raw values for hashData
-
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
-
-                if (itr.hasNext()) {
-                    query.append('&');
-                    hashData.append('&');
-                }
+                // Build Query String (URL Encoded)
+                if (query.length() > 0) query.append('&');
+                query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()))
+                        .append('=')
+                        .append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
             }
         }
         String queryUrl = query.toString();
