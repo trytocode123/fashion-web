@@ -28,7 +28,7 @@ const LogIn = () => {
         } else {
             dispatch(loginSuccess(data));
             toast.success(`Login successfully. Welcome, ${data.name}!`);
-            navigate("/fashion-web-omega.vercel.app/home");
+            navigate("/home");
         }
         setDisable(prevState => !prevState);
     }

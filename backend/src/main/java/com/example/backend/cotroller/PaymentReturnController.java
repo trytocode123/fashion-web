@@ -64,12 +64,12 @@ public class PaymentReturnController {
         if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
             return ResponseEntity
                     .status(302)
-                    .header("Location", "http:/fashion-web-omega.vercel.app/paymentSuccess?vnp_TxnRef=" + vnp_TxnRef)
+                    .header("Location", "https://fashion-web-omega.vercel.app/paymentSuccess?vnp_TxnRef=" + vnp_TxnRef)
                     .build();
         }
         return ResponseEntity
                 .status(302)
-                .header("Location", "http:/fashion-web-omega.vercel.app/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
+                .header("Location", "https://fashion-web-omega.vercel.app/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
                 .build();
     }
 }
