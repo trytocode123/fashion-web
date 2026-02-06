@@ -198,8 +198,11 @@ const Home = () => {
                                         </p>
                                     </div>
 
-                                    <div>
+                                    <div className={"lg:flex flex-col"}>
                                         <p className={"font-bold"}>{product.price.toLocaleString("vi-VN") + "VND"}</p>
+                                        <p className="text-sm text-gray-500">
+                                            {product.gender}
+                                        </p>
                                     </div>
                                 </div>
                             </div>))}

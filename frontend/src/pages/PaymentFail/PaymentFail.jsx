@@ -1,7 +1,7 @@
-import {FiCheckCircle, FiShoppingBag} from "react-icons/fi";
+import {FiXCircle, FiRefreshCcw} from "react-icons/fi";
 import {Link} from "react-router-dom";
 
-const PaymentSuccess = () => {
+const PaymentFail = () => {
     const params = new URLSearchParams(window.location.search);
     const txnRef = params.get("vnp_TxnRef");
 
@@ -16,28 +16,30 @@ const PaymentSuccess = () => {
                 "
             >
                 <div className="flex justify-center mb-4">
-                    <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                        <FiCheckCircle className="text-green-600 text-3xl"/>
+                    <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                        <FiXCircle className="text-red-600 text-3xl"/>
                     </div>
                 </div>
 
                 <h1 className="text-xl font-bold text-gray-900">
-                    Payment Successful
+                    Payment Failed
                 </h1>
 
                 <p className="text-sm text-gray-500 mt-1">
-                    Thank you for shopping at Fashion Hub
+                    Unfortunately, your payment could not be completed
                 </p>
 
-                <div className="mt-5 rounded-xl border border-gray-200 px-5 py-4">
-                    <p className="text-xs text-gray-500">Transaction ID</p>
-                    <p className="mt-1 font-semibold text-gray-800 break-all text-sm">
-                        {txnRef}
-                    </p>
-                </div>
+                {txnRef && (
+                    <div className="mt-5 rounded-xl border border-gray-200 px-5 py-4">
+                        <p className="text-xs text-gray-500">Transaction ID</p>
+                        <p className="mt-1 font-semibold text-gray-800 break-all text-sm">
+                            {txnRef}
+                        </p>
+                    </div>
+                )}
 
                 <p className="text-sm text-gray-400 mt-4">
-                    Your order is being processed and will be delivered soon
+                    Please try again or choose a different payment method
                 </p>
 
                 <div className="mt-6 space-y-3">
@@ -49,8 +51,8 @@ const PaymentSuccess = () => {
                             font-semibold hover:bg-gray-800 transition
                         "
                     >
-                        <FiShoppingBag className="text-lg"/>
-                        Continue Shopping
+                        <FiRefreshCcw className="text-lg"/>
+                        Try Again
                     </Link>
 
                     <a
@@ -62,11 +64,11 @@ const PaymentSuccess = () => {
                 </div>
 
                 <p className="text-xs text-gray-400 mt-6">
-                    If you have any issues, please contact our support team
+                    If the problem persists, please contact our support team
                 </p>
             </div>
         </div>
     );
 };
 
-export default PaymentSuccess;
+export default PaymentFail;

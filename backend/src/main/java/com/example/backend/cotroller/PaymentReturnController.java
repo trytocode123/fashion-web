@@ -19,18 +19,16 @@ import java.util.*;
 @RequestMapping("/vnpay_return")
 public class PaymentReturnController {
     @GetMapping
-    public ResponseEntity<?> result(HttpServletRequest request,
-                                    HttpSession sessionHttp
+    public ResponseEntity<?> result(HttpServletRequest request
     ) throws Exception {
 
         Map<String, String> fields = new HashMap<>();
 
-        // Chỉ lấy param VNPay trả về
         for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
             String fieldName = params.nextElement();
 
             if (!fieldName.startsWith("vnp_"))
-                continue; // cực quan trọng!!!
+                continue;
 
             String fieldValue = request.getParameter(fieldName);
             if (fieldValue != null && fieldValue.length() > 0) {
@@ -40,12 +38,12 @@ public class PaymentReturnController {
 
         String vnp_SecureHash = request.getParameter("vnp_SecureHash");
         String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
+        String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
         String vnp_TxnRef = request.getParameter("vnp_TxnRef");
 
         fields.remove("vnp_SecureHashType");
         fields.remove("vnp_SecureHash");
 
-// Tạo hashData y như servlet gốc
         List<String> fieldNames = new ArrayList<>(fields.keySet());
         Collections.sort(fieldNames);
 
@@ -64,12 +62,15 @@ public class PaymentReturnController {
         String signValue = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
 
 
-        if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode)) {
+        if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
             return ResponseEntity
                     .status(302)
                     .header("Location", "http://localhost:5173/paymentSuccess?vnp_TxnRef=" + vnp_TxnRef)
                     .build();
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity
+                .status(302)
+                .header("Location", "http://localhost:5173/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
+                .build();
     }
 }

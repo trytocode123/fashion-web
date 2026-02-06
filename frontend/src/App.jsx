@@ -9,6 +9,7 @@ import Home from "./pages/Home/Home.jsx";
 import Detail from "./pages/Detail/Detail.jsx";
 import PaymentForm from "./pages/PaymentForm/PaymentForm.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess.jsx";
+import PaymentFail from "./pages/PaymentFail/PaymentFail.jsx";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
                     <Route path={"/detail/:id"} element={<Detail/>}/>
                     <Route path={"/payForm/:info"} element={<PaymentForm/>}/>
                     <Route path={"/paymentSuccess"} element={<PaymentSuccess/>}/>
+                    <Route path={"/paymentFail"} element={<PaymentFail/>}/>
                 </Routes>
             </DefaultLayout>
             <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>

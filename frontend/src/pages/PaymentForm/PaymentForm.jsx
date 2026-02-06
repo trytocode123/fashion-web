@@ -1,10 +1,10 @@
 import {Link, useParams} from "react-router-dom";
-import { Field, Form, Formik } from "formik";
-import { useSelector } from "react-redux";
-import { savePayment } from "../../service/VNPay/VNPayServer.js";
+import {Field, Form, Formik} from "formik";
+import {useSelector} from "react-redux";
+import {savePayment} from "../../service/VNPay/VNPayServer.js";
 
 const PaymentForm = () => {
-    const { info } = useParams();
+    const {info} = useParams();
 
     const infoOptimize = JSON.parse(info);
     console.log(infoOptimize);
@@ -22,6 +22,7 @@ const PaymentForm = () => {
             const res = await savePayment(value, token);
             window.location.href = res;
         }
+
         submitPayment();
     };
 
