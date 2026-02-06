@@ -61,16 +61,20 @@ public class PaymentReturnController {
 
         String signValue = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
 
+        String frontendUrl = System.getenv("FRONTEND_URL");
+        if (frontendUrl == null || frontendUrl.isEmpty()) {
+            frontendUrl = "http://localhost:5173";
+        }
 
         if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
             return ResponseEntity
                     .status(302)
-                    .header("Location", "http://localhost:5173/paymentSuccess?vnp_TxnRef=" + vnp_TxnRef)
+                    .header("Location", frontendUrl + "/paymentSuccess?vnp_TxnRef=" + vnp_TxnRef)
                     .build();
         }
         return ResponseEntity
                 .status(302)
-                .header("Location", "http://localhost:5173/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
+                .header("Location", frontendUrl + "/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
                 .build();
     }
 }
