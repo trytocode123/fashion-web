@@ -20,11 +20,11 @@ function App() {
                 <Routes>
                     <Route path={"/"} element={<LogIn/>}/>
                     <Route path={"/register"} element={<Register/>}/>
-                    <Route path={"/home"} element={<Home/>}/>
+                    <Route path={"/fashion-web-omega.vercel.app/home"} element={<Home/>}/>
                     <Route path={"/detail/:id"} element={<Detail/>}/>
                     <Route path={"/payForm/:info"} element={<PaymentForm/>}/>
                     <Route path={"/paymentSuccess"} element={<PaymentSuccess/>}/>
-                    <Route path={"/paymentFail"} element={<PaymentFail/>}/>
+                    <Route path={"/fashion-web-omega.vercel.app/paymentFail"} element={<PaymentFail/>}/>
                 </Routes>
             </DefaultLayout>
             <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>

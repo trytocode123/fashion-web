@@ -1,5 +1,5 @@
-import {FiXCircle, FiRefreshCcw} from "react-icons/fi";
-import {Link} from "react-router-dom";
+import { FiXCircle, FiRefreshCcw } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 const PaymentFail = () => {
     const params = new URLSearchParams(window.location.search);
@@ -17,7 +17,7 @@ const PaymentFail = () => {
             >
                 <div className="flex justify-center mb-4">
                     <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                        <FiXCircle className="text-red-600 text-3xl"/>
+                        <FiXCircle className="text-red-600 text-3xl" />
                     </div>
                 </div>
 
@@ -44,23 +44,23 @@ const PaymentFail = () => {
 
                 <div className="mt-6 space-y-3">
                     <Link
-                        to={"/home"}
+                        to={"/fashion-web-omega.vercel.app/home"}
                         className="
                             flex items-center justify-center gap-2 w-full
                             bg-black text-white py-3 rounded-xl
                             font-semibold hover:bg-gray-800 transition
                         "
                     >
-                        <FiRefreshCcw className="text-lg"/>
+                        <FiRefreshCcw className="text-lg" />
                         Try Again
                     </Link>
 
-                    <a
-                        href="/orders"
+                    <Link
+                        to={"/home"}
                         className="block text-sm text-gray-500 hover:underline"
                     >
                         View My Orders
-                    </a>
+                    </Link>
                 </div>
 
                 <p className="text-xs text-gray-400 mt-6">

@@ -3,7 +3,6 @@ package com.example.backend.cotroller;
 
 import com.example.backend.config.VNPayConfig;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,7 +69,7 @@ public class PaymentReturnController {
         }
         return ResponseEntity
                 .status(302)
-                .header("Location", "http://localhost:5173/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
+                .header("Location", "http:/fashion-web-omega.vercel.app/paymentFail?vnp_TxnRef=" + vnp_TxnRef)
                 .build();
     }
 }

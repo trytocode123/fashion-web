@@ -2,9 +2,9 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import {Button} from "@headlessui/react";
 import {FcGoogle} from "react-icons/fc";
 import {logIn, logInGoogle} from "../../service/Acount/AccountService.js";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useDispatch} from "react-redux";
-import {loginSuccess, logOut} from "../../redux/Reducer/authSlice.js";
+import {loginSuccess} from "../../redux/Reducer/authSlice.js";
 import {toast} from "react-toastify";
 import * as Yup from "yup";
 import {Link, useNavigate} from "react-router-dom";
@@ -19,10 +19,6 @@ const LogIn = () => {
         username: "",
         password: ""
     };
-
-    useEffect(() => {
-        dispatch(logOut());
-    }, [dispatch]);
 
     const handleLogin = async (value) => {
         setDisable(prevState => !prevState);
