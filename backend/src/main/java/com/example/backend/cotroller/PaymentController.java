@@ -75,6 +75,8 @@ public class PaymentController {
 
         List fieldNames = new ArrayList(vnp_Params.keySet());
         Collections.sort(fieldNames);
+        StringBuilder hashData = new StringBuilder();
+        StringBuilder query = new StringBuilder();
         // Build hash data and query string
         for (String fieldName : (List<String>) fieldNames) {
             String fieldValue = vnp_Params.get(fieldName);
