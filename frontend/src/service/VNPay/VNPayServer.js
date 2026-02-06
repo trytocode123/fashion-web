@@ -12,7 +12,7 @@ export async function savePayment(data, token) {
         })
         return res.data;
     } catch (e) {
-        console.error(e.message());
+        console.error("Error");
     }
 
 }

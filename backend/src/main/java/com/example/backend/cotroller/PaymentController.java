@@ -18,14 +18,14 @@ import java.util.*;
 @CrossOrigin("*")
 public class PaymentController {
     @PostMapping("/savePayment")
-    public ResponseEntity<?> savePayment(@RequestBody PaymentInputDTO paymentInputDTO, HttpServletRequest req) throws UnsupportedEncodingException {
+    public ResponseEntity<?> savePayment(@RequestBody String total, HttpServletRequest req) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-        String bankCode = paymentInputDTO.getBankCode();
+
 
 //        long amount = Long.parseLong(req.getParameter("amount")) * 100;
-        String amountStr = paymentInputDTO.getAmount() + "";
+        String amountStr = total;
         System.out.println("Amount param: " + amountStr); // debug
 
         long amount = (long) Double.parseDouble(amountStr) * 100;
@@ -41,19 +41,10 @@ public class PaymentController {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", "VND");
-        if (bankCode != null && !bankCode.isEmpty()) {
-            vnp_Params.put("vnp_BankCode", bankCode);
-        }
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef);
         vnp_Params.put("vnp_OrderType", orderType);
-
-        String locate = paymentInputDTO.getLanguage();
-        if (locate != null && !locate.isEmpty()) {
-            vnp_Params.put("vnp_Locale", locate);
-        } else {
-            vnp_Params.put("vnp_Locale", "vn");
-        }
+        vnp_Params.put("vnp_Locale", "vn");
         String baseUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
         String vnp_ReturnUrl = baseUrl + VNPayConfig.vnp_ReturnUrl;
         vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
