@@ -85,11 +85,12 @@ public class PaymentController {
 
                 hashData.append(fieldName);
                 hashData.append('=');
-                hashData.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
+                hashData.append(fieldValue); // VNPay 2.1.0 uses raw values for hashData
 
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
                 query.append('=');
                 query.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
+
                 if (itr.hasNext()) {
                     query.append('&');
                     hashData.append('&');

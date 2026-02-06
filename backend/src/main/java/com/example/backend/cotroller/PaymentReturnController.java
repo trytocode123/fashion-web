@@ -52,10 +52,8 @@ public class PaymentReturnController {
             String fieldName = fieldNames.get(i);
             String fieldValue = fields.get(fieldName);
             if (fieldValue != null && !fieldValue.isEmpty()) {
-                if (i > 0) hashData.append('&');
-                hashData.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8))
-                        .append('=')
-                        .append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
+                if (hashData.length() > 0) hashData.append('&');
+                hashData.append(fieldName).append('=').append(fieldValue);
             }
         }
 
