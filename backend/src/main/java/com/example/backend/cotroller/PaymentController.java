@@ -77,32 +77,26 @@ public class PaymentController {
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
         StringBuilder query = new StringBuilder();
-
+        // Build hash data (RAW) and query string (ENCODED)
         for (String fieldName : fieldNames) {
             String fieldValue = vnp_Params.get(fieldName);
             if ((fieldValue != null) && (!fieldValue.isEmpty())) {
-                // 1. URL Encode the value
-                String encodedValue = URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString());
-
-                // 2. VNPay 2.1.0 requires %20 instead of +
-                encodedValue = encodedValue.replace("+", "%20");
-
-                // 3. Build hash data (using ENCODED values for 2.1.0)
+                // 1. Build hash data (using RAW values for 2.1.0)
                 if (hashData.length() > 0) hashData.append('&');
-                hashData.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
-                hashData.append('=');
-                hashData.append(encodedValue);
+                hashData.append(fieldName).append('=').append(fieldValue);
 
-                // 4. Build query string
+                // 2. Build query string (using ENCODED values)
                 if (query.length() > 0) query.append('&');
                 query.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.toString()));
                 query.append('=');
-                query.append(encodedValue);
+                query.append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8.toString()));
             }
         }
-        String queryUrl = query.toString();
+        String queryUrl = query.toString().replace("+", "%20");
         String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
+
+        System.out.println("VNP Final Raw Hash Data: " + hashData.toString());
 
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         return ResponseEntity.ok(paymentUrl);

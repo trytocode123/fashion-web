@@ -40,6 +40,9 @@ public class VNPayConfig {
             ipAdress = request.getHeader("X-FORWARDED-FOR");
             if (ipAdress == null) {
                 ipAdress = request.getRemoteAddr();
+            } else {
+                // If there are multiple IPs (due to proxy), take the first one
+                ipAdress = ipAdress.split(",")[0].trim();
             }
         } catch (Exception e) {
             ipAdress = "Invalid IP:" + e.getMessage();
