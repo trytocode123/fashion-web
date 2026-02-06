@@ -113,7 +113,7 @@ public class SecurityConfig {
                         .requestMatchers("/v1/api/login").permitAll() // Cho phép mọi người truy cập login API
                         .requestMatchers("/v1/api/products").permitAll()
                         .requestMatchers("/v1/api/products/top8Trailer").permitAll()
-                        .requestMatchers("/v1/api/payment/savePayment").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers(HttpMethod.GET,"/v1/api/payment/savePayment/**").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers("/vnpay_return").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/api/products/detail/").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers("/oauth2/**").permitAll() // Cho phép mọi người truy cập login API

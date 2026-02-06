@@ -4,7 +4,7 @@ import { findProductById, findProductByName } from "../../service/Product/Produc
 import { useSelector } from "react-redux";
 import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 import { IoBagOutline } from "react-icons/io5";
-import {savePayment, sendDataToPayForm} from "../../service/VNPay/VNPayServer.js";
+import {savePayment} from "../../service/VNPay/VNPayServer.js";
 
 const Detail = () => {
     const { id } = useParams();
@@ -71,6 +71,7 @@ const Detail = () => {
     const handlePay = () => {
         async function implementPay() {
             const res = await savePayment(detail.price * quantity, token);
+            window.location.href = res;
         }
         implementPay();
     }

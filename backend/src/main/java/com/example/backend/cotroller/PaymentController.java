@@ -1,8 +1,6 @@
 package com.example.backend.cotroller;
 
 import com.example.backend.config.VNPayConfig;
-import com.example.backend.dto.PaymentInfoDTO;
-import com.example.backend.dto.PaymentInputDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +15,13 @@ import java.util.*;
 @RequestMapping(value = "/v1/api/payment")
 @CrossOrigin("*")
 public class PaymentController {
-    @PostMapping("/savePayment")
-    public ResponseEntity<?> savePayment(@RequestBody String total, HttpServletRequest req) throws UnsupportedEncodingException {
+    @GetMapping("/savePayment/{data}")
+    public ResponseEntity<?> savePayment(@PathVariable String data, HttpServletRequest req) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
         String orderType = "other";
-
-
 //        long amount = Long.parseLong(req.getParameter("amount")) * 100;
-        String amountStr = total;
+        String amountStr = data;
         System.out.println("Amount param: " + amountStr); // debug
 
         long amount = (long) Double.parseDouble(amountStr) * 100;
@@ -89,16 +85,5 @@ public class PaymentController {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
         return ResponseEntity.ok(paymentUrl);
-    }
-
-    @GetMapping("/showFormToPay/{total}")
-    public ResponseEntity<?> showFormToPay(@PathVariable Long total) {
-        System.out.println(total);
-        String orderId = "TEST" + System.currentTimeMillis();
-        System.out.println(orderId);
-        PaymentInfoDTO paymentInfoDTO = new PaymentInfoDTO();
-        paymentInfoDTO.setAmount(total);
-        paymentInfoDTO.setOrderId(orderId);
-        return ResponseEntity.ok(paymentInfoDTO);
     }
 }
