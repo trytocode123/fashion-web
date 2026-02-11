@@ -5,7 +5,6 @@ import com.example.backend.entity.Account;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.PaymentTransaction;
 import com.example.backend.repository.PaymentTransactionRepository;
-import com.example.backend.entity.Customer;
 import com.example.backend.service.IAccountService;
 import com.example.backend.service.ICustomerService;
 import jakarta.servlet.http.HttpServletRequest;

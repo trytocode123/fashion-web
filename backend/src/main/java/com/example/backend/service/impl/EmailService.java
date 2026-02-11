@@ -34,9 +34,7 @@ public class EmailService implements IEmailService {
     @Async
     @Override
     public void sendVNPaySuccessMail(String to, String txnRef, double amount) {
-        System.out.println("DEBUG: Async Brevo email task started for " + to);
         if (brevoApiKey == null || brevoApiKey.trim().isEmpty()) {
-            System.err.println("ERROR: BREVO_API_KEY is not configured. Email not sent.");
             return;
         }
         try {
@@ -56,9 +54,7 @@ public class EmailService implements IEmailService {
 
             body.put("subject", "Thanh toan VNPay Thanh cong");
             
-            // Format HTML content manually since we can't easily use Thymeleaf here cleanly without more refactoring
-            // or we render it first then pass string.
-            // Let's use the existing template engine to generate HTML string!
+            // Format HTML
              Context context = new Context();
             context.setVariable("txnRef", txnRef);
             context.setVariable("amount", String.format("%,.0f", amount));
@@ -85,11 +81,8 @@ public class EmailService implements IEmailService {
                     String.class
             );
 
-            System.out.println("DEBUG: Brevo Response Code: " + response.getStatusCode());
-            System.out.println("DEBUG: Brevo Response Body: " + response.getBody());
 
         } catch (Exception e) {
-            System.out.println("ERROR: Failed to send email via Brevo: " + e.getMessage());
             e.printStackTrace();
         }
     }

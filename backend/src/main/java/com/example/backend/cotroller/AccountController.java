@@ -93,12 +93,10 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CustomerDTO customerDTO) {
-        System.out.println(customerDTO.getFullName());
         Account accountFind = accountService.findByUsername(customerDTO.getEmail());
         Customer customerFind = customerService.findCustomerByAccount(accountFind);
         if (accountFind != null) {
             if (customerFind != null) {
-                System.out.println(customerFind.getFullName());
                 customerFind.setFullName(customerDTO.getFullName());
                 customerFind.setDob(LocalDate.parse(customerDTO.getDob()));
                 customerFind.setGender(Gender.valueOf(customerDTO.getGender()));

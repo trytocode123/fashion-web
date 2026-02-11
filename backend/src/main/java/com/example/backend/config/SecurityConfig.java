@@ -112,7 +112,6 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable) // Tắt CSRF vì API không cần
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/test/**").permitAll() // Cho phép truy cập API test
                         .requestMatchers("/v1/api/paypal/success/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/v1/api/login").permitAll() // Cho phép mọi người truy cập login API
