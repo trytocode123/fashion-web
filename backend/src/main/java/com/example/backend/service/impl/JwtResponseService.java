@@ -1,10 +1,15 @@
 package com.example.backend.service.impl;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-
+@Getter
+@Setter
+@AllArgsConstructor
 public class JwtResponseService {
     private Long id;
     private String token;
@@ -21,47 +26,11 @@ public class JwtResponseService {
         this.authorities = authorities;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String getTokenType() {
         return type;
     }
 
     public void setTokenType(String tokenType) {
         this.type = tokenType;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
     }
 }

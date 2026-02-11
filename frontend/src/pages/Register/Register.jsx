@@ -49,7 +49,7 @@ const Register = () => {
     const validation = Yup.object({
         username: Yup.string().required("Please enter your user name!"),
         password: Yup.string().required("Please enter your password!"),
-        fullName: Yup.string().required("Please enter your full name!").matches(/^([A-Z][a-z]+)(\s[A-Z][a-z]+)*$/, "Each word must start with a capital letter."),
+        fullName: Yup.string().required("Please enter your full name!").matches(/^([A-Z][a-z]+)(\s[A-Z][a-z]+)*$/, "Invalid format full name.").min(7, "Full name must be more than 7 characters"),
         phoneNumber: Yup.string().required("Please enter your phone number!")
             .min(10, "Phone number must be 10 numbers")
             .max(10, "Phone number must be 10 numbers"),
