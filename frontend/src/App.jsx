@@ -1,0 +1,41 @@
+import './App.css'
+
+import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout.jsx";
+import LogIn from "./pages/LogIn/LogIn.jsx";
+import {ToastContainer} from "react-toastify";
+import {Route, Routes} from "react-router-dom";
+import Register from "./pages/Register/Register.jsx";
+import Home from "./pages/Home/Home.jsx";
+import Detail from "./pages/Detail/Detail.jsx";
+import VNPaySuccess from "./pages/VNPayResult/VNPaySuccess/VNPaySuccess.jsx";
+import VNPayFail from "./pages/VNPayResult/VNPayFail/VNPayFail.jsx";
+import PaypalSuccess from "./pages/PaypalResult/PaypalSuccess/PaypalSuccess.jsx";
+import PaypalFail from "./pages/PaypalResult/PaypalFail/PaypalFail.jsx";
+import About from "./pages/About/About.jsx";
+
+
+function App() {
+
+    return (
+        <div className="bg-">
+            <DefaultLayout>
+                <Routes>
+                    <Route path={"/"} element={<LogIn/>}/>
+                    <Route path={"/about"} element={<About/>}/>
+                    <Route path={"/register"} element={<Register/>}/>
+                    <Route path={"/home"} element={<Home/>}/>
+                    <Route path={"/detail/:id"} element={<Detail/>}/>
+                    <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
+                    <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
+                    <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
+                    <Route path={"/paypalFail"} element={<PaypalFail/>}/>
+
+                </Routes>
+            </DefaultLayout>
+            <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>
+
+        </div>
+    )
+}
+
+export default App

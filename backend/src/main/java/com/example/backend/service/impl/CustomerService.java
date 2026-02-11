@@ -1,0 +1,71 @@
+package com.example.backend.service.impl;
+
+import com.example.backend.dto.GoogleUserInfoDTO;
+import com.example.backend.entity.Account;
+import com.example.backend.entity.AuthProvider;
+import com.example.backend.entity.Customer;
+import com.example.backend.entity.Role;
+import com.example.backend.repository.ICustomerRepository;
+import com.example.backend.repository.IRoleRepository;
+import com.example.backend.repository.IAccountRepository;
+import com.example.backend.service.ICustomerService;
+import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Service
+public class CustomerService implements ICustomerService {
+    final ICustomerRepository customerRepository;
+    final IAccountRepository accountRepository;
+    final IRoleRepository roleRepository;
+
+    public CustomerService(ICustomerRepository customerRepository, IAccountRepository accountRepository, IRoleRepository roleRepository) {
+        this.customerRepository = customerRepository;
+        this.accountRepository = accountRepository;
+        this.roleRepository = roleRepository;
+    }
+
+    public Customer createOrGetFromGoogle(GoogleUserInfoDTO googleUser) {
+
+        Customer customer = customerRepository.findCustomerByEmail(googleUser.getEmail());
+        if (customer != null) {
+            return customer;
+        }
+
+        Account account = accountRepository.findByUsername(googleUser.getEmail());
+
+        if (account == null) {
+            Set<Role> roles = new HashSet<>();
+            account = new Account();
+            account.setUsername(googleUser.getEmail());
+            account.setProvider(AuthProvider.valueOf("GOOGLE"));
+            Role role = roleRepository.findRoleById(2L);
+            roles.add(role);
+            account.setRoles(roles);
+            accountRepository.save(account);
+        }
+
+        customer = new Customer();
+        customer.setEmail(googleUser.getEmail());
+        customer.setFullName(googleUser.getName());
+        customer.setAccount(account);
+        return customerRepository.save(customer);
+    }
+
+
+    @Override
+    public Customer findByEmail(String email) {
+        return customerRepository.findCustomerByEmail(email);
+    }
+
+    @Override
+    public Customer findCustomerByAccount(Account account) {
+        return customerRepository.findCustomerByAccount(account);
+    }
+
+    @Override
+    public Customer add(Customer customer) {
+        return customerRepository.save(customer);
+    }
+}
