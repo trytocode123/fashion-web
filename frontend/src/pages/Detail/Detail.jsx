@@ -23,10 +23,8 @@ const Detail = () => {
 
     useEffect(() => {
         if (!token) {
-            const timeout = setTimeout(() => {
-                if (!token) navigate("/");
-            }, 500);
-            return () => clearTimeout(timeout);
+            navigate("/");
+            return;
         }
 
         const fetchData = async () => {
