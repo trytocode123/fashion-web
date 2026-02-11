@@ -50,7 +50,7 @@ const About = () => {
 
                     <div className={"lg:mt-3"}>
                         <p className={"lg:font-bold"}>Email</p>
-                        <p className={"lg:text-gray-600"}>nguyenthienan.171202@gmail.com</p>
+                        <p className={"lg:text-gray-600"}>annguyendang.17.07.2002@gmail.com</p>
                     </div>
 
                     <div className={"lg:mt-3"}>
