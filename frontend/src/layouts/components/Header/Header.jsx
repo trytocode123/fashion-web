@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {FiLogOut} from "react-icons/fi";
 import {Link} from "react-router-dom";
 import {logOut} from "../../../redux/Reducer/authSlice.js";
+import {IoMdHome} from "react-icons/io";
 
 
 const Header = () => {
@@ -16,7 +17,8 @@ const Header = () => {
     }
     return (
         <header
-            className={"flex fixed h-[100px] w-[100%] top-0 left-0 right-0 bg-gray-900 text-white items-center justify-between px-[80px] lg:z-10"}>
+            className={"flex fixed h-[100px] w-[100%] top-0 left-0 right-0 bg-gray-900 text-white items-center " +
+                "justify-between px-[80px] lg:z-10 shadow-md shadow-gray-900"}>
             <div className={"flex flex-col justify-center flex-wrap-reverse group"}>
                 <Link to={"/about"}
                       className={"lg:font-bold lg:text-3xl cursor-pointer group-hover:text-amber-50"}>FASHION</Link>
@@ -32,12 +34,13 @@ const Header = () => {
                 </div>
             }
 
-            <div className={"flex justify-between lg:min-w-[200px] text-[16px]"}>
+            <div className={"lg:flex lg:justify-end lg:w-[350px] text-[16px]"}>
                 {(account?.name || account?.fullName) && (
-                    <div className="flex items-center font-medium text-gray-200 lg:min-w-[150px] lg:mr-2">
-                        Hello, <span className="text-white font-semibold ml-1">{account.name || account.fullName}</span>
+                    <div className="flex items-center justify-evenly font-medium text-gray-200 lg:w-[250px]">
+                        Hello, <span
+                        className="text-white font-semibold lg:ml-1 lg:p-0 lg:w-[200px]">{account.name || account.fullName}</span>
                         <Link to={"/"}>
-                            <FiLogOut onClick={handleLogOut} className={"lg:ml-3 text-red-400\n" +
+                            <FiLogOut onClick={handleLogOut} className={"text-red-400\n" +
                                 "hover:text-red-500\n" +
                                 "hover:bg-red-500/15" +
                                 "rounded-full"}/>
@@ -45,7 +48,12 @@ const Header = () => {
                     </div>
                 )}
 
-                <div className={"flex items-center justify-between lg:w-[50px]"}>
+                <div className={"lg:flex lg:justify-end lg:justify-evenly lg:items-center lg:w-[100px]"}>
+                    {account && (
+                        <Link to={"/home"}>
+                            <IoMdHome className={"lg:text-[20px]"}/>
+                        </Link>
+                    )}
                     <FaRegUser/>
                     <div className={"relative"}>
                         <FaCartShopping/>
