@@ -17,7 +17,7 @@ const Detail = () => {
     const [products, setProducts] = useState([]);
     const [currentSize, setCurrentSize] = useState("");
     const [quantity, setQuantity] = useState(0);
-    const [paymentMethod, setPaymentMethod] = useState("VNPAY"); // VNPAY | PAYPAL
+    const [paymentMethod, setPaymentMethod] = useState("VNPAY");
 
     const quantityRef = useRef(null);
 
