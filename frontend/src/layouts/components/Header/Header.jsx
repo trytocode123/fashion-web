@@ -38,7 +38,7 @@ const Header = () => {
                 {(account?.name || account?.fullName) && (
                     <div className="flex items-center justify-evenly font-medium text-gray-200 lg:min-w-[120px]">
                         Hello, <span
-                        className="text-white font-semibold lg:ml-1 lg:p-0 lg:min-w-[50px]">{account.name || account.fullName}</span>
+                        className="text-white font-semibold lg:ml-1 lg:p-0 lg:min-w-[20px]">{account.name || account.fullName}</span>
                         <Link to={"/"}>
                             <FiLogOut onClick={handleLogOut} className={"lg:m-2 text-red-400\n" +
                                 "hover:text-red-500\n" +
