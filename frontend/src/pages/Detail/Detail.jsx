@@ -44,10 +44,10 @@ const Detail = () => {
 
     const handleUpdateQuantity = (action) => {
         if (action === "+") {
-            setQuantity(q => q + 1);
+            setQuantity(prevState => prevState + 1);
         }
         if (action === "-" && quantity > 0) {
-            setQuantity(q => q - 1);
+            setQuantity(prevState => prevState - 1);
         }
     };
 
@@ -70,20 +70,17 @@ const Detail = () => {
     return (<div className="lg:w-full lg:px-[80px]">
         <div className="lg:grid lg:grid-cols-2 lg:gap-6 items-start">
 
-            {/* Image */}
             <img
                 className="rounded-2xl w-full h-[600px] object-cover"
                 src={detail?.img}
                 alt=""
             />
 
-            {/* Info */}
             <div className="border border-gray-300 rounded-2xl p-6">
                 <p className="font-bold text-lg mb-2">
                     Price: {detail?.price?.toLocaleString("vi-VN")} VND
                 </p>
 
-                {/* Size */}
                 <p className="font-semibold mb-2">Size: {currentSize || "-"}</p>
                 <div className="grid grid-cols-4 gap-3 mb-4">
                     {products?.map((p, i) => (p.size && (<button
@@ -97,7 +94,6 @@ const Detail = () => {
                     </button>)))}
                 </div>
 
-                {/* Quantity */}
                 <div className="flex items-center gap-4 mb-4">
                     <button onClick={() => handleUpdateQuantity("-")}>
                         <CiCircleMinus size={22}/>
@@ -115,15 +111,13 @@ const Detail = () => {
                     </button>
                 </div>
 
-                {/* Payment method */}
                 <div className="mb-4">
                     <p className="font-semibold mb-2">Payment Method</p>
                     <div className="flex gap-3">
                         <button
                             onClick={() => setPaymentMethod("VNPAY")}
                             className={`flex-1 p-3 rounded-xl border transition-all duration-200
-                                 ${paymentMethod === "VNPAY" ? "bg-gradient-to-r from-[#d32f2f] to-[#1976d2] text-white border-transparent shadow-md scale-[1.02]" : "border-gray-300 text-gray-700 hover:border-[#1976d2] hover:text-[#1976d2]"}
-    `}
+                                 ${paymentMethod === "VNPAY" ? "bg-gradient-to-r from-[#d32f2f] to-[#1976d2] text-white border-transparent shadow-md scale-[1.02]" : "border-gray-300 text-gray-700 hover:border-[#1976d2] hover:text-[#1976d2]"}`}
                         >
                             VNPay (VND)
                         </button>
@@ -132,8 +126,7 @@ const Detail = () => {
                         <button
                             onClick={() => setPaymentMethod("PAYPAL")}
                             className={`flex-1 p-3 rounded-xl border transition-all duration-200
-                                 ${paymentMethod === "PAYPAL" ? "bg-gradient-to-r from-[#003087] to-[#009cde] text-white border-transparent shadow-lg scale-[1.02]" : "border-gray-300 text-gray-700 hover:border-[#009cde] hover:text-[#003087]"}
-    `}
+                                 ${paymentMethod === "PAYPAL" ? "bg-gradient-to-r from-[#003087] to-[#009cde] text-white border-transparent shadow-lg scale-[1.02]" : "border-gray-300 text-gray-700 hover:border-[#009cde] hover:text-[#003087]"}`}
                         >
                             PayPal (USD)
                         </button>
