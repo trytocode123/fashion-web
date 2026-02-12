@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/v1/api/payment")
 public class VNPayController {
