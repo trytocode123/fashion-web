@@ -27,7 +27,7 @@ const LogIn = () => {
             setError(data);
         } else {
             dispatch(loginSuccess(data));
-            toast.success(`Login successfully. Welcome, ${data.name}!`);
+            toast.success(`Login successfully. Welcome, ${data.fullName}!`);
             navigate("/home");
         }
         setDisable(prevState => !prevState);
