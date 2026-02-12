@@ -24,7 +24,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/v1/api")
 public class AccountController {
     private final AuthenticationManager authenticationManager;

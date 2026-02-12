@@ -7,7 +7,6 @@ import com.example.backend.repository.PaymentTransactionRepository;
 import com.example.backend.service.IEmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +15,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/vnpay_return")
 public class VNPayReturnController {

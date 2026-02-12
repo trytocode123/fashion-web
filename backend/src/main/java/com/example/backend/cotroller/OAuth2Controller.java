@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/oauth2")
-@CrossOrigin("*")
 public class OAuth2Controller {
     private final GoogleOAuthService googleOAuthService;
     private final ICustomerService customerService;

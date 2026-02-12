@@ -21,7 +21,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/v1/api/payment")
-@CrossOrigin("*")
 public class VNPayController {
     private final IAccountService accountService;
     private final ICustomerService customerService;

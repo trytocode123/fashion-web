@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/v1/api/paypal")
 public class PaypalController {
     private static final String SUCCESS_URL = "https://fashion-web-omega.vercel.app/paypalSuccess";

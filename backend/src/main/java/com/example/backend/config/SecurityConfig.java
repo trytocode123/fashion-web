@@ -15,7 +15,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -83,23 +82,27 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         String frontendUrl = System.getenv("FRONTEND_URL");
-
-        if (frontendUrl == null || frontendUrl.isEmpty()) {
-            config.setAllowedOriginPatterns(List.of("*"));
+        if (frontendUrl != null && !frontendUrl.isEmpty()) {
+            // Split by comma to support multiple origins (e.g., local and production)
+            List<String> origins = List.of(frontendUrl.split(","));
+            config.setAllowedOrigins(origins);
         } else {
-            config.setAllowedOrigins(List.of(frontendUrl));
+            // Default for development if no env var is set
+            config.setAllowedOriginPatterns(List.of("http://localhost:*", "https://*.vercel.app"));
         }
 
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L); // Cache preflight response for 1 hour
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
 
         return source;
     }
+
 
     // Cấu hình chuỗi lọc bảo mật
     @Bean
