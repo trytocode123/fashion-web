@@ -1,4 +1,4 @@
-package com.example.backend.cotroller;
+package com.example.backend.controller;
 
 import com.example.backend.dto.LoginResponseDTO;
 import com.example.backend.entity.Account;
@@ -25,7 +25,6 @@ public class OAuth2Controller {
     public OAuth2Controller(GoogleOAuthService googleOAuthService, ICustomerService customerService) {
         this.googleOAuthService = googleOAuthService;
         this.customerService = customerService;
-
     }
 
     @GetMapping("/google/callback")

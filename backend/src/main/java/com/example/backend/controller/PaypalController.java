@@ -1,4 +1,4 @@
-package com.example.backend.cotroller;
+package com.example.backend.controller;
 
 import com.example.backend.dto.PaypalAmountDTO;
 import com.example.backend.service.IPaypalService;
