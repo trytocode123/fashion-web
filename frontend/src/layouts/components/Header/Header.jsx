@@ -39,8 +39,8 @@ const Header = () => {
                     <div className="flex items-center justify-evenly font-medium text-gray-200 lg:min-w-[120px]">
                         Hello, <span
                         className="text-white font-semibold lg:ml-1 lg:p-0 lg:min-w-[20px]">{account.name}</span>
-                        <Link to={"/"}>
-                            <FiLogOut onClick={handleLogOut} className={"lg:m-2 text-red-400\n" +
+                        <Link to={"/"} onClick={handleLogOut}>
+                            <FiLogOut className={"lg:m-2 text-red-400\n" +
                                 "hover:text-red-500\n" +
                                 "hover:bg-red-500/15" +
                                 "rounded-full"}/>
