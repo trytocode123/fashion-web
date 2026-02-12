@@ -9,7 +9,7 @@ RUN chmod +x ./gradlew && ./gradlew clean build -x test --no-daemon
 
 FROM amazoncorretto:17-alpine
 WORKDIR /app
-# Use a specific JAR pattern to avoid conflicts
+# Use a specific JAR pattern to avoid conflicts (matching build/libs content)
 COPY --from=build /app/build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 

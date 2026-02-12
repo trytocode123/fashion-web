@@ -16,7 +16,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/vnpay_return")
 public class VNPayReturnController {
