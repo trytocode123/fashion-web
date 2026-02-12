@@ -62,7 +62,8 @@ const Register = () => {
     return (
         <div className={"flex flex-col lg:w-[100%] items-center justify-center px-[80px]"}>
             <h2 className={"font-bold text-2xl align-middle"}>Register</h2>
-            <Formik initialValues={user} onSubmit={handleRegister} validationSchema={validation}>
+            <Formik initialValues={user} onSubmit={handleRegister} validationSchema={validation}
+                    validateOnChange={false}>
                 <Form className={"w-[100%]"}>
                     <div className={"grid grid-cols-2 gap-28"}>
                         {/*Column 1*/}

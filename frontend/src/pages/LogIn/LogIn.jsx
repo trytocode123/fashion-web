@@ -48,7 +48,7 @@ const LogIn = () => {
     return (
         <div className={"flex flex-col lg:w-[100%] items-center justify-center"}>
             <h2 className={"font-bold text-2xl align-middle"}>Login</h2>
-            <Formik initialValues={user} onSubmit={handleLogin} validationSchema={validation}>
+            <Formik initialValues={user} onSubmit={handleLogin} validationSchema={validation} validateOnChange={false}>
                 <Form className={"lg:mt-4"}>
                     <div className={"flex flex-col lg:w-[300px]"}>
                         <label className={"font-bold"}>Username</label>
