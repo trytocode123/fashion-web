@@ -85,7 +85,7 @@ public class AccountController {
             Account userInfo = accountService.findByUsername(user.getUsername());
             Customer customer = customerService.findCustomerByAccount(userInfo);
             return ResponseEntity.ok(new JwtResponseService(userInfo.getId(), jwt,
-                    userInfo.getUsername(), customer.getFullName(), userDetails.getAuthorities()));
+                    userInfo.getUsername(), customer.getFullName(), customer.getEmail(), userDetails.getAuthorities()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
         }

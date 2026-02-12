@@ -15,14 +15,16 @@ public class JwtResponseService {
     private String token;
     private String type = "Bearer";
     private String username;
-    private String name;
+    private String fullName;
+    private String email;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public JwtResponseService(Long id, String token, String username, String name, Collection<? extends GrantedAuthority> authorities) {
+    public JwtResponseService(Long id, String token, String username, String fullName, String email, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.token = token;
         this.username = username;
-        this.name = name;
+        this.fullName = fullName;
+        this.email = email;
         this.authorities = authorities;
     }
 

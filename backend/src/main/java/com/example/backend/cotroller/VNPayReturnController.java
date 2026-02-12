@@ -71,11 +71,8 @@ public class VNPayReturnController {
 
         if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
             String txnRef = request.getParameter("vnp_TxnRef");
-            System.out.println("DEBUG: Received vnp_TxnRef: " + txnRef);
-
             Optional<PaymentTransaction> transactionOptional = paymentTransactionRepository.findById(txnRef);
             if (transactionOptional.isPresent()) {
-                System.out.println("DEBUG: Transaction found in DB. Processing email...");
                 PaymentTransaction transaction = transactionOptional.get();
                 double amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
 
@@ -84,10 +81,8 @@ public class VNPayReturnController {
                         txnRef,
                         amount
                 );
-                System.out.println("DEBUG: Email task submitted.");
 
                 paymentTransactionRepository.delete(transaction);
-                System.out.println("DEBUG: Transaction deleted from DB.");
             } else {
                 System.out.println("DEBUG: Transaction NOT found in DB with txnRef: " + txnRef);
             }
