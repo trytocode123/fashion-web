@@ -46,13 +46,14 @@ const LogIn = () => {
         password: Yup.string().required("Please enter your password!")
     })
     return (
-        <div className={"flex flex-col lg:w-[100%] items-center justify-center"}>
+        <div
+            className={"w-[100%] flex flex-col items-center justify-center mt-[140px] mb-[120px] md:mt-[300px] md:mb-[345px] lg:mt-[300px] lg:mb-[320px] xl:mt-[50px] xl:mb-[20px]"}>
             <h2 className={"font-bold text-2xl align-middle"}>Login</h2>
             <Formik initialValues={user} onSubmit={handleLogin} validationSchema={validation} validateOnChange={false}>
                 <Form className={"lg:mt-4"}>
-                    <div className={"flex flex-col lg:w-[300px]"}>
+                    <div className={"flex flex-col w-[300px] lg:w-[500px] xl:w-[400px]"}>
                         <label className={"font-bold"}>Username</label>
-                        <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
+                        <div className={"w-[100%] border-2 rounded-2xl py-[10px] px-[10px]"}>
                             <Field onFocus={handleOnchange}
                                    className={"w-full h-full focus:outline-hidden focus:bg-white"}
                                    name={"username"}
@@ -62,7 +63,7 @@ const LogIn = () => {
                                       className={"text-red-800 text-[13px] font-bold"}/>
                     </div>
 
-                    <div className={"flex flex-col lg:w-[300px] lg:mt-2"}>
+                    <div className={"flex flex-col lg:w-[500px] lg:w-[300px] xl:w-[400px] lg:mt-2"}>
                         <label className={"font-bold"}>Password</label>
                         <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                             <Field onFocus={handleOnchange} type={"password"}
@@ -75,17 +76,17 @@ const LogIn = () => {
                     </div>
                     {error && <p className={"text-red-800 text-[13px] font-bold"}>{error.message}</p>}
                     {disable ?
-                        <div className={"lg:flex items-center justify-center lg:mt-5 lg:h-[50px]"}>
+                        <div className={"flex items-center justify-center mt-5 lg:h-[50px]"}>
                             <FaSpinner className={"animate-spin text-[20px]"}/>
                         </div>
                         : <Button
                             type={"submit"}
-                            className={"w-[100%] bg-gray-900 lg:h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700 "}>
+                            className={"w-[100%] bg-gray-900 mt-4 h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700 "}>
                             Continue
                         </Button>
                     }
 
-                    <div className={"lg:mt-3"}>
+                    <div className={"mt-3"}>
                         <p>New user? <Link to={"/register"} className={"text-blue-600"}>Create an account!</Link></p>
                     </div>
 

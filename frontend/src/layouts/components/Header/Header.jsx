@@ -5,6 +5,7 @@ import {FiLogOut} from "react-icons/fi";
 import {Link} from "react-router-dom";
 import {logOut} from "../../../redux/Reducer/authSlice.js";
 import {IoMdHome} from "react-icons/io";
+import {MdOutlineMenu} from "react-icons/md";
 
 
 const Header = () => {
@@ -17,12 +18,16 @@ const Header = () => {
     }
     return (
         <header
-            className={"flex fixed h-[100px] w-[100%] top-0 left-0 right-0 bg-gray-900 text-white items-center " +
-                "justify-between px-[80px] lg:z-10 shadow-md shadow-gray-900"}>
-            <div className={"flex flex-col justify-center flex-wrap-reverse group"}>
+            className={"fixed h-[100px] w-[100%] top-0 left-0 right-0 bg-gray-900 text-white items-center " +
+                "shadow-md shadow-gray-900 justify-between md:flex md:px-[40px] lg:px-[80px] lg:z-10 lg:h-[150px] xl:px-[80px] xl:z-10 xl:h-[100px]"}>
+
+            <MdOutlineMenu className={"md:hidden mt-3 ml-3"}/>
+
+            <div className={"hidden md:flex lg:flex flex-col justify-center flex-wrap-reverse group"}>
                 <Link to={"/about"}
                       className={"lg:font-bold lg:text-3xl cursor-pointer group-hover:text-amber-50"}>FASHION</Link>
-                <Link to={"/about"} className={"text-end group-hover:text-amber-50 cursor-pointer"}>hub</Link>
+                <Link to={"/about"}
+                      className={"text-start md:text-end group-hover:text-amber-50 cursor-pointer"}>hub</Link>
             </div>
 
             {account &&
@@ -34,7 +39,7 @@ const Header = () => {
                 </div>
             }
 
-            <div className={"lg:flex lg:justify-end lg:w-[350px] text-[16px]"}>
+            <div className={"hidden md:flex lg:justify-end lg:w-[350px] text-[16px]"}>
                 {(account?.fullName) && (
                     <div className="flex items-center justify-evenly font-medium text-gray-200 lg:min-w-[120px]">
                         Hello, <span
@@ -48,7 +53,7 @@ const Header = () => {
                     </div>
                 )}
 
-                <div className={"lg:flex lg:justify-end lg:justify-evenly lg:items-center lg:w-[100px]"}>
+                <div className={"md:flex md:justify-end md:justify-evenly lg:items-center md:w-[100px]"}>
                     {account && (
                         <Link to={"/home"}>
                             <IoMdHome className={"lg:text-[20px]"}/>

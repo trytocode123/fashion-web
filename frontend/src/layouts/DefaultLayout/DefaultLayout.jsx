@@ -5,7 +5,7 @@ const DefaultLayout = ({children}) => {
     return (
         <div className={"w-[100%]"}>
             <Header/>
-            <div className={"flex lg:items-center lg:justify-center lg:mt-[120px]"}>
+            <div className={"w-[100%] flex items-center justify-center lg:mt-[120px]"}>
                 {children}
             </div>
             <Footer/>
