@@ -12,28 +12,34 @@ import VNPayFail from "./pages/VNPayResult/VNPayFail/VNPayFail.jsx";
 import PaypalSuccess from "./pages/PaypalResult/PaypalSuccess/PaypalSuccess.jsx";
 import PaypalFail from "./pages/PaypalResult/PaypalFail/PaypalFail.jsx";
 import About from "./pages/About/About.jsx";
+import PrivateRoute from "./route/PrivateRoute/PrivateRoute.jsx";
+import PublicRoute from "./route/PublicRoute/PublicRoute.jsx";
+import ScrollToStart from "./components/ScrollToStart/ScrollToStart.jsx";
 
 
 function App() {
-
     return (
-        <div className="bg-">
-            <DefaultLayout>
+        <div>
+            <ScrollToStart/>
                 <Routes>
-                    <Route path={"/"} element={<LogIn/>}/>
-                    <Route path={"/about"} element={<About/>}/>
-                    <Route path={"/register"} element={<Register/>}/>
-                    <Route path={"/home"} element={<Home/>}/>
-                    <Route path={"/detail/:id"} element={<Detail/>}/>
-                    <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
-                    <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
-                    <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
-                    <Route path={"/paypalFail"} element={<PaypalFail/>}/>
+                    <Route element={<DefaultLayout/>}>
+                        <Route element={<PublicRoute/>}>
+                            <Route path={"/"} element={<LogIn/>}/>
+                            <Route path={"/about"} element={<About/>}/>
+                            <Route path={"/register"} element={<Register/>}/>
+                            <Route path={"/home"} element={<Home/>}/>
+                        </Route>
 
+                        <Route element={<PrivateRoute/>}>
+                            <Route path={"/detail/:id"} element={<Detail/>}/>
+                            <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
+                            <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
+                            <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
+                            <Route path={"/paypalFail"} element={<PaypalFail/>}/>
+                        </Route>
+                    </Route>
                 </Routes>
-            </DefaultLayout>
             <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>
-
         </div>
     )
 }
