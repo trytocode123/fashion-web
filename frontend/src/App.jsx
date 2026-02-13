@@ -27,10 +27,10 @@ function App() {
                             <Route path={"/"} element={<LogIn/>}/>
                             <Route path={"/about"} element={<About/>}/>
                             <Route path={"/register"} element={<Register/>}/>
-                            <Route path={"/home"} element={<Home/>}/>
                         </Route>
 
                         <Route element={<PrivateRoute/>}>
+                            <Route path={"/home"} element={<Home/>}/>
                             <Route path={"/detail/:id"} element={<Detail/>}/>
                             <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
                             <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
