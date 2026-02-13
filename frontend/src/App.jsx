@@ -16,6 +16,7 @@ import PrivateRoute from "./route/PrivateRoute/PrivateRoute.jsx";
 import PublicRoute from "./route/PublicRoute/PublicRoute.jsx";
 import ScrollToStart from "./components/ScrollToStart/ScrollToStart.jsx";
 import PreventToHome from "./components/PreventToHome/PreventToHome.jsx";
+import NotFound from "./pages/404/404.jsx";
 
 
 function App() {
@@ -40,6 +41,10 @@ function App() {
                         <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
                         <Route path={"/paypalFail"} element={<PaypalFail/>}/>
                     </Route>
+                </Route>
+
+                <Route path={"*"} element={<NotFound/>}>
+
                 </Route>
             </Routes>
             <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>

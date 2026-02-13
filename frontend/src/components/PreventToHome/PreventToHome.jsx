@@ -1,19 +1,15 @@
-import {Outlet, useNavigate} from "react-router-dom";
+import {Navigate, Outlet} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {useEffect} from "react";
 
 
 const PreventToHome = () => {
     const auth = useSelector(state => state.auth.account);
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (auth) {
-            navigate("/home");
-        }
-    }, []);
-    return (
-        <Outlet/>
-    )
+
+    if (auth) {
+        return <Navigate to={"/home"} replace/>
+    }
+
+    return (<Outlet/>)
 }
 
 export default PreventToHome;
