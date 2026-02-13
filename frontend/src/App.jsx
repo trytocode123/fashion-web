@@ -15,6 +15,7 @@ import About from "./pages/About/About.jsx";
 import PrivateRoute from "./route/PrivateRoute/PrivateRoute.jsx";
 import PublicRoute from "./route/PublicRoute/PublicRoute.jsx";
 import ScrollToStart from "./components/ScrollToStart/ScrollToStart.jsx";
+import ResetAuth from "./components/ResetAuth/ResetAuth.jsx";
 
 
 function App() {
@@ -24,8 +25,10 @@ function App() {
             <Routes>
                 <Route element={<DefaultLayout/>}>
                     <Route element={<PublicRoute/>}>
-                        <Route path={"/"} element={<LogIn/>}/>
-                        <Route path={"/register"} element={<Register/>}/>
+                        <Route element={<ResetAuth/>}>
+                            <Route path={"/"} element={<LogIn/>}/>
+                            <Route path={"/register"} element={<Register/>}/>
+                        </Route>
                         <Route path={"/about"} element={<About/>}/>
                     </Route>
 

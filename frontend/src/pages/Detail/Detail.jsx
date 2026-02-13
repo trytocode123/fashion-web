@@ -120,7 +120,6 @@ const Detail = () => {
                             VNPay (VND)
                         </button>
 
-
                         <button
                             onClick={() => setPaymentMethod("PAYPAL")}
                             className={`flex-1 p-3 rounded-xl border transition-all duration-200
