@@ -4,7 +4,7 @@ import {useEffect} from "react";
 
 
 const PreventToHome = () => {
-    const auth = useSelector(state => state.auth);
+    const auth = useSelector(state => state.auth.account);
     const navigate = useNavigate();
     useEffect(() => {
         if (auth) {
