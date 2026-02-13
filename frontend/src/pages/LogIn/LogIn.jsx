@@ -1,9 +1,9 @@
 import {ErrorMessage, Field, Form, Formik} from "formik";
 import {Button} from "@headlessui/react";
 import {FcGoogle} from "react-icons/fc";
-import {logIn, logInGoogle} from "../../service/Acount/AccountService.js";
-import {useState} from "react";
-import {useDispatch} from "react-redux";
+import {logIn, logInGoogle} from "../../service/Account/AccountService.js";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import {loginSuccess} from "../../redux/Reducer/authSlice.js";
 import {toast} from "react-toastify";
 import * as Yup from "yup";
@@ -45,6 +45,7 @@ const LogIn = () => {
         username: Yup.string().required("Please enter your user name!"),
         password: Yup.string().required("Please enter your password!")
     })
+
     return (
         <div
             className={"w-[100%] flex flex-col items-center justify-center mt-[140px] mb-[120px] md:mt-[300px] md:mb-[345px] lg:mt-[300px] lg:mb-[320px] xl:mt-[50px] xl:mb-[20px]"}>

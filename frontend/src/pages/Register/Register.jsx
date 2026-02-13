@@ -2,7 +2,7 @@ import {ErrorMessage, Field, Form, Formik} from "formik";
 import * as Yup from "yup";
 import {Button} from "@headlessui/react";
 import {Link, useNavigate} from "react-router-dom";
-import {addAccount} from "../../service/Acount/AccountService.js";
+import {addAccount} from "../../service/Account/AccountService.js";
 import {toast} from "react-toastify";
 import {useState} from "react";
 import {FaSpinner} from "react-icons/fa";

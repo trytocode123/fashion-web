@@ -15,7 +15,7 @@ import About from "./pages/About/About.jsx";
 import PrivateRoute from "./route/PrivateRoute/PrivateRoute.jsx";
 import PublicRoute from "./route/PublicRoute/PublicRoute.jsx";
 import ScrollToStart from "./components/ScrollToStart/ScrollToStart.jsx";
-import ResetAuth from "./components/ResetAuth/ResetAuth.jsx";
+import PreventToHome from "./components/PreventToHome/PreventToHome.jsx";
 
 
 function App() {
@@ -25,10 +25,10 @@ function App() {
             <Routes>
                 <Route element={<DefaultLayout/>}>
                     <Route element={<PublicRoute/>}>
-                        <Route element={<ResetAuth/>}>
+                        <Route element={<PreventToHome/>}>
                             <Route path={"/"} element={<LogIn/>}/>
-                            <Route path={"/register"} element={<Register/>}/>
                         </Route>
+                        <Route path={"/register"} element={<Register/>}/>
                         <Route path={"/about"} element={<About/>}/>
                     </Route>
 

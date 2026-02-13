@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {dataFromGoogle} from "../../service/Acount/AccountService.js";
+import {dataFromGoogle} from "../../service/Account/AccountService.js";
 import {useDispatch} from "react-redux";
 import {logInByGoogle} from "../../redux/Reducer/authSlice.js";
 import {Swiper, SwiperSlide} from "swiper/react";
