@@ -21,24 +21,24 @@ function App() {
     return (
         <div>
             <ScrollToStart/>
-                <Routes>
-                    <Route element={<DefaultLayout/>}>
-                        <Route element={<PublicRoute/>}>
-                            <Route path={"/"} element={<LogIn/>}/>
-                            <Route path={"/about"} element={<About/>}/>
-                            <Route path={"/register"} element={<Register/>}/>
-                        </Route>
-
-                        <Route element={<PrivateRoute/>}>
-                            <Route path={"/home"} element={<Home/>}/>
-                            <Route path={"/detail/:id"} element={<Detail/>}/>
-                            <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
-                            <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
-                            <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
-                            <Route path={"/paypalFail"} element={<PaypalFail/>}/>
-                        </Route>
+            <Routes>
+                <Route element={<DefaultLayout/>}>
+                    <Route element={<PublicRoute/>}>
+                        <Route path={"/"} element={<LogIn/>}/>
+                        <Route path={"/about"} element={<About/>}/>
+                        <Route path={"/register"} element={<Register/>}/>
                     </Route>
-                </Routes>
+
+                    <Route element={<PrivateRoute/>}>
+                        <Route path={"/home"} element={<Home/>}/>
+                        <Route path={"/detail/:id"} element={<Detail/>}/>
+                        <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
+                        <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
+                        <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
+                        <Route path={"/paypalFail"} element={<PaypalFail/>}/>
+                    </Route>
+                </Route>
+            </Routes>
             <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>
         </div>
     )
