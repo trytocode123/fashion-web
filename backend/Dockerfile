@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 # Set Gradle memory limit and build without daemon to save RAM
-ENV GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx512m -Dorg.gradle.daemon=false"
+ENV GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx2048m -Dorg.gradle.daemon=false"
 RUN chmod +x ./gradlew && ./gradlew clean build -x test --no-daemon
 
 FROM amazoncorretto:17-alpine
