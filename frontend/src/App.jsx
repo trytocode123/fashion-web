@@ -16,7 +16,7 @@ import PrivateRoute from "./route/PrivateRoute/PrivateRoute.jsx";
 import PublicRoute from "./route/PublicRoute/PublicRoute.jsx";
 import ScrollToStart from "./components/ScrollToStart/ScrollToStart.jsx";
 import PreventToHome from "./components/PreventToHome/PreventToHome.jsx";
-import NotFound from "./pages/404/404.jsx";
+import NotFound from "./pages/404/NotFound.jsx";
 
 
 function App() {
@@ -47,7 +47,7 @@ function App() {
 
                 </Route>
             </Routes>
-            <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>
+            <ToastContainer position="top-right" theme="colored" autoClose="1000" closeOnClick="true"/>
         </div>
     )
 }
