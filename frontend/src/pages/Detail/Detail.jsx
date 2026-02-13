@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useLayoutEffect, useRef, useState} from "react";
 import {findProductById, findProductByName} from "../../service/Product/ProductService.js";
 import {useSelector} from "react-redux";
 import {CiCircleMinus, CiCirclePlus} from "react-icons/ci";
@@ -21,7 +21,7 @@ const Detail = () => {
 
     const quantityRef = useRef(null);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!token) {
             navigate("/");
             return;

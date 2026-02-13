@@ -25,8 +25,8 @@ function App() {
                 <Route element={<DefaultLayout/>}>
                     <Route element={<PublicRoute/>}>
                         <Route path={"/"} element={<LogIn/>}/>
-                        <Route path={"/about"} element={<About/>}/>
                         <Route path={"/register"} element={<Register/>}/>
+                        <Route path={"/about"} element={<About/>}/>
                     </Route>
 
                     <Route element={<PrivateRoute/>}>
