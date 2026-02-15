@@ -39,7 +39,7 @@ const Header = () => {
                 </div>
             }
 
-            <div className={"hidden md:flex lg:justify-end lg:min-w-[100px] text-[16px]"}>
+            <div className={"md:flex lg:justify-end lg:min-w-[100px] text-[16px]"}>
                 {(account?.fullName) && (
                     <div className="flex items-center justify-evenly font-medium text-gray-200 lg:min-w-[120px]">
                         Hello, <span
