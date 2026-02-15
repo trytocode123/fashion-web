@@ -32,9 +32,8 @@ function App() {
                         <Route path={"/register"} element={<Register/>}/>
                         <Route path={"/about"} element={<About/>}/>
                     </Route>
-
+                    <Route path={"/home"} element={<Home/>}/>
                     <Route element={<PrivateRoute/>}>
-                        <Route path={"/home"} element={<Home/>}/>
                         <Route path={"/detail/:id"} element={<Detail/>}/>
                         <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
                         <Route path={"/vnpayFail"} element={<VNPayFail/>}/>

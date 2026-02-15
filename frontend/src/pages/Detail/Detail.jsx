@@ -21,7 +21,7 @@ const Detail = () => {
 
     const quantityRef = useRef(null);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (!token) {
             navigate("/");
             return;
