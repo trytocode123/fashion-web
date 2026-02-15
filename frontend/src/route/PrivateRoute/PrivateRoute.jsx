@@ -3,8 +3,7 @@ import {useSelector} from "react-redux";
 
 const PrivateRoute = () => {
     const auth = useSelector(state => state.auth.account);
-    const keyGoogle = localStorage.getItem("nextRotationAttemptTs");
-    if (!auth || !keyGoogle) {
+    if (!auth) {
         return <Navigate to={"/"} replace/>
     }
 
