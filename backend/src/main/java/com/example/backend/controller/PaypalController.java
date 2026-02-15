@@ -48,8 +48,7 @@ public class PaypalController {
     }
 
     @GetMapping("/success/{paymentId}/{payerID}")
-    public ResponseEntity<?> excuteSuccess(@PathVariable String paymentId, @PathVariable String payerID) {
-        System.out.println("vào rồi");
+    public ResponseEntity<?> executeSuccess(@PathVariable String paymentId, @PathVariable String payerID) {
         try {
             paypalService.excutePayment(paymentId, payerID);
             return ResponseEntity.ok("success");

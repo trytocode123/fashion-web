@@ -29,15 +29,13 @@ public class VNPayReturnController {
     }
 
     @GetMapping
-    public ResponseEntity<?> result(HttpServletRequest request
-    ) throws Exception {
+    public ResponseEntity<?> result(HttpServletRequest request) throws Exception {
 
         Map<String, String> fields = new HashMap<>();
         for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements(); ) {
             String fieldName = params.nextElement();
 
-            if (!fieldName.startsWith("vnp_"))
-                continue;
+            if (!fieldName.startsWith("vnp_")) continue;
 
             String fieldValue = request.getParameter(fieldName);
             if (fieldValue != null && !fieldValue.isEmpty()) {
@@ -48,6 +46,14 @@ public class VNPayReturnController {
         String vnp_SecureHash = request.getParameter("vnp_SecureHash");
         String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
         String vnp_TransactionStatus = request.getParameter("vnp_TransactionStatus");
+
+        // log bank code
+        String vnp_BankCode = request.getParameter("vnp_BankCode");
+        System.out.println(vnp_BankCode);
+
+        // log date create payment
+        String vnp_payDate = request.getParameter("vnp_PayDate");
+        System.out.println(vnp_payDate);
 
         fields.remove("vnp_SecureHashType");
         fields.remove("vnp_SecureHash");
@@ -61,9 +67,7 @@ public class VNPayReturnController {
             String fieldValue = fields.get(fieldName);
             if (fieldValue != null && !fieldValue.isEmpty()) {
                 if (i > 0) hashData.append('&');
-                hashData.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8))
-                        .append('=')
-                        .append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
+                hashData.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8)).append('=').append(URLEncoder.encode(fieldValue, StandardCharsets.UTF_8));
             }
         }
 
@@ -76,24 +80,14 @@ public class VNPayReturnController {
                 PaymentTransaction transaction = transactionOptional.get();
                 double amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
 
-                emailService.sendVNPaySuccessMail(
-                        transaction.getEmail(),
-                        txnRef,
-                        amount
-                );
+                emailService.sendVNPaySuccessMail(transaction.getEmail(), txnRef, amount);
 
                 paymentTransactionRepository.delete(transaction);
             } else {
                 System.out.println("DEBUG: Transaction NOT found in DB with txnRef: " + txnRef);
             }
-            return ResponseEntity
-                    .status(303)
-                    .header("Location", "https://fashion-web-omega.vercel.app/vnpaySuccess")
-                    .build();
+            return ResponseEntity.status(303).header("Location", "https://fashion-web-omega.vercel.app/vnpaySuccess").build();
         }
-        return ResponseEntity
-                .status(303)
-                .header("Location", "https://fashion-web-omega.vercel.app/vnpayFail")
-                .build();
+        return ResponseEntity.status(303).header("Location", "https://fashion-web-omega.vercel.app/vnpayFail").build();
     }
 }

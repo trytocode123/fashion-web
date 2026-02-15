@@ -53,7 +53,7 @@ public class VNPayController {
 
         String vnp_TxnRef = "TEST" + System.currentTimeMillis();
 
-        // Save to Database instead of Cache
+        // Save to Database instead of Cache to send mail
         PaymentTransaction transaction = new PaymentTransaction();
         transaction.setTxnRef(vnp_TxnRef);
         transaction.setEmail(email);
