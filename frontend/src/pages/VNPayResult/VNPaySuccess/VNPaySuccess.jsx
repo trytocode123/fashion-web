@@ -28,7 +28,7 @@ const VNPaySuccess = () => {
                         className="
                             inline-flex items-center
                             px-2 py-0.5 rounded-full
-                            bg-red-50 text-red-600
+                            bg-green-50 text-green-600
                             font-semibold text-xs
                         "
                     >
@@ -47,26 +47,16 @@ const VNPaySuccess = () => {
                         to="/home"
                         className="
                             flex items-center justify-center gap-2 w-full
-                            bg-gradient-to-r from-red-500 to-red-600
+                            bg-gradient-to-r from-green-500 to-green-600
                             text-white py-3 rounded-xl
                             font-semibold
-                            hover:from-red-600 hover:to-red-700
+                            hover:from-green-600 hover:to-green-700
                             transition
                         "
                     >
                         <FiShoppingBag className="text-lg"/>
                         Continue Shopping
                     </Link>
-
-                    {/* Future use */}
-                    {/*
-                    <Link
-                        to="/orders"
-                        className="block text-sm text-gray-500 hover:underline"
-                    >
-                        View My Orders
-                    </Link>
-                    */}
                 </div>
 
                 <p className="text-xs text-gray-400 mt-6">
