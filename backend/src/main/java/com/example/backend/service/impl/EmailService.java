@@ -110,7 +110,7 @@ public class EmailService implements IEmailService {
             body.put("subject", "Xác thực tài khoản Fashion Hub");
 
             Context context = new Context();
-            String verificationUrl = "http://localhost:5173/verify?token=" + token;
+            String verificationUrl = "https://fashion-web-omega.vercel.app/verify?token=" + token;
             context.setVariable("verificationUrl", verificationUrl);
             String htmlContent = templateEngine.process("mail/verification", context);
             body.put("htmlContent", htmlContent);

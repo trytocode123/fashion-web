@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8" />
-    <title>Xác thực tài khoản</title>
+    <title>Account Verification</title>
 </head>
 
 <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 30px;">
     <div
         style="max-width: 600px; margin: auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        <h2 style="color: #1a1a1a;">Chào mừng đến với Fashion Hub!</h2>
-        <p style="color: #555;">Cảm ơn bạn đã đăng ký tài khoản. Vui lòng nhấn vào nút bên dưới để xác thực địa chỉ
-            email của bạn:</p>
+        <h2 style="color: #1a1a1a;">Welcome to Fashion Hub!</h2>
+        <p style="color: #555;">Thank you for registering. Please click the button below to verify your email address:
+        </p>
         <div style="text-align: center; margin: 30px 0;">
             <a th:href="${verificationUrl}"
                 style="background-color: #1a1a1a; color: white; padding: 14px 28px; text-decoration: none; border-radius: 25px; font-size: 16px; display: inline-block;">
-                Xác thực Email
+                Verify Email
             </a>
         </div>
-        <p style="color: #999; font-size: 13px;">Nếu bạn không đăng ký tài khoản này, vui lòng bỏ qua email này.</p>
+        <p style="color: #999; font-size: 13px;">If you didn't create an account, you can safely ignore this email.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-        <p style="color: #999; font-size: 12px; text-align: center;">Fashion Hub &copy; 2025</p>
+        <p style="color: #999; font-size: 12px; text-align: center;">Fashion Hub &copy; 2026</p>
     </div>
 </body>
 
