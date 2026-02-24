@@ -2,8 +2,8 @@ import './App.css'
 
 import DefaultLayout from "./layouts/DefaultLayout/DefaultLayout.jsx";
 import LogIn from "./pages/LogIn/LogIn.jsx";
-import { ToastContainer } from "react-toastify";
-import { Route, Routes } from "react-router-dom";
+import {ToastContainer} from "react-toastify";
+import {Route, Routes} from "react-router-dom";
 import Register from "./pages/Register/Register.jsx";
 import Home from "./pages/Home/Home.jsx";
 import Detail from "./pages/Detail/Detail.jsx";
@@ -23,33 +23,33 @@ import Verify from "./pages/Verify/Verify.jsx";
 function App() {
     return (
         <div>
-            <ScrollToStart />
+            <ScrollToStart/>
             <Routes>
-                <Route element={<DefaultLayout />}>
-                    <Route element={<PublicRoute />}>
+                <Route element={<DefaultLayout/>}>
+                    <Route element={<PublicRoute/>}>
                         //If user has auth, navigate to home default when user try to navigate to login
-                        <Route element={<PreventToHome />}>
-                            <Route path={"/"} element={<LogIn />} />
+                        <Route element={<PreventToHome/>}>
+                            <Route path={"/"} element={<LogIn/>}/>
                         </Route>
-                        <Route path={"/register"} element={<Register />} />
-                        <Route path={"/about"} element={<About />} />
-                        <Route path={"/verify"} element={<Verify />} />
+                        <Route path={"/register"} element={<Register/>}/>
+                        <Route path={"/about"} element={<About/>}/>
+                        <Route path={"/verify"} element={<Verify/>}/>
                     </Route>
-                    <Route path={"/home"} element={<Home />} />
-                    <Route element={<PrivateRoute />}>
-                        <Route path={"/detail/:id"} element={<Detail />} />
-                        <Route path={"/vnpaySuccess"} element={<VNPaySuccess />} />
-                        <Route path={"/vnpayFail"} element={<VNPayFail />} />
-                        <Route path={"/paypalSuccess"} element={<PaypalSuccess />} />
-                        <Route path={"/paypalFail"} element={<PaypalFail />} />
+                    <Route path={"/home"} element={<Home/>}/>
+                    <Route element={<PrivateRoute/>}>
+                        <Route path={"/detail/:id"} element={<Detail/>}/>
+                        <Route path={"/vnpaySuccess"} element={<VNPaySuccess/>}/>
+                        <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
+                        <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
+                        <Route path={"/paypalFail"} element={<PaypalFail/>}/>
                     </Route>
                 </Route>
 
-                <Route path={"*"} element={<NotFound />}>
+                <Route path={"*"} element={<NotFound/>}>
 
                 </Route>
             </Routes>
-            <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true" />
+            <ToastContainer position="top-right" theme="colored" autoClose="2000" closeOnClick="true"/>
         </div>
     )
 }
