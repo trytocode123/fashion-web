@@ -27,7 +27,6 @@ function App() {
             <Routes>
                 <Route element={<DefaultLayout/>}>
                     <Route element={<PublicRoute/>}>
-                        //If user has auth, navigate to home default when user try to navigate to login
                         <Route element={<PreventToHome/>}>
                             <Route path={"/"} element={<LogIn/>}/>
                         </Route>

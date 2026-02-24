@@ -1,11 +1,10 @@
-import {Link} from "react-router-dom";
-import {useDispatch} from "react-redux";
-import {logOut} from "../../redux/Reducer/authSlice.js";
+import {useNavigate} from "react-router-dom";
+
 
 const NotFound = () => {
-    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const handleBack = () => {
-        dispatch(logOut());
+        navigate(-1);
     };
 
     return (
@@ -22,20 +21,12 @@ const NotFound = () => {
             <div className="w-24 h-1 bg-indigo-500 rounded mt-6"></div>
 
             <div className="mt-8 flex gap-4">
-                <Link
-                    to="/home"
-                    className="px-6 py-3 rounded-lg bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition duration-200"
-                >
-                    Go Home
-                </Link>
-
-                <Link
+                <button
                     onClick={handleBack}
-                    to="/"
                     className="px-6 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition duration-200"
                 >
-                    Back to Login
-                </Link>
+                    Back
+                </button>
             </div>
 
         </div>
