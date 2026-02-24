@@ -40,7 +40,7 @@ public class EmailService implements IEmailService {
         try {
             // Prepare request body
             Map<String, Object> body = new HashMap<>();
-            
+
             Map<String, String> sender = new HashMap<>();
             sender.put("name", "Fashion hub");
             sender.put("email", "nguyenthienan.171202@gmail.com");
@@ -53,9 +53,9 @@ public class EmailService implements IEmailService {
             body.put("to", toList);
 
             body.put("subject", "Successful Payment");
-            
+
             // Format HTML
-             Context context = new Context();
+            Context context = new Context();
             context.setVariable("txnRef", txnRef);
             context.setVariable("amount", String.format("%,.0f", amount));
             context.setVariable(
@@ -64,7 +64,7 @@ public class EmailService implements IEmailService {
                             .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
             );
             String htmlContent = templateEngine.process("mail/vnpay-success", context);
-            
+
             body.put("htmlContent", htmlContent);
 
             // Prepare Headers
