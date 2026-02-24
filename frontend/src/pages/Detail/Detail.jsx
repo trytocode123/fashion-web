@@ -6,6 +6,7 @@ import {CiCircleMinus, CiCirclePlus} from "react-icons/ci";
 import {IoBagOutline} from "react-icons/io5";
 import {savePayment} from "../../service/VNPay/VNPayServer.js";
 import {progressPaypal} from "../../service/Paypal/PaypalService.js";
+import {BiRotateRight} from "react-icons/bi";
 import {FaSpinner} from "react-icons/fa";
 
 const Detail = () => {
@@ -19,6 +20,7 @@ const Detail = () => {
     const [currentSize, setCurrentSize] = useState("");
     const [quantity, setQuantity] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState("VNPAY");
+    const [loading, setLoading] = useState(false);
     const quantityRef = useRef(null);
 
     useEffect(() => {
@@ -26,7 +28,7 @@ const Detail = () => {
             navigate("/");
             return;
         }
-      
+        setLoading(prevState => !prevState);
         const fetchData = async () => {
             const data = await findProductById(id, token);
             setDetail(data);
@@ -38,7 +40,7 @@ const Detail = () => {
         };
 
         fetchData();
-
+        setLoading(prevState => !prevState);
     }, [id, token, navigate]);
 
     const handleUpdateQuantity = (action) => {
@@ -68,7 +70,7 @@ const Detail = () => {
 
     return (<div className="lg:w-full lg:px-[80px]">
         {
-            detail !== null ? (
+            !loading ? (
                 <div className="lg:grid lg:grid-cols-2 lg:gap-6 items-start">
 
                     <img
