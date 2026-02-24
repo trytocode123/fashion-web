@@ -10,8 +10,9 @@ export async function logIn(account) {
         const res = await axios.post(`${apiUrl}/login`, account);
         return res.data;
     } catch (e) {
+        const errData = e.response?.data;
         return {
-            message: e.response.data,
+            message: (typeof errData === 'string') ? errData : (errData?.message || "Login failed"),
         };
     }
 }
@@ -35,7 +36,7 @@ export function logInGoogle() {
 export async function dataFromGoogle(code) {
     if (code) {
         try {
-            const res = await axios.post(`${apiUrlGoogle}/auth/google`, {code});
+            const res = await axios.post(`${apiUrlGoogle}/auth/google`, { code });
             return res.data;
         } catch (e) {
             console.error(e.message);
@@ -46,8 +47,20 @@ export async function dataFromGoogle(code) {
 export async function addAccount(data) {
     try {
         const res = await axios.post(`${apiUrl}/register`, data);
-        return res.status === 201;
+        return res.data;
     } catch (e) {
-        console.error(e.message);
+        const errData = e.response?.data;
+        throw new Error((typeof errData === 'string') ? errData : (errData?.message || "Registration failed"));
+    }
+}
+
+export async function verifyEmail(token) {
+    try {
+        const res = await axios.get(`${apiUrl}/verify-email`, { params: { token } });
+        return res.data;
+    } catch (e) {
+        const errData = e.response?.data;
+        const msg = (typeof errData === 'string') ? errData : (errData?.message || "Verification failed");
+        throw new Error(msg);
     }
 }

@@ -86,4 +86,43 @@ public class EmailService implements IEmailService {
             e.printStackTrace();
         }
     }
+
+    @Async
+    @Override
+    public void sendVerificationMail(String to, String token) {
+        if (brevoApiKey == null || brevoApiKey.trim().isEmpty()) {
+            return;
+        }
+        try {
+            Map<String, Object> body = new HashMap<>();
+
+            Map<String, String> sender = new HashMap<>();
+            sender.put("name", "Fashion Hub");
+            sender.put("email", "nguyenthienan.171202@gmail.com");
+            body.put("sender", sender);
+
+            List<Map<String, String>> toList = new ArrayList<>();
+            Map<String, String> toMap = new HashMap<>();
+            toMap.put("email", to);
+            toList.add(toMap);
+            body.put("to", toList);
+
+            body.put("subject", "Xác thực tài khoản Fashion Hub");
+
+            Context context = new Context();
+            String verificationUrl = "http://localhost:5173/verify?token=" + token;
+            context.setVariable("verificationUrl", verificationUrl);
+            String htmlContent = templateEngine.process("mail/verification", context);
+            body.put("htmlContent", htmlContent);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("api-key", brevoApiKey);
+            headers.set("Content-Type", "application/json");
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+            restTemplate.postForEntity("https://api.brevo.com/v3/smtp/email", entity, String.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

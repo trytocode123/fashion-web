@@ -102,20 +102,21 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Tắt CSRF vì API không cần
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/v1/api/paypal/success/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v1/api/verify-email").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/v1/api/login").permitAll() // Cho phép mọi người truy cập login API
+                        .requestMatchers("/v1/api/login").permitAll()
                         .requestMatchers("/v1/api/products").permitAll()
                         .requestMatchers("/v1/api/products/top8Trailer").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/api/payment/savePayment/**").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers(HttpMethod.POST, "/v1/api/paypal/save-paypal").hasAnyRole("ADMIN", "CUSTOMER")
                         .requestMatchers("/vnpay_return").permitAll()
                         .requestMatchers(HttpMethod.GET, "/v1/api/products/detail/").hasAnyRole("ADMIN", "CUSTOMER")
-                        .requestMatchers("/oauth2/**").permitAll() // Cho phép mọi người truy cập login API
+                        .requestMatchers("/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/v1/api/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v1/api/**").hasAnyRole("ADMIN", "CUSTOMER") // GET yêu cầu quyền USER hoặc ADMIN
-                        .requestMatchers(HttpMethod.POST, "/v1/api/**").hasRole("ADMIN") // POST chỉ ADMIN mới có quyền
-                        .requestMatchers(HttpMethod.DELETE, "/v1/api/**").hasRole("ADMIN") // DELETE chỉ ADMIN mới có quyền
-                        .anyRequest().authenticated() // Các request khác yêu cầu đăng nhập
+                        .requestMatchers(HttpMethod.GET, "/v1/api/**").hasAnyRole("ADMIN", "CUSTOMER")
+                        .requestMatchers(HttpMethod.POST, "/v1/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/v1/api/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(restServicesEntryPoint()) // Nếu chưa đăng nhập → trả về lỗi 401

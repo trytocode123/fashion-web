@@ -5,8 +5,10 @@ import com.example.backend.entity.Account;
 import com.example.backend.entity.UserPrinciple;
 import com.example.backend.repository.IAccountRepository;
 import com.example.backend.service.IAccountService;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +29,7 @@ public class AccountService implements UserDetailsService, IAccountService {
 
     public List<AccountDTO> findAll() {
         List<AccountDTO> accountDTOS = new ArrayList<>();
-        for (Account u :iAccountRepository.findAll()) {
+        for (Account u : iAccountRepository.findAll()) {
             accountDTOS.add(toDTO(u));
         }
         return accountDTOS;
@@ -43,10 +45,16 @@ public class AccountService implements UserDetailsService, IAccountService {
     }
 
     public boolean add(Account user) {
-        String passwordEncode = passwordEncoder.encode(user.getPassword());
-        user.setPassword(passwordEncode);
         iAccountRepository.save(user);
         return true;
+    }
+
+    public void save(Account account) {
+        iAccountRepository.save(account);
+    }
+
+    public Account findByVerificationToken(String token) {
+        return iAccountRepository.findByVerificationToken(token);
     }
 
     public void delete(Long id) {
@@ -54,12 +62,13 @@ public class AccountService implements UserDetailsService, IAccountService {
     }
 
     @Override
+    @NullMarked
     public UserDetails loadUserByUsername(String username) {
         Account account = iAccountRepository.findByUsername(username);
         if (account != null) {
             return UserPrinciple.build(account);
         }
-        return null;
+        throw new UsernameNotFoundException("Username not found");
     }
 
     public AccountDTO toDTO(Account user) {

@@ -47,6 +47,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-websocket-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     implementation 'com.paypal.sdk:rest-api-sdk:1.14.0'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 }
 
 tasks.named('test') {

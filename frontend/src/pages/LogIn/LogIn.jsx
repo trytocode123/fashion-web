@@ -1,14 +1,14 @@
-import {ErrorMessage, Field, Form, Formik} from "formik";
-import {Button} from "@headlessui/react";
-import {FcGoogle} from "react-icons/fc";
-import {logIn, logInGoogle} from "../../service/Account/AccountService.js";
-import {useEffect, useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {loginSuccess} from "../../redux/Reducer/authSlice.js";
-import {toast} from "react-toastify";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Button } from "@headlessui/react";
+import { FcGoogle } from "react-icons/fc";
+import { logIn, logInGoogle } from "../../service/Account/AccountService.js";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginSuccess } from "../../redux/Reducer/authSlice.js";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
-import {Link, useNavigate} from "react-router-dom";
-import {FaSpinner} from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { FaSpinner } from "react-icons/fa";
 
 const LogIn = () => {
     const [error, setError] = useState();
@@ -24,7 +24,7 @@ const LogIn = () => {
         setDisable(prevState => !prevState);
         const data = await logIn(value);
         if (data.message) {
-            setError(data);
+            setError(data.message);
         } else {
             dispatch(loginSuccess(data));
             toast.success(`Login successfully. Welcome, ${data.fullName}!`);
@@ -56,29 +56,29 @@ const LogIn = () => {
                         <label className={"font-bold"}>Username</label>
                         <div className={"w-[100%] border-2 rounded-2xl py-[10px] px-[10px]"}>
                             <Field onFocus={handleOnchange}
-                                   className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                   name={"username"}
-                                   placeholder="Enter user name..."/>
+                                className={"w-full h-full focus:outline-hidden focus:bg-white"}
+                                name={"username"}
+                                placeholder="Enter user name..." />
                         </div>
                         <ErrorMessage name={"username"} component={"small"}
-                                      className={"text-red-800 text-[13px] font-bold"}/>
+                            className={"text-red-800 text-[13px] font-bold"} />
                     </div>
 
                     <div className={"flex flex-col lg:w-[500px] lg:w-[300px] xl:w-[400px] lg:mt-2"}>
                         <label className={"font-bold"}>Password</label>
                         <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                             <Field onFocus={handleOnchange} type={"password"}
-                                   className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                   name={"password"}
-                                   placeholder="Enter password..."/>
+                                className={"w-full h-full focus:outline-hidden focus:bg-white"}
+                                name={"password"}
+                                placeholder="Enter password..." />
                         </div>
                         <ErrorMessage name={"password"} component={"small"}
-                                      className={"text-red-800 text-[13px] font-bold"}/>
+                            className={"text-red-800 text-[13px] font-bold"} />
                     </div>
-                    {error && <p className={"text-red-800 text-[13px] font-bold"}>{error.message}</p>}
+                    {error && <p className={"text-red-800 text-[13px] font-bold"}>{error}</p>}
                     {disable ?
                         <div className={"flex items-center justify-center mt-5 lg:h-[50px]"}>
-                            <FaSpinner className={"animate-spin text-[20px]"}/>
+                            <FaSpinner className={"animate-spin text-[20px]"} />
                         </div>
                         : <Button
                             type={"submit"}
@@ -93,9 +93,9 @@ const LogIn = () => {
 
                     <div>
                         <div className={"border-b-gray-500 h-[2px] flex items-center gap-4 my-6"}>
-                            <div className="flex-1 h-px bg-gray-300"/>
+                            <div className="flex-1 h-px bg-gray-300" />
                             <span className="text-xs text-gray-400 uppercase">or</span>
-                            <div className="flex-1 h-px bg-gray-300"/>
+                            <div className="flex-1 h-px bg-gray-300" />
                         </div>
                     </div>
                     <Button
@@ -115,7 +115,7 @@ const LogIn = () => {
               transition
             "
                     >
-                        <FcGoogle className="text-xl"/>
+                        <FcGoogle className="text-xl" />
                         <span className="font-medium">Continue with Google</span>
                     </Button>
                 </Form>

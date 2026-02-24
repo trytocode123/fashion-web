@@ -19,17 +19,17 @@ public class UserPrinciple implements UserDetails {
     private final String username;
     private final String password;
     private Collection<? extends GrantedAuthority> roles;
-
+    private final boolean enabled;
 
     public static UserPrinciple build(Account account) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Role role : account.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
-
         return new UserPrinciple(account.getUsername(),
                 account.getPassword(),
-                authorities);
+                authorities,
+                account.getEnabled() == null || account.getEnabled());
     }
 
     @Override
@@ -64,6 +64,6 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 }

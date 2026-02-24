@@ -6,13 +6,16 @@ import com.example.backend.entity.Account;
 import com.example.backend.entity.AuthProvider;
 import com.example.backend.entity.Customer;
 import com.example.backend.entity.Gender;
+import com.example.backend.service.IAccountService;
 import com.example.backend.service.ICustomerService;
+import com.example.backend.service.IEmailService;
 import com.example.backend.service.impl.JwtResponseService;
 import com.example.backend.service.impl.JwtService;
-import com.example.backend.service.impl.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @CrossOrigin("*")
 @RestController
@@ -29,16 +33,20 @@ import java.util.List;
 public class AccountController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final AccountService accountService;
+    private final IAccountService accountService;
     private final ICustomerService customerService;
     private final PasswordEncoder passwordEncoder;
+    private final IEmailService emailService;
 
-    public AccountController(AuthenticationManager authenticationManager, JwtService jwtService, AccountService accountService, ICustomerService customerService, PasswordEncoder passwordEncoder) {
+    public AccountController(AuthenticationManager authenticationManager, JwtService jwtService,
+                             IAccountService accountService, ICustomerService customerService,
+                             PasswordEncoder passwordEncoder, IEmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.accountService = accountService;
         this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     /* ---------------- GET ALL USER ------------------------ */
@@ -74,6 +82,7 @@ public class AccountController {
         return new ResponseEntity<>("Deleted!", HttpStatus.OK);
     }
 
+    /* ---------------- LOGIN ------------------------ */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Account user) {
         try {
@@ -86,16 +95,28 @@ public class AccountController {
             Customer customer = customerService.findCustomerByAccount(userInfo);
             return ResponseEntity.ok(new JwtResponseService(userInfo.getId(), jwt,
                     userInfo.getUsername(), customer.getFullName(), customer.getEmail(), userDetails.getAuthorities()));
-        } catch (Exception e) {
+        } catch (DisabledException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account not verified. Please check your email.");
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during login");
         }
     }
 
+    /* ---------------- REGISTER ------------------------ */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody CustomerDTO customerDTO) {
-        Account accountFind = accountService.findByUsername(customerDTO.getEmail());
-        Customer customerFind = customerService.findCustomerByAccount(accountFind);
+        Customer existingCustomer = customerService.findByEmail(customerDTO.getEmail());
+        if (existingCustomer != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("This email is already registered. Please use a different email or log in.");
+        }
+
+        String token = UUID.randomUUID().toString();
+        Account accountFind = accountService.findByUsername(customerDTO.getUsername());
+
         if (accountFind != null) {
+            Customer customerFind = customerService.findCustomerByAccount(accountFind);
             if (customerFind != null) {
                 customerFind.setFullName(customerDTO.getFullName());
                 customerFind.setDob(LocalDate.parse(customerDTO.getDob()));
@@ -105,11 +126,11 @@ public class AccountController {
                 customerFind.setAddress(customerDTO.getAddress());
                 customerService.add(customerFind);
             }
-
-            accountFind.setUsername(customerDTO.getUsername());
             accountFind.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
             accountFind.setProvider(AuthProvider.LOCAL);
-            accountService.add(accountFind);
+            accountFind.setEnabled(false);
+            accountFind.setVerificationToken(token);
+            accountService.save(accountFind);
         } else {
             Customer customer = new Customer();
             Account account = new Account();
@@ -121,15 +142,46 @@ public class AccountController {
             customer.setAddress(customerDTO.getAddress());
 
             account.setUsername(customerDTO.getUsername());
-            account.setPassword(customerDTO.getPassword());
+            account.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
             account.setProvider(AuthProvider.LOCAL);
             account.setRoles(customerDTO.getRoles());
+            account.setEnabled(false);
+            account.setVerificationToken(token);
+
             customer.setAccount(account);
-            accountService.add(account);
+            accountService.save(account);
             customerService.add(customer);
         }
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        emailService.sendVerificationMail(customerDTO.getEmail(), token);
+        return new ResponseEntity<>("Please check your email to verify your account.", HttpStatus.CREATED);
+    }
+
+    /* ---------------- VERIFY EMAIL ------------------------ */
+    @GetMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
+        Account account = accountService.findByVerificationToken(token);
+        if (account == null) {
+            return ResponseEntity.badRequest().body("Link xác thực không hợp lệ hoặc đã hết hạn.");
+        }
+
+        if (!Boolean.TRUE.equals(account.getEnabled())) {
+            account.setEnabled(true);
+            account.setVerificationToken(null);
+            accountService.save(account);
+        }
+
+        UserDetails userDetails = accountService.loadUserByUsername(account.getUsername());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwt = jwtService.generateTokenLogin(authentication);
+        Customer customer = customerService.findCustomerByAccount(account);
+
+        return ResponseEntity.ok(new JwtResponseService(
+                account.getId(), jwt, account.getUsername(),
+                customer.getFullName(), customer.getEmail(),
+                userDetails.getAuthorities()));
     }
 }
-

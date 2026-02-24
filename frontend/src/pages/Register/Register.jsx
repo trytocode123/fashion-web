@@ -29,16 +29,22 @@ const Register = () => {
 
     const navigate = useNavigate();
     const [disable, setDisable] = useState(false);
+    const [serverError, setServerError] = useState("");
 
     const handleRegister = (value) => {
-
         async function register() {
             setDisable(prevState => !prevState);
-            const {passwordAgain, ...data} = value;
-            const res = await addAccount(data);
-            if (res) {
-                toast.success("Your account has been created successfully.");
-                navigate("/");
+            setServerError("");
+            try {
+                const {passwordAgain, ...data} = value;
+                const res = await addAccount(data);
+                if (res) {
+                    toast.info(res);
+                    navigate("/");
+                }
+            } catch (e) {
+                setServerError(e.message || "Registration failed. Please try again.");
+                toast.error(e.message || "Registration failed.");
             }
             setDisable(prevState => !prevState);
         }
@@ -121,6 +127,8 @@ const Register = () => {
                                 </div>
                                 <ErrorMessage name={"email"} component={"small"}
                                               className={"text-red-800 text-[13px] font-bold"}/>
+                                {serverError &&
+                                    <small className="text-red-800 text-[13px] font-bold">{serverError}</small>}
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
