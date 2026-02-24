@@ -52,7 +52,7 @@ public class EmailService implements IEmailService {
             toList.add(toMap);
             body.put("to", toList);
 
-            body.put("subject", "Thanh toan VNPay Thanh cong");
+            body.put("subject", "Successful Payment");
             
             // Format HTML
              Context context = new Context();
@@ -107,7 +107,7 @@ public class EmailService implements IEmailService {
             toList.add(toMap);
             body.put("to", toList);
 
-            body.put("subject", "Xác thực tài khoản Fashion Hub");
+            body.put("subject", "Identify Fashion hub account");
 
             Context context = new Context();
             String verificationUrl = "https://fashion-web-omega.vercel.app/verify?token=" + token;
