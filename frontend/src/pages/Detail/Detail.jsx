@@ -1,26 +1,25 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useLayoutEffect, useRef, useState} from "react";
-import {findProductById, findProductByName} from "../../service/Product/ProductService.js";
-import {useSelector} from "react-redux";
-import {CiCircleMinus, CiCirclePlus} from "react-icons/ci";
-import {IoBagOutline} from "react-icons/io5";
-import {savePayment} from "../../service/VNPay/VNPayServer.js";
-import {progressPaypal} from "../../service/Paypal/PaypalService.js";
-import {BiRotateRight} from "react-icons/bi";
-import {FaSpinner} from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { findProductById, findProductByName } from "../../service/Product/ProductService.js";
+import { useSelector } from "react-redux";
+import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
+import { IoBagOutline } from "react-icons/io5";
+import { savePayment } from "../../service/VNPay/VNPayServer.js";
+import { progressPaypal } from "../../service/Paypal/PaypalService.js";
+import { FaSpinner } from "react-icons/fa";
+import { HiArrowLeft } from "react-icons/hi2";
 
 const Detail = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const token = useSelector(state => state.auth?.account?.token);
 
-    const [detail, setDetail] = useState({});
+    const [detail, setDetail] = useState(null);
     const [products, setProducts] = useState([]);
     const [currentSize, setCurrentSize] = useState("");
     const [quantity, setQuantity] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState("VNPAY");
-    const [loading, setLoading] = useState(false);
     const quantityRef = useRef(null);
 
     useEffect(() => {
@@ -28,8 +27,9 @@ const Detail = () => {
             navigate("/");
             return;
         }
-        setLoading(prevState => !prevState);
+
         const fetchData = async () => {
+
             const data = await findProductById(id, token);
             setDetail(data);
 
@@ -37,10 +37,10 @@ const Detail = () => {
                 const res = await findProductByName(data.name, token);
                 setProducts(res);
             }
+
         };
 
         fetchData();
-        setLoading(prevState => !prevState);
     }, [id, token, navigate]);
 
     const handleUpdateQuantity = (action) => {
@@ -68,20 +68,30 @@ const Detail = () => {
 
     const isDisabled = currentSize === "" || quantity === 0;
 
-    return (<div className="lg:w-full lg:px-[80px]">
-        {
-            !loading ? (
-                <div className="lg:grid lg:grid-cols-2 lg:gap-6 items-start">
+    return (
+        <div className="lg:w-full lg:px-[80px] lg:mt-8">
+            {(detail !== null) ?
+                (<div className="lg:grid lg:grid-cols-2 lg:gap-10 items-start">
+                    <div className="relative group/img">
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="absolute top-4 left-4 flex items-center justify-center w-10 h-10 rounded-full bg-white/90 backdrop-blur-sm shadow-lg hover:bg-white transition-all duration-300 hover:scale-110 group border border-gray-100"
+                            title="Go back"
+                        >
+                            <HiArrowLeft className="text-gray-800 transition-transform duration-300 group-hover:-translate-x-0.5" size={20} />
+                        </button>
 
-                    <img
-                        className="rounded-2xl w-full h-[600px] object-cover"
-                        src={detail?.img}
-                        alt=""
-                    />
+                        <img
+                            className="rounded-2xl w-full h-[600px] object-cover shadow-md border border-gray-100"
+                            src={detail?.img}
+                            alt={detail?.name}
+                        />
+                    </div>
 
-                    <div className="border border-gray-300 rounded-2xl p-6">
-                        <p className="font-bold text-lg mb-2">
-                            Price: {detail?.price?.toLocaleString("vi-VN")} VND
+                    <div className="border border-gray-200 rounded-2xl p-8 bg-white shadow-sm">
+                        <h1 className="text-2xl font-bold mb-4 text-gray-900">{detail?.name}</h1>
+                        <p className="font-bold text-xl mb-4 text-sky-600">
+                            {detail?.price?.toLocaleString("vi-VN")} VND
                         </p>
 
                         <p className="font-semibold mb-2">Size: {currentSize || "-"}</p>
@@ -99,7 +109,7 @@ const Detail = () => {
 
                         <div className="flex items-center gap-4 mb-4">
                             <button onClick={() => handleUpdateQuantity("-")}>
-                                <CiCircleMinus size={22}/>
+                                <CiCircleMinus size={22} />
                             </button>
 
                             <input
@@ -110,7 +120,7 @@ const Detail = () => {
                             />
 
                             <button onClick={() => handleUpdateQuantity("+")}>
-                                <CiCirclePlus size={22}/>
+                                <CiCirclePlus size={22} />
                             </button>
                         </div>
 
@@ -140,8 +150,8 @@ const Detail = () => {
                         <div className="flex justify-between text-gray-600 mb-4">
                             <span>Total</span>
                             <span className="font-semibold">
-                            {paymentMethod === "PAYPAL" ? `$${((detail.price / 27000) * quantity).toFixed(2)}` : `${(detail.price * quantity).toLocaleString("vi-VN")} VND`}
-                        </span>
+                                {paymentMethod === "PAYPAL" ? `$${((detail.price / 27000) * quantity).toFixed(2)}` : `${(detail.price * quantity).toLocaleString("vi-VN")} VND`}
+                            </span>
                         </div>
 
                         {/* Pay button */}
@@ -152,25 +162,22 @@ const Detail = () => {
                             }}
                             className={`w-full flex items-center justify-center gap-2 p-4 rounded-3xl text-white transition-all
                          ${isDisabled
-                                ? "bg-gray-400 cursor-not-allowed"
-                                : paymentMethod === "PAYPAL"
-                                    ? "bg-gradient-to-r from-[#003087] to-[#009cde] hover:brightness-110"
-                                    : "bg-gradient-to-r from-[#d32f2f] to-[#1976d2] hover:brightness-110"}
-`}
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : paymentMethod === "PAYPAL"
+                                        ? "bg-gradient-to-r from-[#003087] to-[#009cde] hover:brightness-110"
+                                        : "bg-gradient-to-r from-[#d32f2f] to-[#1976d2] hover:brightness-110"}
+ `}
 
                         >
-                            <IoBagOutline/>
+                            <IoBagOutline />
                             Pay with {paymentMethod === "PAYPAL" ? "PayPal" : "VNPay"}
                         </button>
                     </div>
-                </div>
-            ) : (
-                <div className={"flex justify-center items-center"}><FaSpinner
-                    className={"animate-spin text-[20px] xl:text-[100px]"}/></div>
-            )
-        }
-
-    </div>);
+                </div>) : (<div className="flex items-center justify-center min-h-[405px]">
+                    <FaSpinner className={"animate-spin text-[60px] text-gray-600"} />
+                </div>)}
+        </div>
+    );
 };
 
 export default Detail;
