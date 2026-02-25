@@ -125,7 +125,6 @@ const Detail = () => {
                         <div className="mb-4">
                             <div className="flex justify-between items-center mb-2">
                                 <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider">Select Size</h3>
-                                <button className="text-xs text-gray-500 underline hover:text-gray-900 transition-colors">Size Guide</button>
                             </div>
 
                             <div className="flex flex-wrap gap-2">
