@@ -22,10 +22,12 @@ import java.util.*;
 public class VNPayReturnController {
     final IEmailService emailService;
     private final PaymentTransactionRepository paymentTransactionRepository;
+    private final com.example.backend.service.IOrderService orderService;
 
-    public VNPayReturnController(IEmailService emailService, PaymentTransactionRepository paymentTransactionRepository) {
+    public VNPayReturnController(IEmailService emailService, PaymentTransactionRepository paymentTransactionRepository, com.example.backend.service.IOrderService orderService) {
         this.emailService = emailService;
         this.paymentTransactionRepository = paymentTransactionRepository;
+        this.orderService = orderService;
     }
 
     @GetMapping
@@ -80,7 +82,8 @@ public class VNPayReturnController {
                 PaymentTransaction transaction = transactionOptional.get();
                 double amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
 
-                emailService.sendVNPaySuccessMail(transaction.getEmail(), txnRef, amount);
+                // Create Order and Send Email
+                orderService.createOrderFromCart(transaction.getEmail());
 
                 paymentTransactionRepository.delete(transaction);
             } else {

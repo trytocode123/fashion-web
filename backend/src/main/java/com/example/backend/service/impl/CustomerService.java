@@ -33,7 +33,7 @@ public class CustomerService implements ICustomerService {
             return customer;
         }
 
-        Account account = accountRepository.findByUsername(googleUser.getEmail());
+        Account account = accountRepository.findByUsername(googleUser.getEmail()).orElse(null);
 
         if (account == null) {
             Set<Role> roles = new HashSet<>();

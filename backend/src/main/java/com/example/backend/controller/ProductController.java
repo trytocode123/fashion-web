@@ -45,4 +45,18 @@ public class ProductController {
         List<Product> products = productService.findProductByName(name);
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/filter")
+    public ResponseEntity<?> filterProducts(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> genders,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) Long minPrice,
+            @RequestParam(required = false) Long maxPrice,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "9") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productService.filterProducts(categories, genders, sizes, minPrice, maxPrice, pageable);
+        return ResponseEntity.ok(products);
+    }
 }

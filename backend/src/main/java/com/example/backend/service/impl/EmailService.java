@@ -123,5 +123,43 @@ public class EmailService implements IEmailService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    @Async
+    @Override
+    public void sendOrderConfirmationMail(Order order) {
+        if (brevoApiKey == null || brevoApiKey.trim().isEmpty()) {
+            return;
+        }
+        try {
+            Map<String, Object> body = new HashMap<>();
+
+            Map<String, String> sender = new HashMap<>();
+            sender.put("name", "Fashion Hub");
+            sender.put("email", "nguyenthienan.171202@gmail.com");
+            body.put("sender", sender);
+
+            List<Map<String, String>> toList = new ArrayList<>();
+            Map<String, String> toMap = new HashMap<>();
+            toMap.put("email", order.getAccount().getUsername());
+            toList.add(toMap);
+            body.put("to", toList);
+
+            body.put("subject", "Order Confirmation - Invoice #" + order.getId());
+
+            Context context = new Context();
+            context.setVariable("order", order);
+            context.setVariable("time", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+            
+            String htmlContent = templateEngine.process("mail/order-confirmation", context);
+            body.put("htmlContent", htmlContent);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("api-key", brevoApiKey);
+            headers.set("Content-Type", "application/json");
+
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+            restTemplate.postForEntity("https://api.brevo.com/v3/smtp/email", entity, String.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

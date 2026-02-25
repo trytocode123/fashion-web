@@ -17,9 +17,11 @@ public class PaypalController {
     private static final String CANCEL_URL = "https://fashion-web-omega.vercel.app/paypalFail";
 
     private final IPaypalService paypalService;
+    private final com.example.backend.service.IOrderService orderService;
 
-    public PaypalController(IPaypalService paypalService) {
+    public PaypalController(IPaypalService paypalService, com.example.backend.service.IOrderService orderService) {
         this.paypalService = paypalService;
+        this.orderService = orderService;
     }
 
     @PostMapping("/save-paypal")
@@ -48,9 +50,11 @@ public class PaypalController {
     }
 
     @GetMapping("/success/{paymentId}/{payerID}")
-    public ResponseEntity<?> executeSuccess(@PathVariable String paymentId, @PathVariable String payerID) {
+    public ResponseEntity<?> executeSuccess(@PathVariable String paymentId, @PathVariable String payerID, java.security.Principal principal) {
+        if (principal == null) return ResponseEntity.status(401).build();
         try {
             paypalService.excutePayment(paymentId, payerID);
+            orderService.createOrderFromCart(principal.getName());
             return ResponseEntity.ok("success");
         } catch (PayPalRESTException e) {
             e.printStackTrace();

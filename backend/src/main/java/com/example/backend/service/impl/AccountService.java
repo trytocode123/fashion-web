@@ -41,7 +41,7 @@ public class AccountService implements UserDetailsService, IAccountService {
     }
 
     public Account findByUsername(String username) {
-        return iAccountRepository.findByUsername(username);
+        return iAccountRepository.findByUsername(username).orElse(null);
     }
 
     public boolean add(Account user) {
@@ -54,7 +54,7 @@ public class AccountService implements UserDetailsService, IAccountService {
     }
 
     public Account findByVerificationToken(String token) {
-        return iAccountRepository.findByVerificationToken(token);
+        return iAccountRepository.findByVerificationToken(token).orElse(null);
     }
 
     public void delete(Long id) {
@@ -64,7 +64,7 @@ public class AccountService implements UserDetailsService, IAccountService {
     @Override
     @NullMarked
     public UserDetails loadUserByUsername(String username) {
-        Account account = iAccountRepository.findByUsername(username);
+        Account account = iAccountRepository.findByUsername(username).orElse(null);
         if (account != null) {
             return UserPrinciple.build(account);
         }
