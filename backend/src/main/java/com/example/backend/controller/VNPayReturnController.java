@@ -84,8 +84,8 @@ public class VNPayReturnController {
 
                 // Create Order and Send Email
                 try {
-                    System.out.println("DEBUG: Creating order for username: " + transaction.getUsername());
-                    orderService.createOrderFromCart(transaction.getUsername());
+                    System.out.println("DEBUG: Creating order for username: " + transaction.getUsername() + " with ref: " + txnRef);
+                    orderService.createOrderFromCart(transaction.getUsername(), txnRef);
                     System.out.println("DEBUG: Order created successfully");
                 } catch (Exception e) {
                     System.err.println("DEBUG ERROR in createOrderFromCart: " + e.getMessage());

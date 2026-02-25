@@ -7,4 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 public class PaypalAmountDTO {
     private Double amount;
+    private Long productId;
+    private String size;
+    private Integer quantity;
 }

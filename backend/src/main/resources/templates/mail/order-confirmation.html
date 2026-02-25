@@ -3,136 +3,342 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
+            font-family: 'Outfit', sans-serif;
+            background-color: #f4f7f6;
             margin: 0;
             padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .wrapper {
+            width: 100%;
+            background-color: #f4f7f6;
+            padding: 40px 0;
         }
 
         .container {
             max-width: 600px;
-            mx-auto;
-            padding: 20px;
-            border: 1px solid #eee;
-            border-radius: 10px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
         }
 
+        /* --- Header --- */
         .header {
+            background-color: #0f172a;
+            padding: 40px 20px;
             text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #2563eb;
+            color: #ffffff;
         }
 
-        .header h1 {
-            color: #2563eb;
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 4px;
             margin: 0;
-            font-size: 24px;
+            text-transform: uppercase;
+            color: #3b82f6;
         }
 
-        .order-info {
-            margin: 20px 0;
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .order-info p {
-            margin: 5px 0;
+        .header-subtext {
             font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-top: 10px;
+            color: #94a3b8;
+        }
+
+        /* --- Hero --- */
+        .hero {
+            padding: 40px 40px 20px;
+            text-align: left;
+        }
+
+        .hero h2 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 10px;
+            color: #1e293b;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: #64748b;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* --- Order Details & Metadata --- */
+        .order-meta {
+            padding: 20px 40px;
+            background-color: #f8fafc;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .meta-item {
+            display: inline-block;
+            vertical-align: top;
+            width: 48%;
+        }
+
+        .meta-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .meta-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .badge-paid {
+            background-color: #dcfce7;
+            color: #15803d;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        /* --- Table --- */
+        .content {
+            padding: 20px 40px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
         }
 
         th {
             text-align: left;
-            padding: 12px;
-            border-bottom: 2px solid #eee;
-            color: #666;
-            font-size: 13px;
+            padding: 15px 0;
+            border-bottom: 2px solid #f1f5f9;
+            color: #94a3b8;
+            font-size: 12px;
+            font-weight: 600;
             text-transform: uppercase;
         }
 
         td {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 15px;
+            display: block;
+        }
+
+        .product-variant {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .item-price {
+            font-weight: 600;
+            color: #1e293b;
+            text-align: right;
+        }
+
+        /* --- Totals --- */
+        .totals-section {
+            padding: 30px 40px 40px;
         }
 
         .total-row {
-            font-weight: bold;
-            background: #f8fafc;
+            padding: 5px 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
 
+        .total-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-right: 20px;
+            min-width: 100px;
+            text-align: right;
+        }
+
+        .total-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .grand-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #0f172a;
+        }
+
+        .grand-total .total-label {
+            font-size: 16px;
+            font-weight: 800;
+            color: #1e293b;
+        }
+
+        .grand-total .total-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #3b82f6;
+        }
+
+        /* --- Footer --- */
         .footer {
+            background-color: #f1f5f9;
+            padding: 40px 20px;
             text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #999;
         }
 
-        .badge {
-            background: #dcfce7;
-            color: #166534;
-            padding: 4px 12px;
-            border-radius: 99px;
-            font-weight: bold;
+        .footer p {
             font-size: 12px;
+            color: #94a3b8;
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 24px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        @media screen and (max-width: 600px) {
+            .container {
+                border-radius: 0;
+            }
+
+            .hero,
+            .content,
+            .totals-section,
+            .order-meta {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>FASHION HUB</h1>
-            <p>Thank you for your purchase!</p>
-        </div>
+    <div class="wrapper">
+        <div class="container">
+            <!-- Header -->
+            <div class="header">
+                <h1 class="logo">FASHION HUB</h1>
+                <p class="header-subtext">PREMIUM APPAREL & STYLE</p>
+            </div>
 
-        <div class="order-info">
-            <p><strong>Order ID:</strong> #<span th:text="${order.id}">123</span></p>
-            <p><strong>Order Date:</strong> <span th:text="${time}">25/02/2026</span></p>
-            <p><strong>Payment Status:</strong> <span class="badge" th:text="${order.status}">PAID</span></p>
-        </div>
+            <!-- Hero -->
+            <div class="hero">
+                <h2>Order Confirmed.</h2>
+                <p>Hello, your order has been successfully placed. We're getting it ready for shipment!</p>
+            </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Size</th>
-                    <th>Qty</th>
-                    <th style="text-align: right;">Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="item : ${order.orderItems}">
-                    <td>
-                        <strong th:text="${item.product.name}">Product Name</strong>
-                    </td>
-                    <td th:text="${item.size}">M</td>
-                    <td th:text="${item.quantity}">1</td>
-                    <td style="text-align: right;"
-                        th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT') + ' ₫'}">
-                        100,000 ₫</td>
-                </tr>
-                <tr class="total-row">
-                    <td colspan="3" style="text-align: right; padding-top: 20px;">Total Amount:</td>
-                    <td style="text-align: right; padding-top: 20px; color: #2563eb; font-size: 18px;"
-                        th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">100,000 ₫
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            <!-- Order Metadata -->
+            <div class="order-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Order Number</div>
+                    <div class="meta-value" th:text="'#' + ${order.id}">#12345</div>
+                </div>
+                <div class="meta-item" style="text-align: right;">
+                    <div class="meta-label">Order Date</div>
+                    <div class="meta-value" th:text="${time}">Feb 25, 2026</div>
+                </div>
+            </div>
+            <div class="order-meta" style="border-top: none; padding-top: 0;">
+                <div class="meta-item">
+                    <div class="meta-label">Payment</div>
+                    <div class="meta-value"><span class="badge-paid" th:text="${order.status}">PAID</span></div>
+                </div>
+                <div class="meta-item" style="text-align: right;">
+                    <div class="meta-label">Shipping</div>
+                    <div class="meta-value" style="color: #10b981;">Standard (Free)</div>
+                </div>
+            </div>
 
-        <div class="footer">
-            <p>&copy; 2026 Fashion Hub. All rights reserved.</p>
-            <p>If you have any questions, please contact us at nguyenthienan.171202@gmail.com</p>
+            <!-- Items -->
+            <div class="content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th style="text-align: center;">Qty</th>
+                            <th style="text-align: right;">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${order.orderItems}">
+                            <td>
+                                <span class="product-name" th:text="${item.product.name}">Grey Oversized Hoodie</span>
+                                <span class="product-variant" th:text="'Size: ' + ${item.size}">Size: M</span>
+                            </td>
+                            <td style="text-align: center; color: #1e293b; font-weight: 600;"
+                                th:text="${item.quantity}">1</td>
+                            <td class="item-price"
+                                th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 'COMMA', 0, 'POINT') + ' ₫'}">
+                                400,000 ₫</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Totals -->
+            <div class="totals-section">
+                <div class="total-row">
+                    <span class="total-label">Subtotal</span>
+                    <span class="total-value"
+                        th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">400,000
+                        ₫</span>
+                </div>
+                <div class="total-row">
+                    <span class="total-label">Shipping</span>
+                    <span class="total-value" style="color: #10b981;">0 ₫</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span class="total-label">Grand Total</span>
+                    <span class="total-value"
+                        th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">400,000
+                        ₫</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>Thank you for choosing Fashion Hub.</p>
+                <p>&copy; 2026 Fashion Hub Identity. All rights reserved.</p>
+                <a th:href="'mailto:' + ${order.account.username}" class="contact-btn">Need help? Contact Support</a>
+            </div>
         </div>
     </div>
 </body>

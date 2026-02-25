@@ -34,7 +34,12 @@ public class VNPayController {
     }
 
     @GetMapping("/savePayment/{data}")
-    public ResponseEntity<?> savePayment(@PathVariable String data, HttpServletRequest req) throws UnsupportedEncodingException {
+    public ResponseEntity<?> savePayment(
+            @PathVariable String data,
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false) String size,
+            @RequestParam(required = false) Integer quantity,
+            HttpServletRequest req) throws UnsupportedEncodingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         assert authentication != null;
         String username = authentication.getName();
@@ -58,6 +63,13 @@ public class VNPayController {
         transaction.setTxnRef(vnp_TxnRef);
         transaction.setUsername(username);
         transaction.setAmount((double) amount);
+        
+        if (productId != null) {
+            transaction.setProductId(productId);
+            transaction.setSize(com.example.backend.entity.Size.valueOf(size.toUpperCase()));
+            transaction.setQuantity(quantity);
+        }
+        
         paymentTransactionRepository.save(transaction);
 //        long amount = 50000 * 100;
 //        String vnp_TxnRef = "1238";

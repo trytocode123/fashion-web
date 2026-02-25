@@ -23,6 +23,16 @@ public class PaymentTransaction {
     @Column(name = "amount")
     private Double amount;
 
+    @Column(name = "product_id")
+    private Long productId;
+
+    @Column(name = "size")
+    @Enumerated(EnumType.STRING)
+    private Size size;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

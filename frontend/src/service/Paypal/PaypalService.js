@@ -2,9 +2,16 @@ import axios from "axios";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
-export async function progressPaypal(amount, token) {
+export async function progressPaypal(amount, token, productId = null, size = null, quantity = null) {
     try {
-        const res = await axios.post(`${apiUrl}/paypal/save-paypal`, { amount: amount }, {
+        const payload = { amount: amount };
+        if (productId) {
+            payload.productId = productId;
+            payload.size = size;
+            payload.quantity = quantity;
+        }
+
+        const res = await axios.post(`${apiUrl}/paypal/save-paypal`, payload, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

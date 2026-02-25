@@ -62,12 +62,12 @@ const Detail = () => {
     };
 
     const handlePay = async () => {
-        const res = await savePayment(detail.price * quantity, token);
+        const res = await savePayment(detail.price * quantity, token, detail.id, currentSize, quantity);
         if (res) window.location.href = res;
     };
 
     const handlePaypal = async () => {
-        const res = await progressPaypal((detail.price / 27000) * quantity, token);
+        const res = await progressPaypal((detail.price / 27000) * quantity, token, detail.id, currentSize, quantity);
         if (res) window.location.href = res;
     };
 
