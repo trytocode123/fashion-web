@@ -23,11 +23,15 @@ public class VNPayReturnController {
     final IEmailService emailService;
     private final PaymentTransactionRepository paymentTransactionRepository;
     private final com.example.backend.service.IOrderService orderService;
+    private final com.example.backend.config.VNPayConfig vnPayConfig;
+    private final com.example.backend.repository.IOrderRepository orderRepository;
 
-    public VNPayReturnController(IEmailService emailService, PaymentTransactionRepository paymentTransactionRepository, com.example.backend.service.IOrderService orderService) {
+    public VNPayReturnController(IEmailService emailService, PaymentTransactionRepository paymentTransactionRepository, com.example.backend.service.IOrderService orderService, com.example.backend.config.VNPayConfig vnPayConfig, com.example.backend.repository.IOrderRepository orderRepository) {
         this.emailService = emailService;
         this.paymentTransactionRepository = paymentTransactionRepository;
         this.orderService = orderService;
+        this.vnPayConfig = vnPayConfig;
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping
@@ -73,15 +77,14 @@ public class VNPayReturnController {
             }
         }
 
-        String signValue = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
+        String signValue = vnPayConfig.hmacSHA512(vnPayConfig.vnp_HashSecret, hashData.toString());
 
         if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
             String txnRef = request.getParameter("vnp_TxnRef");
             Optional<PaymentTransaction> transactionOptional = paymentTransactionRepository.findById(txnRef);
+            
             if (transactionOptional.isPresent()) {
                 PaymentTransaction transaction = transactionOptional.get();
-                double amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
-
                 // Create Order and Send Email
                 try {
                     System.out.println("DEBUG: Creating order for username: " + transaction.getUsername() + " with ref: " + txnRef);
@@ -89,14 +92,19 @@ public class VNPayReturnController {
                     System.out.println("DEBUG: Order created successfully");
                 } catch (Exception e) {
                     System.err.println("DEBUG ERROR in createOrderFromCart: " + e.getMessage());
-                    e.printStackTrace();
-                    throw e; // Re-throw to see the error in rails/500
                 }
-
                 paymentTransactionRepository.delete(transaction);
             } else {
-                System.err.println("DEBUG: Transaction NOT found in DB with txnRef: " + txnRef);
-                return ResponseEntity.status(500).body("Transaction record missing in database");
+                // Fallback: Check if Order already exists (processed by IPN)
+                Optional<com.example.backend.entity.Order> existingOrder = orderRepository.findByPaymentRef(txnRef);
+                if (existingOrder.isPresent()) {
+                    System.out.println("DEBUG: Order already exists (likely processed by IPN), redirecting to success");
+                } else {
+                    System.err.println("DEBUG: Transaction NOT found and no existing Order with txnRef: " + txnRef);
+                    // We might not want to show 500 if the order was somehow lost but payment succeeded
+                    // But for now, let's keep it informative
+                    return ResponseEntity.status(500).body("Transaction record missing and no order found");
+                }
             }
             System.out.println("DEBUG: VNPay return success, redirecting to success page");
             return ResponseEntity.status(303).header("Location", "https://fashion-web-omega.vercel.app/vnpaySuccess").build();

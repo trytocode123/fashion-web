@@ -26,11 +26,13 @@ public class VNPayController {
     private final IAccountService accountService;
     private final ICustomerService customerService;
     private final PaymentTransactionRepository paymentTransactionRepository;
+    private final VNPayConfig vnPayConfig;
 
-    public VNPayController(IAccountService accountService, ICustomerService customerService, PaymentTransactionRepository paymentTransactionRepository) {
+    public VNPayController(IAccountService accountService, ICustomerService customerService, PaymentTransactionRepository paymentTransactionRepository, VNPayConfig vnPayConfig) {
         this.accountService = accountService;
         this.customerService = customerService;
         this.paymentTransactionRepository = paymentTransactionRepository;
+        this.vnPayConfig = vnPayConfig;
     }
 
     @GetMapping("/savePayment/{data}")
@@ -74,7 +76,7 @@ public class VNPayController {
 //        long amount = 50000 * 100;
 //        String vnp_TxnRef = "1238";
         String vnp_IpAddr = VNPayConfig.getIpAddress(req);
-        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
@@ -86,7 +88,7 @@ public class VNPayController {
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
         String baseUrl = req.getRequestURL().toString().replace(req.getRequestURI(), "");
-        String vnp_ReturnUrl = baseUrl + VNPayConfig.vnp_ReturnUrl;
+        String vnp_ReturnUrl = baseUrl + vnPayConfig.vnp_ReturnUrl;
         vnp_Params.put("vnp_ReturnUrl", vnp_ReturnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
@@ -126,9 +128,9 @@ public class VNPayController {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
+        String vnp_SecureHash = vnPayConfig.hmacSHA512(vnPayConfig.vnp_HashSecret, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + queryUrl;
         return ResponseEntity.ok(paymentUrl);
     }
 }

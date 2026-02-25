@@ -13,7 +13,7 @@ const ProductList = ({ filters }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Reset to page 0 when filters change, except on initial load where page is 0 anyway
+
         setPage(0);
     }, [filters]);
 
@@ -84,10 +84,8 @@ const ProductList = ({ filters }) => {
                                             e.target.src = 'https://via.placeholder.com/400x500?text=No+Image';
                                         }}
                                     />
-                                    {/* Optional: Add badge here if needed (e.g., Sale, New) */}
                                 </div>
 
-                                {/* Product Info */}
                                 <div className="p-4 flex flex-col flex-grow">
                                     <div className="flex justify-between items-start mb-2">
                                         <h3 className="font-bold text-gray-800 text-lg line-clamp-1 flex-grow pr-2" title={product.name}>
@@ -117,8 +115,7 @@ const ProductList = ({ filters }) => {
                             </div>
                         ))}
                     </div>
-
-                    {/* Pagination */}
+                    
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center mt-12 gap-2">
                             <button

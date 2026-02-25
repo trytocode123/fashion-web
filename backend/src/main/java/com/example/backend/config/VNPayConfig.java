@@ -1,19 +1,29 @@
 package com.example.backend.config;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Component
 public class VNPayConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "/vnpay_return";
-    public static String vnp_TmnCode = "Z97NTLAX";
-    public static String vnp_HashSecret = "FYZ7XDDGBK2FKJRKQ1Q9GH4D5PCZXH25";
+    @Value("${vnpay.pay-url}")
+    public String vnp_PayUrl;
 
-    public static String hmacSHA512(final String key, final String data) {
+    @Value("${vnpay.tmn-code}")
+    public String vnp_TmnCode;
+
+    @Value("${vnpay.hash-secret}")
+    public String vnp_HashSecret;
+
+    @Value("${vnpay.return-url}")
+    public String vnp_ReturnUrl;
+
+    public String hmacSHA512(final String key, final String data) {
         try {
             if (key == null || data == null) {
                 throw new NullPointerException();
