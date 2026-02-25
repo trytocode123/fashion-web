@@ -278,12 +278,8 @@
             </div>
             <div class="order-meta" style="border-top: none; padding-top: 0;">
                 <div class="meta-item">
-                    <div class="meta-label">Payment</div>
+                    <div class="meta-label">Payment Status</div>
                     <div class="meta-value"><span class="badge-paid" th:text="${order.status}">PAID</span></div>
-                </div>
-                <div class="meta-item" style="text-align: right;">
-                    <div class="meta-label">Shipping</div>
-                    <div class="meta-value" style="color: #10b981;">Standard (Free)</div>
                 </div>
             </div>
 
@@ -320,10 +316,6 @@
                     <span class="total-value"
                         th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}">400,000
                         ₫</span>
-                </div>
-                <div class="total-row">
-                    <span class="total-label">Shipping</span>
-                    <span class="total-value" style="color: #10b981;">0 ₫</span>
                 </div>
                 <div class="total-row grand-total">
                     <span class="total-label">Grand Total</span>

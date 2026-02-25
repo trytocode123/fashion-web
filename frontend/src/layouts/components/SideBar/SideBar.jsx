@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const SideBar = ({ filters, setFilters }) => {
     const categoriesList = ["Tops", "Bottoms", "Outerwear", "Dresses", "Activewear", "Accessories"];
-    const sizesList = ["S", "M", "L", "XL"];
+    const sizesList = ["S", "M", "L", "XL", "XXL"];
     const gendersList = ["Men", "Women", "Unisex"];
 
     const [localFilters, setLocalFilters] = useState({
