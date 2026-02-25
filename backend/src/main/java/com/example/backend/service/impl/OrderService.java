@@ -31,30 +31,12 @@ public class OrderService implements IOrderService {
      * Email is sent after the transaction commits to avoid LazyInitializationException.
      */
     @Override
-    public Order createOrderFromCart(String username, String paymentRef) {
-        // Run DB operations in a dedicated transaction first
-        Order savedOrder = createOrderTransactional(username, paymentRef);
-
-        // Send email AFTER the transaction commits — order data is now fully committed and retrievable
-        if (savedOrder != null) {
-            try {
-                emailService.sendOrderConfirmationMail(savedOrder);
-                System.out.println("DEBUG [OrderService]: Email triggered for order #" + savedOrder.getId());
-            } catch (Exception e) {
-                System.err.println("ERROR [OrderService]: Email failed: " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-        return savedOrder;
-    }
-
     @Transactional
-    public Order createOrderTransactional(String username, String paymentRef) {
+    public Order createOrderFromCart(String username, String paymentRef) {
         // 1. Deduplication check
         Optional<Order> existingOrder = orderRepository.findByPaymentRef(paymentRef);
         if (existingOrder.isPresent()) {
-            System.out.println("DEBUG [OrderService]: Duplicate order detected for paymentRef=" + paymentRef + ". Skipping.");
+            System.out.println("DEBUG [OrderService]: Order with paymentRef=" + paymentRef + " already exists. Skipping.");
             return existingOrder.get();
         }
 
@@ -63,7 +45,7 @@ public class OrderService implements IOrderService {
 
         // 3. Get Account
         Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Account not found: " + username));
+                .orElseThrow(() -> new RuntimeException("Account not found for username: " + username));
 
         Order order = new Order();
         order.setAccount(account);
@@ -85,21 +67,18 @@ public class OrderService implements IOrderService {
             orderItems.add(item);
 
             totalAmount = (product.getPrice() != null ? product.getPrice() : 0L) * transaction.getQuantity();
-            System.out.println("DEBUG [OrderService]: Direct Purchase - product=" + product.getName() + " qty=" + transaction.getQuantity());
+            System.out.println("DEBUG [OrderService]: Direct Purchase created for: " + product.getName());
 
         } else {
             // ====== Cart Purchase ======
             Cart cart = cartRepository.findByAccount_Username(username)
                     .orElseThrow(() -> new RuntimeException("Cart not found for user: " + username));
 
-            List<CartItem> cartItems = cart.getCartItems();
-            if (cartItems == null || cartItems.isEmpty()) {
+            if (cart.getCartItems() == null || cart.getCartItems().isEmpty()) {
                 throw new RuntimeException("Cart is empty for user: " + username);
             }
 
-            System.out.println("DEBUG [OrderService]: Cart has " + cartItems.size() + " items for user: " + username);
-
-            for (CartItem cartItem : cartItems) {
+            for (CartItem cartItem : cart.getCartItems()) {
                 if (cartItem.getProduct() == null) continue;
                 OrderItem item = new OrderItem();
                 item.setOrder(order);
@@ -110,16 +89,39 @@ public class OrderService implements IOrderService {
                 totalAmount += (cartItem.getProduct().getPrice() != null ? cartItem.getProduct().getPrice() : 0L) * cartItem.getQuantity();
             }
 
-            // Use @Modifying JPQL query to bypass the Hibernate cache / orphanRemoval conflict
+            // Direct JPQL delete inside transaction ensures cart is cleared
             cartItemRepository.deleteAllByCart(cart);
-            System.out.println("DEBUG [OrderService]: Cart cleared via JPQL DELETE for user: " + username);
+            System.out.println("DEBUG [OrderService]: Cart items deleted for user: " + username);
         }
 
         order.setTotalAmount(totalAmount);
         order.setOrderItems(orderItems);
 
         Order savedOrder = orderRepository.save(order);
-        System.out.println("DEBUG [OrderService]: Order saved, ID=" + savedOrder.getId() + " total=" + totalAmount);
+        System.out.println("DEBUG [OrderService]: Order saved ID=" + savedOrder.getId());
+
+        // 4. Register Post-Commit Email Sending
+        // This ensures email is sent ONLY if the transaction commits
+        // and also bypasses LazyInit issues because the thread is still the same but transaction is closing.
+        final Order finalOrder = savedOrder;
+        if (org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive()) {
+            org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
+                new org.springframework.transaction.support.TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        try {
+                            emailService.sendOrderConfirmationMail(finalOrder);
+                            System.out.println("DEBUG [OrderService]: Email triggered after commit.");
+                        } catch (Exception e) {
+                            System.err.println("ERROR [OrderService]: Task commit-email failed: " + e.getMessage());
+                        }
+                    }
+                }
+            );
+        } else {
+            // Fallback for non-transactional calls (should not happen with @Transactional)
+            emailService.sendOrderConfirmationMail(savedOrder);
+        }
 
         return savedOrder;
     }

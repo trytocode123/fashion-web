@@ -92,6 +92,7 @@ public class VNPayReturnController {
                     System.out.println("DEBUG: Order created successfully");
                 } catch (Exception e) {
                     System.err.println("DEBUG ERROR in createOrderFromCart: " + e.getMessage());
+                    e.printStackTrace(); // Crucial to see the actual error in Railway logs
                 }
                 paymentTransactionRepository.delete(transaction);
             } else {
