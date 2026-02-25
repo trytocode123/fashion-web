@@ -123,6 +123,8 @@ public class EmailService implements IEmailService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
     @Async
     @Override
     public void sendOrderConfirmationMail(Order order) {
