@@ -17,8 +17,8 @@ public class PaymentTransaction {
     @Column(name = "txn_ref")
     private String txnRef;
 
-    @Column(name = "email")
-    private String email;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "amount")
     private Double amount;

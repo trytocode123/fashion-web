@@ -26,9 +26,11 @@ public class EmailService implements IEmailService {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final TemplateEngine templateEngine;
+    private final com.example.backend.repository.ICustomerRepository customerRepository;
 
-    public EmailService(TemplateEngine templateEngine) {
+    public EmailService(TemplateEngine templateEngine, com.example.backend.repository.ICustomerRepository customerRepository) {
         this.templateEngine = templateEngine;
+        this.customerRepository = customerRepository;
     }
 
     @Async
@@ -142,7 +144,11 @@ public class EmailService implements IEmailService {
 
             List<Map<String, String>> toList = new ArrayList<>();
             Map<String, String> toMap = new HashMap<>();
-            toMap.put("email", order.getAccount().getUsername());
+            
+            com.example.backend.entity.Customer customer = customerRepository.findCustomerByAccount(order.getAccount());
+            String recipientEmail = (customer != null) ? customer.getEmail() : order.getAccount().getUsername();
+            
+            toMap.put("email", recipientEmail);
             toList.add(toMap);
             body.put("to", toList);
 

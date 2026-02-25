@@ -83,7 +83,7 @@ public class VNPayReturnController {
                 double amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
 
                 // Create Order and Send Email
-                orderService.createOrderFromCart(transaction.getEmail());
+                orderService.createOrderFromCart(transaction.getUsername());
 
                 paymentTransactionRepository.delete(transaction);
             } else {

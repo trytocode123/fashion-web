@@ -56,7 +56,7 @@ public class VNPayController {
         // Save to Database instead of Cache to send mail
         PaymentTransaction transaction = new PaymentTransaction();
         transaction.setTxnRef(vnp_TxnRef);
-        transaction.setEmail(email);
+        transaction.setUsername(username);
         transaction.setAmount((double) amount);
         paymentTransactionRepository.save(transaction);
 //        long amount = 50000 * 100;
