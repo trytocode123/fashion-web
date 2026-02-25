@@ -28,18 +28,19 @@ public class OrderService implements IOrderService {
     @Override
     @Transactional
     public Order createOrderFromCart(String username, String paymentRef) {
-        // 1. Get Transaction for deduplication and direct purchase info
-        PaymentTransaction transaction = paymentTransactionRepository.findById(paymentRef)
-                .orElse(null); // We need this to check for direct purchase fields
-        
+        // 1. Deduplication check - prevent duplicate orders
         Optional<Order> existingOrder = orderRepository.findByPaymentRef(paymentRef);
         if (existingOrder.isPresent()) {
+            System.out.println("DEBUG: Order with paymentRef=" + paymentRef + " already exists. Skipping.");
             return existingOrder.get();
         }
 
-        // 2. Get Account
+        // 2. Get Transaction for direct purchase info
+        PaymentTransaction transaction = paymentTransactionRepository.findById(paymentRef).orElse(null);
+
+        // 3. Get Account
         Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new RuntimeException("Account not found for username: " + username));
 
         Order order = new Order();
         order.setAccount(account);
@@ -48,28 +49,28 @@ public class OrderService implements IOrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         long totalAmount = 0;
 
-        // 3. Logic: Direct Purchase vs Cart Purchase
+        // 4. Logic: Direct Purchase vs Cart Purchase
         if (transaction != null && transaction.getProductId() != null) {
-            // Direct Purchase (Buy Now)
+            // --- Direct Purchase (Buy Now) ---
             Product product = productRepository.findById(transaction.getProductId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            
+                    .orElseThrow(() -> new RuntimeException("Product not found: " + transaction.getProductId()));
+
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             orderItem.setQuantity((long) transaction.getQuantity());
             orderItem.setSize(transaction.getSize());
             orderItems.add(orderItem);
-            
+
             totalAmount = (product.getPrice() != null ? product.getPrice() : 0L) * transaction.getQuantity();
-            System.out.println("DEBUG: Direct Purchase order created");
+            System.out.println("DEBUG: Direct Purchase order created for product: " + product.getName());
         } else {
-            // Cart Purchase (Existing logic)
+            // --- Cart Purchase ---
             Cart cart = cartRepository.findByAccount_Username(username)
-                    .orElseThrow(() -> new RuntimeException("Cart not found"));
+                    .orElseThrow(() -> new RuntimeException("Cart not found for user: " + username));
 
             if (cart.getCartItems() == null || cart.getCartItems().isEmpty()) {
-                throw new RuntimeException("Cart is empty");
+                throw new RuntimeException("Cart is empty for user: " + username);
             }
 
             for (CartItem cartItem : cart.getCartItems()) {
@@ -82,24 +83,26 @@ public class OrderService implements IOrderService {
                 orderItems.add(orderItem);
                 totalAmount += (cartItem.getProduct().getPrice() != null ? cartItem.getProduct().getPrice() : 0L) * cartItem.getQuantity();
             }
-            
-            // Clear Cart only for cart-based purchase
-            cart.getCartItems().clear();
-            cartRepository.save(cart);
-            System.out.println("DEBUG: Cart-based order created");
+
+            // Clear cart items directly via repository (more reliable than collection.clear() with lazy loading)
+            cartItemRepository.deleteByCart(cart);
+            System.out.println("DEBUG: Cart cleared for user: " + username + " (" + orderItems.size() + " items)");
         }
 
         order.setTotalAmount(totalAmount);
         order.setOrderItems(orderItems);
-        
-        // 4. Save Order
-        Order savedOrder = orderRepository.save(order);
 
-        // 5. Send Professional Invoice Email
+        // 5. Save Order
+        Order savedOrder = orderRepository.save(order);
+        System.out.println("DEBUG: Order saved with ID=" + savedOrder.getId() + ", total=" + totalAmount);
+
+        // 6. Send Invoice Email
         try {
             emailService.sendOrderConfirmationMail(savedOrder);
+            System.out.println("DEBUG: Order confirmation email sent to user: " + username);
         } catch (Exception e) {
-            System.err.println("DEBUG ERROR: Failed to trigger email: " + e.getMessage());
+            System.err.println("ERROR: Failed to send order confirmation email: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return savedOrder;
