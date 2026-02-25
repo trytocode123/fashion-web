@@ -1,6 +1,7 @@
 package com.example.backend.service.impl;
 
 import com.example.backend.service.IEmailService;
+import com.example.backend.entity.Order;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
