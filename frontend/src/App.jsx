@@ -18,6 +18,7 @@ import ScrollToStart from "./components/ScrollToStart/ScrollToStart.jsx";
 import PreventToHome from "./components/PreventToHome/PreventToHome.jsx";
 import NotFound from "./pages/404/NotFound.jsx";
 import Verify from "./pages/Verify/Verify.jsx";
+import Product from "./pages/Product/Product.jsx";
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
                         <Route path={"/vnpayFail"} element={<VNPayFail/>}/>
                         <Route path={"/paypalSuccess"} element={<PaypalSuccess/>}/>
                         <Route path={"/paypalFail"} element={<PaypalFail/>}/>
+                        <Route path={"/products"} element={<Product/>}/>
                     </Route>
                 </Route>
 

@@ -34,7 +34,7 @@ const PaymentFail = () => {
 
                 <div className="mt-6 space-y-3">
                     <Link
-                        to={"/home"}
+                        to={"/products"}
                         className="
                             flex items-center justify-center gap-2 w-full
                             bg-black text-white py-3 rounded-xl

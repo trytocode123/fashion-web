@@ -41,3 +41,19 @@ export async function findProductByName(name, token) {
         console.error(e.message);
     }
 }
+
+export async function findAllProduct(token) {
+    try {
+        const res = await axios.get(`${apiUrl}/products`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+
+        });
+
+        return res.data;
+
+    } catch (e) {
+        console.error(e.message);
+    }
+}

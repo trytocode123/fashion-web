@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
-import {dataFromGoogle} from "../../service/Account/AccountService.js";
-import {useDispatch} from "react-redux";
-import {logInByGoogle} from "../../redux/Reducer/authSlice.js";
-import {Swiper, SwiperSlide} from "swiper/react";
-import {Autoplay, Navigation, Pagination} from "swiper/modules";
+import { useEffect, useState } from "react";
+import { dataFromGoogle } from "../../service/Account/AccountService.js";
+import { useDispatch } from "react-redux";
+import { logInByGoogle } from "../../redux/Reducer/authSlice.js";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -13,13 +13,13 @@ import img1 from "../../assets/img/img1.jpg";
 import img2 from "../../assets/img/img2.jpg";
 import img3 from "../../assets/img/img3.jpg";
 import img4 from "../../assets/img/img4.jpg";
-import {LuTruck} from "react-icons/lu";
-import {TbExchange, TbWorld} from "react-icons/tb";
-import {FaArrowRightLong} from "react-icons/fa6";
-import {toast} from "react-toastify";
-import {FaSpinner} from "react-icons/fa";
-import {getTop8Trailer} from "../../service/Product/ProductService.js";
-import {useNavigate} from "react-router-dom";
+import { LuTruck } from "react-icons/lu";
+import { TbExchange, TbWorld } from "react-icons/tb";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
+import { getTop8Trailer } from "../../service/Product/ProductService.js";
+import { useNavigate } from "react-router-dom";
 
 
 const Home = () => {
@@ -63,23 +63,23 @@ const Home = () => {
         <div>
             <div>
                 <Swiper className={"lg-[300px]"}
-                        modules={[Pagination, Navigation, Autoplay]}
-                        allowTouchMove={false}
-                        centeredSlides={true}
-                        loop={true}
-                        autoplay={{
-                            delay: 1500, disableOnInteraction: false, waitForTransition: false
-                        }}
-                        pagination={{
-                            clickable: true,
-                        }}
-                        navigation={true}
-                        slidesPerView={1}
-                        spaceBetween={30}
+                    modules={[Pagination, Navigation, Autoplay]}
+                    allowTouchMove={false}
+                    centeredSlides={true}
+                    loop={true}
+                    autoplay={{
+                        delay: 1500, disableOnInteraction: false, waitForTransition: false
+                    }}
+                    pagination={{
+                        clickable: true,
+                    }}
+                    navigation={true}
+                    slidesPerView={1}
+                    spaceBetween={30}
                 >
                     {[img1, img2, img3, img4].map((img, index) => (
                         <SwiperSlide><img className={"lg:w-[100%] lg:h-[650px]"} src={img}
-                                          alt={`Picture${index + 1}`}/></SwiperSlide>
+                            alt={`Picture${index + 1}`} /></SwiperSlide>
                     ))}
                 </Swiper>
             </div>
@@ -92,7 +92,7 @@ const Home = () => {
 
                 <div className={"lg:flex lg:items-center border-r-2 border-r-gray-600"}>
                     <div className={"mr-2"}>
-                        <LuTruck className={"lg:text-[20px]"}/>
+                        <LuTruck className={"lg:text-[20px]"} />
                     </div>
                     <div>
                         <p className={"font-bold"}>Free shipping</p>
@@ -102,7 +102,7 @@ const Home = () => {
 
                 <div className={"lg:flex lg:items-center lg:pl-[25px] border-r-2 border-r-gray-600"}>
                     <div className={"mr-2"}>
-                        <TbExchange className={"lg:text-[20px]"}/>
+                        <TbExchange className={"lg:text-[20px]"} />
                     </div>
                     <div>
                         <p className={"font-bold"}>Very easy to return</p>
@@ -112,7 +112,7 @@ const Home = () => {
 
                 <div className={"lg:flex lg:items-center lg:pl-[25px]"}>
                     <div className={"mr-2"}>
-                        <TbWorld className={"lg:text-[20px]"}/>
+                        <TbWorld className={"lg:text-[20px]"} />
                     </div>
                     <div>
                         <p className={"font-bold"}>National delivery</p>
@@ -123,91 +123,129 @@ const Home = () => {
 
             <div className={"lg:mt-5"}>
                 <span className={"font-bold lg:text-[25px]"}>Start exploring.</span> <span
-                className={"text-gray-400 font-bold lg:text-[25px]"}>Good things are waiting for you</span>
+                    className={"text-gray-400 font-bold lg:text-[25px]"}>Good things are waiting for you</span>
 
-                <div className={"lg:grid lg:grid-cols-2 lg:gap-2 lg:mt-5"}>
+                <div className={"lg:grid lg:grid-cols-2 lg:gap-4 lg:mt-5 mb-10"}>
 
                     <div
-                        className={"lg:flex lg:justify-evenly lg:items-center lg:rounded-2xl bg-blue-300 lg:h-[100px]"}>
+                        onClick={() => navigate('/products')}
+                        className={"flex justify-between items-center rounded-2xl bg-blue-100 h-[100px] p-6 cursor-pointer hover:shadow-md transition-shadow group"}
+                    >
                         <div>
-                            <p className={"font-bold"}>
+                            <p className={"font-bold text-lg text-blue-900"}>
                                 For Men's
                             </p>
-
-                            <p className="text-sm text-gray-500">Minimal & modern styles</p>
+                            <p className="text-sm text-blue-700">Minimal & modern styles</p>
                         </div>
 
-                        <div
-                            className={"lg:flex items-center border-l-2 border-r-gray-600 lg:pl-[5px] cursor-pointer group"}>
+                        <div className={"flex items-center text-blue-900 font-semibold"}>
                             <span>Shop now</span>
-                            <button className={"group-hover:cursor-pointer"}>
-                                <FaArrowRightLong
-                                    className={"transition-transform duration-300 ml-[5px] group-hover:translate-x-2"}/>
-                            </button>
-
+                            <FaArrowRightLong
+                                className={"transition-transform duration-300 ml-[8px] group-hover:translate-x-2"}
+                            />
                         </div>
                     </div>
 
                     <div
-                        className={"lg:flex lg:justify-evenly lg:items-center lg:rounded-2xl bg-purple-300 lg:h-[100px]"}>
+                        onClick={() => navigate('/products')}
+                        className={"flex justify-between items-center rounded-2xl bg-purple-100 h-[100px] p-6 cursor-pointer hover:shadow-md transition-shadow group mt-4 lg:mt-0"}
+                    >
                         <div>
-                            <p className={"font-bold"}>
+                            <p className={"font-bold text-lg text-purple-900"}>
                                 For Women's
                             </p>
-
-                            <p className="text-sm text-gray-500">Elegant everyday wear</p>
+                            <p className="text-sm text-purple-700">Elegant everyday wear</p>
                         </div>
 
-                        <div
-                            className={"lg:flex items-center border-l-2 border-r-gray-600 lg:pl-[5px] cursor-pointer group"}>
+                        <div className={"flex items-center text-purple-900 font-semibold"}>
                             <span>Shop now</span>
-                            <button className={"group-hover:cursor-pointer"}>
-                                <FaArrowRightLong
-                                    className={"transition-transform duration-300 ml-[5px] group-hover:translate-x-2"}/>
-                            </button>
-
+                            <FaArrowRightLong
+                                className={"transition-transform duration-300 ml-[8px] group-hover:translate-x-2"}
+                            />
                         </div>
                     </div>
 
                 </div>
             </div>
 
-            <div>
-                <p className={"lg:text-[25px] lg:font-bold lg:mb-5 lg:mt-3"}>Products</p>
+            <div className="mt-12">
+                <div className="flex justify-between items-end mb-6">
+                    <div>
+                        <h2 className={"text-2xl lg:text-[28px] font-bold text-gray-900"}>Featured Products</h2>
+                        <p className="text-gray-500 mt-1">Handpicked for you</p>
+                    </div>
+                    <button
+                        onClick={() => navigate('/products')}
+                        className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 transition-colors group"
+                    >
+                        View All
+                        <FaArrowRightLong className="transition-transform duration-300 group-hover:translate-x-1" />
+                    </button>
+                </div>
+
                 {products.length === 0 ?
                     <div className={"flex items-center justify-center"}>
-                        <FaSpinner className={"animate-spin text-[20px]"}/>
+                        <FaSpinner className={"animate-spin text-[20px]"} />
                     </div> :
 
-                    <div className={"lg:grid lg:grid-cols-4 lg:gap-4"}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {products.map(product => (
-                            <div key={product.id} onClick={() => {
-                                handleDetail(product.id)
-                            }}
-                                 className={"lg:hover:-translate-y-2 lg:transition-transform duration-150"}>
-                                <div>
-                                    <img alt={"img"} className={"lg:rounded-2xl lg:h-[495px] lg:w-[100%]"}
-                                         src={product.img}/>
+                            <div
+                                key={product.id}
+                                onClick={() => handleDetail(product.id)}
+                                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group flex flex-col h-full border border-gray-100"
+                            >
+                                {/* Product Image */}
+                                <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
+                                    <img
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        src={product.img}
+                                        alt={product.name}
+                                        onError={(e) => {
+                                            e.target.src = 'https://via.placeholder.com/400x500?text=No+Image';
+                                        }}
+                                    />
                                 </div>
 
-                                <div className={"lg:flex lg:justify-between lg:px-[10px]"}>
-                                    <div className={"lg:flex flex-col"}>
-                                        <p className={"font-bold"}>{product.name}</p>
-                                        <p className="text-sm text-gray-500">
-                                            {product.subCategory.name}
-                                        </p>
+                                {/* Product Info */}
+                                <div className="p-4 flex flex-col flex-grow">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <h3 className="font-bold text-gray-800 text-lg line-clamp-1 flex-grow pr-2" title={product.name}>
+                                            {product.name}
+                                        </h3>
+                                        <span className="font-bold text-blue-600 whitespace-nowrap">
+                                            {product.price ? product.price.toLocaleString("vi-VN") : "0"} ₫
+                                        </span>
                                     </div>
 
-                                    <div className={"lg:flex flex-col"}>
-                                        <p className={"font-bold"}>{product.price.toLocaleString("vi-VN") + "VND"}</p>
-                                        <p className="text-sm text-gray-500">
-                                            {product.gender}
-                                        </p>
+                                    <div className="mt-auto space-y-2">
+                                        <div className="flex justify-between items-center text-sm text-gray-500">
+                                            <span className="bg-gray-100 px-2 py-1 rounded-md">
+                                                {product.subCategory?.name || "Uncategorized"}
+                                            </span>
+                                            <span className="capitalize text-gray-600 font-medium">
+                                                {product.gender?.toLowerCase() || "Unisex"}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>))}
+                            </div>
+                        ))}
                     </div>
                 }
+
+                {/* Bottom View All Button */}
+                {products.length > 0 && (
+                    <div className="flex justify-center mt-10 mb-8 lg:mb-12">
+                        <button
+                            onClick={() => navigate('/products')}
+                            className="bg-gray-900 text-white px-8 py-3.5 rounded-full font-bold shadow-lg hover:bg-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center gap-3 group"
+                        >
+                            View All Products
+                            <FaArrowRightLong className="transition-transform duration-300 group-hover:translate-x-1.5" />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     </div>);

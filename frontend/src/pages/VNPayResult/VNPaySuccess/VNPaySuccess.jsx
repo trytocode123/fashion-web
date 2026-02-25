@@ -44,7 +44,7 @@ const VNPaySuccess = () => {
 
                 <div className="mt-6 space-y-3">
                     <Link
-                        to="/home"
+                        to="/prducts"
                         className="
                             flex items-center justify-center gap-2 w-full
                             bg-gradient-to-r from-green-500 to-green-600
