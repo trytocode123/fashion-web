@@ -83,14 +83,25 @@ public class VNPayReturnController {
                 double amount = Double.parseDouble(request.getParameter("vnp_Amount")) / 100;
 
                 // Create Order and Send Email
-                orderService.createOrderFromCart(transaction.getUsername());
+                try {
+                    System.out.println("DEBUG: Creating order for username: " + transaction.getUsername());
+                    orderService.createOrderFromCart(transaction.getUsername());
+                    System.out.println("DEBUG: Order created successfully");
+                } catch (Exception e) {
+                    System.err.println("DEBUG ERROR in createOrderFromCart: " + e.getMessage());
+                    e.printStackTrace();
+                    throw e; // Re-throw to see the error in rails/500
+                }
 
                 paymentTransactionRepository.delete(transaction);
             } else {
-                System.out.println("DEBUG: Transaction NOT found in DB with txnRef: " + txnRef);
+                System.err.println("DEBUG: Transaction NOT found in DB with txnRef: " + txnRef);
+                return ResponseEntity.status(500).body("Transaction record missing in database");
             }
+            System.out.println("DEBUG: VNPay return success, redirecting to success page");
             return ResponseEntity.status(303).header("Location", "https://fashion-web-omega.vercel.app/vnpaySuccess").build();
         }
+        System.out.println("DEBUG: VNPay return fail or invalid signature, redirecting to fail page");
         return ResponseEntity.status(303).header("Location", "https://fashion-web-omega.vercel.app/vnpayFail").build();
     }
 }

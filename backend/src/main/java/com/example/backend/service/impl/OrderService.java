@@ -44,6 +44,10 @@ public class OrderService implements IOrderService {
         List<OrderItem> orderItems = new ArrayList<>();
         
         for (CartItem cartItem : cart.getCartItems()) {
+            if (cartItem.getProduct() == null) {
+                System.err.println("DEBUG ERROR: CartItem " + cartItem.getId() + " has null product");
+                continue;
+            }
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(cartItem.getProduct());
@@ -51,9 +55,10 @@ public class OrderService implements IOrderService {
             orderItem.setSize(cartItem.getSize());
             orderItems.add(orderItem);
             
-            totalAmount += (cartItem.getProduct().getPrice() * cartItem.getQuantity());
+            totalAmount += (cartItem.getProduct().getPrice() != null ? cartItem.getProduct().getPrice() : 0L) * cartItem.getQuantity();
         }
         
+        System.out.println("DEBUG: Calculated totalAmount: " + totalAmount);
         order.setTotalAmount(totalAmount);
         order.setOrderItems(orderItems);
         
@@ -66,7 +71,11 @@ public class OrderService implements IOrderService {
         cartRepository.save(cart);
 
         // 5. Send Professional Invoice Email
-        emailService.sendOrderConfirmationMail(savedOrder);
+        try {
+            emailService.sendOrderConfirmationMail(savedOrder);
+        } catch (Exception e) {
+            System.err.println("DEBUG ERROR: Failed to trigger email: " + e.getMessage());
+        }
 
         return savedOrder;
     }
