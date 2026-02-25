@@ -74,8 +74,11 @@ public class OrderService implements IOrderService {
             Cart cart = cartRepository.findByAccount_Username(username)
                     .orElseThrow(() -> new RuntimeException("Cart not found for user: " + username));
 
-            if (cart.getCartItems() == null || cart.getCartItems().isEmpty()) {
-                throw new RuntimeException("Cart is empty for user: " + username);
+            int itemsSize = (cart.getCartItems() != null) ? cart.getCartItems().size() : 0;
+            System.out.println("DEBUG [OrderService]: Processing cart ID=" + cart.getId() + " for user=" + username + ". Items found: " + itemsSize);
+
+            if (itemsSize == 0) {
+                throw new RuntimeException("Cart is empty for user: " + username + " (Cart ID=" + cart.getId() + ")");
             }
 
             for (CartItem cartItem : cart.getCartItems()) {

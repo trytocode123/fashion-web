@@ -115,7 +115,7 @@ const ProductList = ({ filters }) => {
                             </div>
                         ))}
                     </div>
-                    
+
                     {totalPages > 1 && (
                         <div className="flex justify-center items-center mt-12 gap-2">
                             <button

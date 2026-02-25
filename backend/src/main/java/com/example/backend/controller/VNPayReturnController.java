@@ -92,7 +92,9 @@ public class VNPayReturnController {
                     System.out.println("DEBUG: Order created successfully");
                 } catch (Exception e) {
                     System.err.println("DEBUG ERROR in createOrderFromCart: " + e.getMessage());
-                    e.printStackTrace(); // Crucial to see the actual error in Railway logs
+                    e.printStackTrace();
+                    // If order creation fails, redirect to failure page instead of success
+                    return ResponseEntity.status(303).header("Location", "https://fashion-web-omega.vercel.app/vnpayFail").build();
                 }
                 paymentTransactionRepository.delete(transaction);
             } else {
