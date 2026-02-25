@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int size) {
+    public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = productService.findAll(pageable);
         return ResponseEntity.ok(products);

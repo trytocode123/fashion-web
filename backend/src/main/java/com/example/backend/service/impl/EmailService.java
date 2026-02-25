@@ -4,7 +4,6 @@ import com.example.backend.service.IEmailService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -75,7 +74,7 @@ public class EmailService implements IEmailService {
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
             // Send Request
-            ResponseEntity<String> response = restTemplate.postForEntity(
+            restTemplate.postForEntity(
                     "https://api.brevo.com/v3/smtp/email",
                     entity,
                     String.class

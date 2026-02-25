@@ -18,7 +18,6 @@ public class ProductService implements IProductService {
         this.productRepository = productRepository;
     }
 
-
     @Override
     public Page<Product> findAll(Pageable pageable) {
         return productRepository.findAll(pageable);
