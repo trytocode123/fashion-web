@@ -28,7 +28,7 @@ export async function findProductById(id, token) {
 
 export async function findProductByName(name, token) {
     try {
-        const res = await axios.get(`${apiUrl}/products/product-by-name/${name}`, {
+        const res = await axios.get(`${apiUrl}/products/search?name=${name}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -76,7 +76,7 @@ export async function filterProducts(token, filters, page = 0, size = 9) {
         if (filters.minPrice !== undefined && filters.minPrice > 0) {
             params.append("minPrice", filters.minPrice);
         }
-        if (filters.maxPrice !== undefined && filters.maxPrice < 400) {
+        if (filters.maxPrice !== undefined && filters.maxPrice < 400000) {
             params.append("maxPrice", filters.maxPrice);
         }
 

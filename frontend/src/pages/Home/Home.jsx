@@ -128,7 +128,7 @@ const Home = () => {
                 <div className={"lg:grid lg:grid-cols-2 lg:gap-4 lg:mt-5 mb-10"}>
 
                     <div
-                        onClick={() => navigate('/products')}
+                        onClick={() => navigate('/products?gender=Men')}
                         className={"flex justify-between items-center rounded-2xl bg-blue-100 h-[100px] p-6 cursor-pointer hover:shadow-md transition-shadow group"}
                     >
                         <div>
@@ -147,7 +147,7 @@ const Home = () => {
                     </div>
 
                     <div
-                        onClick={() => navigate('/products')}
+                        onClick={() => navigate('/products?gender=Women')}
                         className={"flex justify-between items-center rounded-2xl bg-purple-100 h-[100px] p-6 cursor-pointer hover:shadow-md transition-shadow group mt-4 lg:mt-0"}
                     >
                         <div>

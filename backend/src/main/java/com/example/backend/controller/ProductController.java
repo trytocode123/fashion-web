@@ -40,8 +40,8 @@ public class ProductController {
         return ResponseEntity.ok(product);
     }
 
-    @GetMapping("/product-by-name/{name}")
-    public ResponseEntity<?> getProductBy(@PathVariable String name) {
+    @GetMapping("/search")
+    public ResponseEntity<?> getProductBy(@RequestParam String name) {
         List<Product> products = productService.findProductByName(name);
         return ResponseEntity.ok(products);
     }

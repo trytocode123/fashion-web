@@ -14,4 +14,5 @@ public class CustomerProfileDTO {
     private String address;
     private String email;
     private String gender;
+    private String imgUrl;
 }

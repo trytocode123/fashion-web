@@ -44,9 +44,16 @@ export async function dataFromGoogle(code) {
     }
 }
 
-export async function addAccount(data) {
+export async function addAccount(data, avatar) {
     try {
-        const res = await axios.post(`${apiUrl}/register`, data);
+        const formData = new FormData();
+        formData.append("customer", new Blob([JSON.stringify(data)], { type: "application/json" }));
+        if (avatar) {
+            formData.append("avatar", avatar);
+        }
+        const res = await axios.post(`${apiUrl}/register`, formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
         return res.data;
     } catch (e) {
         const errData = e.response?.data;
@@ -76,10 +83,18 @@ export async function getProfile(token) {
     }
 }
 
-export async function updateProfile(data, token) {
+export async function updateProfile(data, token, avatar) {
     try {
-        const res = await axios.put(`${apiUrl}/profile`, data, {
-            headers: { Authorization: `Bearer ${token}` }
+        const formData = new FormData();
+        formData.append("profile", new Blob([JSON.stringify(data)], { type: "application/json" }));
+        if (avatar) {
+            formData.append("avatar", avatar);
+        }
+        const res = await axios.put(`${apiUrl}/profile`, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "multipart/form-data"
+            }
         });
         return res.data;
     } catch (e) {

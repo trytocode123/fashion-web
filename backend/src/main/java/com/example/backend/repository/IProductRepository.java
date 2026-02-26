@@ -21,7 +21,8 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             nativeQuery = true)
     List<Product> get8ProductTrailer();
 
-    List<Product> findProductByName(String name);
+    @Query(value = "SELECT * FROM products p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
+    List<Product> findProductByName(@Param("name") String name);
 
     @Query("SELECT p FROM Product p WHERE " +
            "(:hasCategories = false OR p.subCategory.category.name IN :categories) AND " +

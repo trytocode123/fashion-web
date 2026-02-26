@@ -25,6 +25,8 @@ public class Customer {
     private String email;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column(name = "img_url")
+    private String imgUrl;
     @OneToOne
     @JoinColumn(name = "account_id")
     private Account account;

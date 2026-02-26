@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 
-const SideBar = ({ filters, setFilters }) => {
+const SideBar = ({filters, setFilters}) => {
     const categoriesList = ["Tops", "Bottoms", "Outerwear", "Dresses", "Activewear", "Accessories"];
     const sizesList = ["S", "M", "L", "XL", "XXL"];
-    const gendersList = ["Men", "Women", "Unisex"];
+    const gendersList = ["Men", "Women"];
 
     const [localFilters, setLocalFilters] = useState({
         categories: [],
@@ -23,15 +23,15 @@ const SideBar = ({ filters, setFilters }) => {
         setLocalFilters(prev => {
             const currentList = prev[type];
             if (currentList.includes(value)) {
-                return { ...prev, [type]: currentList.filter(item => item !== value) };
+                return {...prev, [type]: currentList.filter(item => item !== value)};
             } else {
-                return { ...prev, [type]: [...currentList, value] };
+                return {...prev, [type]: [...currentList, value]};
             }
         });
     };
 
     const handlePriceChange = (e) => {
-        setLocalFilters(prev => ({ ...prev, maxPrice: parseInt(e.target.value) }));
+        setLocalFilters(prev => ({...prev, maxPrice: parseInt(e.target.value)}));
     };
 
     const handleApply = () => {
@@ -42,7 +42,6 @@ const SideBar = ({ filters, setFilters }) => {
         <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-100 p-6 xl:mr-6 lg:sticky lg:top-24">
             <h2 className="text-xl font-bold mb-6 text-gray-800 border-b pb-4">Filters</h2>
 
-            {/* Categories */}
             <div className="mb-8">
                 <h3 className="font-semibold text-gray-700 mb-4 tracking-wide uppercase text-sm">Category</h3>
                 <ul className="space-y-3">
@@ -66,7 +65,7 @@ const SideBar = ({ filters, setFilters }) => {
                 </ul>
             </div>
 
-            {/* Gender */}
+
             <div className="mb-8 border-t pt-6">
                 <h3 className="font-semibold text-gray-700 mb-4 tracking-wide uppercase text-sm">Gender</h3>
                 <ul className="space-y-3">
@@ -90,7 +89,6 @@ const SideBar = ({ filters, setFilters }) => {
                 </ul>
             </div>
 
-            {/* Price Range */}
             <div className="mb-8 border-t pt-6">
                 <h3 className="font-semibold text-gray-700 mb-4 tracking-wide uppercase text-sm">Max Price</h3>
                 <div className="px-2">
@@ -106,12 +104,12 @@ const SideBar = ({ filters, setFilters }) => {
                     <div className="flex justify-between items-center mt-4 text-sm font-medium text-gray-600">
                         <span className="bg-gray-100 px-3 py-1 rounded-md border border-gray-200">0 ₫</span>
                         <span className="text-gray-400">-</span>
-                        <span className="bg-gray-100 px-3 py-1 rounded-md border border-gray-200">{localFilters.maxPrice.toLocaleString('vi-VN')} ₫</span>
+                        <span
+                            className="bg-gray-100 px-3 py-1 rounded-md border border-gray-200">{localFilters.maxPrice.toLocaleString('vi-VN')} ₫</span>
                     </div>
                 </div>
             </div>
 
-            {/* Sizes */}
             <div className="mb-6 border-t pt-6">
                 <h3 className="font-semibold text-gray-700 mb-4 tracking-wide uppercase text-sm">Size</h3>
                 <div className="flex flex-wrap gap-2">
@@ -131,7 +129,6 @@ const SideBar = ({ filters, setFilters }) => {
                 </div>
             </div>
 
-            {/* Apply Button */}
             <button
                 onClick={handleApply}
                 className="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors mt-4 shadow-lg hover:shadow-xl hover:-translate-y-0.5"

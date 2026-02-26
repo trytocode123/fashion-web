@@ -1,11 +1,11 @@
-import {ErrorMessage, Field, Form, Formik} from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import {Button} from "@headlessui/react";
-import {Link, useNavigate} from "react-router-dom";
-import {addAccount} from "../../service/Account/AccountService.js";
-import {toast} from "react-toastify";
-import {useState} from "react";
-import {FaSpinner} from "react-icons/fa";
+import { Button } from "@headlessui/react";
+import { Link, useNavigate } from "react-router-dom";
+import { addAccount } from "../../service/Account/AccountService.js";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import {FaSpinner, FaUserEdit} from "react-icons/fa";
 
 const Register = () => {
     const user = {
@@ -30,14 +30,16 @@ const Register = () => {
     const navigate = useNavigate();
     const [disable, setDisable] = useState(false);
     const [serverError, setServerError] = useState("");
+    const [avatar, setAvatar] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     const handleRegister = (value) => {
         async function register() {
             setDisable(prevState => !prevState);
             setServerError("");
             try {
-                const {passwordAgain, ...data} = value;
-                const res = await addAccount(data);
+                const { passwordAgain, ...data } = value;
+                const res = await addAccount(data, avatar);
                 if (res) {
                     toast.info(res);
                     navigate("/");
@@ -65,11 +67,23 @@ const Register = () => {
         gender: Yup.string().required("Please select your gender!"),
         passwordAgain: Yup.string().required("Please enter your confirmed password!").oneOf([Yup.ref("password")], "Your confirmed password is not matched"),
     })
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setAvatar(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreviewUrl(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     return (
         <div className={"flex flex-col lg:w-[100%] items-center justify-center px-[80px]"}>
             <h2 className={"font-bold text-2xl align-middle"}>Register</h2>
             <Formik initialValues={user} onSubmit={handleRegister} validationSchema={validation}
-                    validateOnChange={false}>
+                validateOnChange={false}>
                 <Form className={"w-[100%]"}>
                     <div className={"grid grid-cols-2 gap-28"}>
                         {/*Column 1*/}
@@ -78,40 +92,57 @@ const Register = () => {
                                 <label className={"font-bold"}>Full name</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"fullName"} placeholder={"Enter full name..."}/>
+                                        name={"fullName"} placeholder={"Enter full name..."} />
                                 </div>
                                 <ErrorMessage name={"fullName"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
                                 <label className={"font-bold"}>Phone number</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"phoneNumber"} placeholder={"Enter phone number..."}/>
+                                        name={"phoneNumber"} placeholder={"Enter phone number..."} />
                                 </div>
                                 <ErrorMessage name={"phoneNumber"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
                                 <label className={"font-bold"}>Date of Birth</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field type={"date"} className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"dob"} placeholder={"Enter date of birth..."}/>
+                                        name={"dob"} placeholder={"Enter date of birth..."} />
                                 </div>
                                 <ErrorMessage name={"dob"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
                                 <label className={"font-bold"}>Address</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"address"} placeholder={"Enter address..."}/>
+                                        name={"address"} placeholder={"Enter address..."} />
                                 </div>
                                 <ErrorMessage name={"address"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
+                            </div>
+
+                            <div className={"flex flex-col lg:mt-2"}>
+                                <label className={"font-bold"}>Profile Picture (Optional)</label>
+                                <div className="flex items-center gap-4 mt-2">
+                                    <div className="w-16 h-16 rounded-full border-2 border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
+                                        {previewUrl ? (
+                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <FaUserEdit className="text-gray-300 text-2xl" />
+                                        )}
+                                    </div>
+                                    <label className="cursor-pointer bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors">
+                                        Choose File
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                                    </label>
+                                </div>
                             </div>
 
                         </div>
@@ -123,10 +154,10 @@ const Register = () => {
                                 <label className={"font-bold"}>Email</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"email"} placeholder={"Enter email..."}/>
+                                        name={"email"} placeholder={"Enter email..."} />
                                 </div>
                                 <ErrorMessage name={"email"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                                 {serverError &&
                                     <small className="text-red-800 text-[13px] font-bold">{serverError}</small>}
                             </div>
@@ -156,58 +187,58 @@ const Register = () => {
                                     </label>
                                 </div>
                                 <ErrorMessage name={"gender"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
                                 <label className={"font-bold"}>Username</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"username"} placeholder={"Enter username..."}/>
+                                        name={"username"} placeholder={"Enter username..."} />
                                 </div>
                                 <ErrorMessage name={"username"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
                                 <label className={"font-bold"}>Password</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field type={"password"}
-                                           className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"password"} placeholder={"Enter password..."}/>
+                                        className={"w-full h-full focus:outline-hidden focus:bg-white"}
+                                        name={"password"} placeholder={"Enter password..."} />
                                 </div>
                                 <ErrorMessage name={"password"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
 
                             <div className={"flex flex-col lg:mt-2"}>
                                 <label className={"font-bold"}>Password (Again)</label>
                                 <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
                                     <Field type={"password"}
-                                           className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                           name={"passwordAgain"} placeholder={"Enter confirmed password..."}/>
+                                        className={"w-full h-full focus:outline-hidden focus:bg-white"}
+                                        name={"passwordAgain"} placeholder={"Enter confirmed password..."} />
                                 </div>
                                 <ErrorMessage name={"passwordAgain"} component={"small"}
-                                              className={"text-red-800 text-[13px] font-bold"}/>
+                                    className={"text-red-800 text-[13px] font-bold"} />
                             </div>
                         </div>
                     </div>
 
                     {disable ?
                         <div className={"lg:flex items-center justify-center lg:mt-5 lg:h-[50px]"}>
-                            <FaSpinner className={"animate-spin text-[20px]"}/>
+                            <FaSpinner className={"animate-spin text-[20px]"} />
                         </div>
                         : (<Button type={"submit"}
-                                   className={"w-[100%] bg-gray-900 h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700"}>
+                            className={"w-[100%] bg-gray-900 h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700"}>
                             Continue
                         </Button>)
                     }
 
                     <div>
                         <div className={"border-b-gray-500 h-[2px] flex items-center gap-4 my-6"}>
-                            <div className="flex-1 h-px bg-gray-300"/>
+                            <div className="flex-1 h-px bg-gray-300" />
                             <span className="text-xs text-gray-400 uppercase">or</span>
-                            <div className="flex-1 h-px bg-gray-300"/>
+                            <div className="flex-1 h-px bg-gray-300" />
                         </div>
                     </div>
                     <p className={"p-0 -mt-5"}>Already a member? <Link

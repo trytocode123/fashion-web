@@ -17,14 +17,16 @@ public class JwtResponseService {
     private String username;
     private String fullName;
     private String email;
+    private String imgUrl;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public JwtResponseService(Long id, String token, String username, String fullName, String email, Collection<? extends GrantedAuthority> authorities) {
+    public JwtResponseService(Long id, String token, String username, String fullName, String email, String imgUrl, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.token = token;
         this.username = username;
         this.fullName = fullName;
         this.email = email;
+        this.imgUrl = imgUrl;
         this.authorities = authorities;
     }
 

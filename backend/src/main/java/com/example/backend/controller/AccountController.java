@@ -23,6 +23,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import com.example.backend.service.impl.CloudinaryService;
+
+import java.io.IOException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,16 +42,19 @@ public class AccountController {
     private final ICustomerService customerService;
     private final PasswordEncoder passwordEncoder;
     private final IEmailService emailService;
+    private final CloudinaryService cloudinaryService;
 
     public AccountController(AuthenticationManager authenticationManager, JwtService jwtService,
                              IAccountService accountService, ICustomerService customerService,
-                             PasswordEncoder passwordEncoder, IEmailService emailService) {
+                             PasswordEncoder passwordEncoder, IEmailService emailService,
+                             CloudinaryService cloudinaryService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.accountService = accountService;
         this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.cloudinaryService = cloudinaryService;
     }
 
     /* ---------------- GET ALL USER ------------------------ */
@@ -95,7 +102,7 @@ public class AccountController {
             Account userInfo = accountService.findByUsername(user.getUsername());
             Customer customer = customerService.findCustomerByAccount(userInfo);
             return ResponseEntity.ok(new JwtResponseService(userInfo.getId(), jwt,
-                    userInfo.getUsername(), customer.getFullName(), customer.getEmail(), userDetails.getAuthorities()));
+                    userInfo.getUsername(), customer.getFullName(), customer.getEmail(), customer.getImgUrl(), userDetails.getAuthorities()));
         } catch (DisabledException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account not verified. Please check your email.");
         } catch (BadCredentialsException e) {
@@ -106,11 +113,21 @@ public class AccountController {
     }
 
     /* ---------------- REGISTER ------------------------ */
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody CustomerDTO customerDTO) {
+    @PostMapping(value = "/register", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> register(@RequestPart("customer") CustomerDTO customerDTO,
+                                      @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         Customer existingCustomer = customerService.findByEmail(customerDTO.getEmail());
         if (existingCustomer != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("This email is already registered. Please use a different email or log in.");
+        }
+
+        String avatarUrl = null;
+        if (avatar != null && !avatar.isEmpty()) {
+            try {
+                avatarUrl = cloudinaryService.uploadImage(avatar);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar");
+            }
         }
 
         String token = UUID.randomUUID().toString();
@@ -125,6 +142,7 @@ public class AccountController {
                 customerFind.setEmail(customerDTO.getEmail());
                 customerFind.setPhoneNumber(customerDTO.getPhoneNumber());
                 customerFind.setAddress(customerDTO.getAddress());
+                if (avatarUrl != null) customerFind.setImgUrl(avatarUrl);
                 customerService.add(customerFind);
             }
             accountFind.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
@@ -141,6 +159,7 @@ public class AccountController {
             customer.setEmail(customerDTO.getEmail());
             customer.setPhoneNumber(customerDTO.getPhoneNumber());
             customer.setAddress(customerDTO.getAddress());
+            customer.setImgUrl(avatarUrl);
 
             account.setUsername(customerDTO.getUsername());
             account.setPassword(passwordEncoder.encode(customerDTO.getPassword()));
@@ -182,7 +201,7 @@ public class AccountController {
 
         return ResponseEntity.ok(new JwtResponseService(
                 account.getId(), jwt, account.getUsername(),
-                customer.getFullName(), customer.getEmail(),
+                customer.getFullName(), customer.getEmail(), customer.getImgUrl(),
                 userDetails.getAuthorities()));
     }
 
@@ -208,14 +227,16 @@ public class AccountController {
                 customer.getDob() != null ? customer.getDob().toString() : null,
                 customer.getAddress(),
                 customer.getEmail(),
-                customer.getGender() != null ? customer.getGender().name() : null
+                customer.getGender() != null ? customer.getGender().name() : null,
+                customer.getImgUrl()
         );
         return ResponseEntity.ok(profileDTO);
     }
 
     /* ---------------- UPDATE PROFILE ------------------------ */
-    @PutMapping("/profile")
-    public ResponseEntity<?> updateProfile(@RequestBody CustomerProfileDTO profileDTO) {
+    @PutMapping(value = "/profile", consumes = {"multipart/form-data"})
+    public ResponseEntity<?> updateProfile(@RequestPart("profile") CustomerProfileDTO profileDTO,
+                                          @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
@@ -240,6 +261,15 @@ public class AccountController {
                 customer.setGender(Gender.valueOf(profileDTO.getGender()));
             } catch (IllegalArgumentException e) {
 
+            }
+        }
+
+        if (avatar != null && !avatar.isEmpty()) {
+            try {
+                String avatarUrl = cloudinaryService.uploadImage(avatar);
+                customer.setImgUrl(avatarUrl);
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload avatar");
             }
         }
 

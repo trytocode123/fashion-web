@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FiLogOut } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { logOut } from "../../../redux/Reducer/authSlice.js";
-import { IoMdHome } from "react-icons/io";
+import { IoMdHome, IoMdClose } from "react-icons/io";
 import { MdOutlineMenu } from "react-icons/md";
 import { useState, useEffect, useRef } from "react";
 import { findProductByName } from "../../../service/Product/ProductService.js";
@@ -30,9 +30,10 @@ const Header = () => {
                 setIsSearching(true);
                 setShowDropdown(true);
                 try {
-                    const results = await findProductByName(searchTerm, account?.token);
-                    const uniqueResults = results?.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i) || [];
-                    setSearchResults(uniqueResults.slice(0, 5)); // Chi hien thi max 5 ket qua
+                    const responseData = await findProductByName(searchTerm.trim(), account?.token);
+                    const productsList = Array.isArray(responseData) ? responseData : (responseData?.content || []);
+                    const uniqueResults = productsList.filter((v, i, a) => a.findIndex(t => (t.name === v.name)) === i);
+                    setSearchResults(uniqueResults.slice(0, 5)); // Hiển thị tối đa 5 kết quả
                 } catch (error) {
                     console.error("Search error:", error);
                     setSearchResults([]);
@@ -88,7 +89,20 @@ const Header = () => {
                             onFocus={() => { if (searchTerm) setShowDropdown(true); }}
                             className={"w-[100%] h-[100%] focus:outline-none bg-transparent placeholder-gray-400"}
                         />
-                        {isSearching && <FaSpinner className="animate-spin text-blue-500 ml-2" />}
+                        <div className="flex items-center gap-2">
+                            {searchTerm && (
+                                <IoMdClose
+                                    className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+                                    size={20}
+                                    onClick={() => {
+                                        setSearchTerm("");
+                                        setSearchResults([]);
+                                        setShowDropdown(false);
+                                    }}
+                                />
+                            )}
+                            {isSearching && <FaSpinner className="animate-spin text-blue-500" />}
+                        </div>
                     </div>
 
                     {showDropdown && searchTerm && (
@@ -99,7 +113,7 @@ const Header = () => {
                                         <li key={product.id}>
                                             <div
                                                 onClick={() => {
-                                                    navigate(`/products/${product.id}`);
+                                                    navigate(`/detail/${product.id}`);
                                                     setShowDropdown(false);
                                                     setSearchTerm("");
                                                 }}
@@ -129,33 +143,39 @@ const Header = () => {
             }
 
             <div className={"md:flex lg:justify-end lg:min-w-[100px] text-[16px]"}>
-                {(account?.fullName) && (
-                    <div className="flex items-center justify-evenly font-medium text-gray-200 lg:min-w-[120px]">
-                        Hello, <span
-                            className="text-white font-semibold lg:ml-1 lg:p-0 lg:min-w-[20px]">{account?.fullName}</span>
-                        <Link to={"/"} onClick={handleLogOut}>
-                            <FiLogOut className={"lg:m-2 text-red-400\n" +
-                                "hover:text-red-500\n" +
-                                "hover:bg-red-500/15" +
-                                "rounded-full"} />
+                {account?.fullName && (
+                    <div className="flex items-center gap-4 font-medium text-gray-200">
+                        <div className="flex items-center gap-3 bg-gray-800/50 hover:bg-gray-800 py-1.5 pl-1.5 pr-4 rounded-full border border-gray-700/50 transition-all cursor-pointer group"
+                            onClick={() => navigate("/profile")}>
+                            {account.imgUrl ? (
+                                <img src={account.imgUrl} alt="Avatar" className="w-8 h-8 rounded-full object-cover border border-gray-600 group-hover:border-blue-500 transition-colors" />
+                            ) : (
+                                <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center border border-gray-600 group-hover:border-blue-500 transition-colors">
+                                    <FaRegUser size={14} className="text-gray-400" />
+                                </div>
+                            )}
+                            <div className="hidden lg:flex flex-col text-left">
+                                <span className="text-[10px] text-gray-400 font-bold uppercase tracking-tight leading-none">Account</span>
+                                <span className="text-white text-sm font-bold leading-tight truncate max-w-[100px]">{account.fullName}</span>
+                            </div>
+                        </div>
+
+                        <Link to={"/"} onClick={handleLogOut} title="Log out">
+                            <FiLogOut className="text-red-400 hover:text-red-500 h-6 w-6 hover:bg-red-500/10 p-1 rounded-full transition-all" />
                         </Link>
                     </div>
                 )}
 
-                <div className={"md:flex md:justify-end md:justify-evenly lg:items-center md:w-[100px]"}>
+                <div className="md:flex md:justify-end lg:items-center gap-6 ml-4">
                     {account && (
-                        <Link to={"/home"}>
-                            <IoMdHome className={"lg:text-[20px]"} />
+                        <Link to={"/home"} className="hover:text-blue-400 transition-colors">
+                            <IoMdHome size={22} />
                         </Link>
                     )}
-                    <FaRegUser
-                        className={"cursor-pointer hover:text-blue-400 transition-colors lg:text-[18px]"}
-                        onClick={() => navigate(account ? "/profile" : "/")}
-                    />
-                    <div className={"relative cursor-pointer"} onClick={() => navigate("/cart")}>
-                        <FaCartShopping size={20} />
+                    <div className={"relative cursor-pointer hover:text-blue-400 transition-colors"} onClick={() => navigate("/cart")}>
+                        <FaCartShopping size={22} />
                         <span
-                            className={"absolute -top-4 -right-3 w-5 h-5 rounded-full bg-blue-800 text-amber-50 font-bold text-xs flex items-center justify-center animate-bounce-short"}>{totalCartItems}</span>
+                            className={"absolute -top-3 -right-3 w-5 h-5 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center border-2 border-gray-900"}>{totalCartItems}</span>
                     </div>
                 </div>
             </div>

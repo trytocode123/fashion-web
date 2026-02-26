@@ -1,15 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SideBar from "../../layouts/components/SideBar/SideBar.jsx";
 import ProductList from "../../layouts/components/ProductList/ProductList.jsx";
+import { useSearchParams } from "react-router-dom";
 
 const Product = () => {
+    const [searchParams] = useSearchParams();
+    const genderParam = searchParams.get("gender");
+
     const [filters, setFilters] = useState({
         categories: [],
-        genders: [],
+        genders: genderParam ? [genderParam] : [],
         sizes: [],
         minPrice: 0,
-        maxPrice: 400
+        maxPrice: 400000
     });
+
+    useEffect(() => {
+        if (genderParam) {
+            setFilters(prev => ({
+                ...prev,
+                genders: [genderParam]
+            }));
+        }
+    }, [genderParam]);
 
     return (
         <div className="lg:px-[80px] px-4 py-8 bg-gray-50/50 min-h-screen">
