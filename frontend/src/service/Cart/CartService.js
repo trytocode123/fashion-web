@@ -17,7 +17,7 @@ export const getCartForUser = async (token) => {
         return res.data;
     } catch (e) {
         console.error("Error fetching cart", e);
-        return null; // Return null if fetching fails
+        return null;
     }
 };
 
@@ -25,7 +25,7 @@ export const addItemToCart = async (token, productId, size, quantity) => {
     try {
         const res = await axios.post(`${CART_API_URL}/add`, null, {
             ...getConfig(token),
-            params: { productId, size, quantity }
+            params: {productId, size, quantity}
         });
         return res.data;
     } catch (e) {
@@ -38,7 +38,7 @@ export const updateItemQuantity = async (token, cartItemId, quantity) => {
     try {
         const res = await axios.put(`${CART_API_URL}/update`, null, {
             ...getConfig(token),
-            params: { cartItemId, quantity }
+            params: {cartItemId, quantity}
         });
         return res.data;
     } catch (e) {

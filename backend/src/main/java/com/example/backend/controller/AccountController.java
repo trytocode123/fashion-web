@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.dto.AccountDTO;
 import com.example.backend.dto.CustomerDTO;
+import com.example.backend.dto.CustomerProfileDTO;
 import com.example.backend.entity.Account;
 import com.example.backend.entity.AuthProvider;
 import com.example.backend.entity.Customer;
@@ -183,5 +184,66 @@ public class AccountController {
                 account.getId(), jwt, account.getUsername(),
                 customer.getFullName(), customer.getEmail(),
                 userDetails.getAuthorities()));
+    }
+
+    /* ---------------- GET PROFILE ------------------------ */
+    @GetMapping("/profile")
+    public ResponseEntity<?> getProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        Account account = accountService.findByUsername(authentication.getName());
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        Customer customer = customerService.findCustomerByAccount(account);
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer profile not found");
+        }
+
+        CustomerProfileDTO profileDTO = new CustomerProfileDTO(
+                customer.getFullName(),
+                customer.getPhoneNumber(),
+                customer.getDob() != null ? customer.getDob().toString() : null,
+                customer.getAddress(),
+                customer.getEmail(),
+                customer.getGender() != null ? customer.getGender().name() : null
+        );
+        return ResponseEntity.ok(profileDTO);
+    }
+
+    /* ---------------- UPDATE PROFILE ------------------------ */
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@RequestBody CustomerProfileDTO profileDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || authentication.getName() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        Account account = accountService.findByUsername(authentication.getName());
+        if (account == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+        Customer customer = customerService.findCustomerByAccount(account);
+        if (customer == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer profile not found");
+        }
+
+        if (profileDTO.getFullName() != null) customer.setFullName(profileDTO.getFullName());
+        if (profileDTO.getPhoneNumber() != null) customer.setPhoneNumber(profileDTO.getPhoneNumber());
+        if (profileDTO.getDob() != null && !profileDTO.getDob().isEmpty()) {
+            customer.setDob(LocalDate.parse(profileDTO.getDob()));
+        }
+        if (profileDTO.getAddress() != null) customer.setAddress(profileDTO.getAddress());
+        if (profileDTO.getGender() != null && !profileDTO.getGender().isEmpty()) {
+            try {
+                customer.setGender(Gender.valueOf(profileDTO.getGender()));
+            } catch (IllegalArgumentException e) {
+
+            }
+        }
+
+        customerService.add(customer);
+        return ResponseEntity.ok("Profile updated successfully");
     }
 }

@@ -1,7 +1,8 @@
-import { FiXCircle, FiShoppingBag } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import {FiXCircle, FiShoppingBag} from "react-icons/fi";
+import {Link, useNavigate} from "react-router-dom";
 
 const PaymentFail = () => {
+    const navigate = useNavigate();
     return (
         <div className="w-full flex justify-center px-4 pt-6 mb-5">
             <div
@@ -14,7 +15,7 @@ const PaymentFail = () => {
             >
                 <div className="flex justify-center mb-4">
                     <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                        <FiXCircle className="text-red-600 text-3xl" />
+                        <FiXCircle className="text-red-600 text-3xl"/>
                     </div>
                 </div>
 
@@ -28,22 +29,24 @@ const PaymentFail = () => {
 
                 <p className="text-sm text-gray-400 mt-4">
                     No charges were made to your account.
-                    <br />
+                    <br/>
                     You may try a different products.
                 </p>
 
                 <div className="mt-6 space-y-3">
-                    <Link
-                        to={"/products"}
+                    <button
+                        onClick={() => {
+                            navigate(-1)
+                        }}
                         className="
                             flex items-center justify-center gap-2 w-full
                             bg-black text-white py-3 rounded-xl
                             font-semibold hover:bg-gray-800 transition
                         "
                     >
-                        <FiShoppingBag className="text-lg" />
+                        <FiShoppingBag className="text-lg"/>
                         Continue Shopping
-                    </Link>
+                    </button>
 
                 </div>
 

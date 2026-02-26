@@ -22,7 +22,7 @@ const Header = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const searchRef = useRef(null);
 
-    const totalCartItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+    const totalCartItems = cartItems.length;
 
     useEffect(() => {
         const delayDebounceFn = setTimeout(async () => {
@@ -148,7 +148,10 @@ const Header = () => {
                             <IoMdHome className={"lg:text-[20px]"} />
                         </Link>
                     )}
-                    <FaRegUser />
+                    <FaRegUser
+                        className={"cursor-pointer hover:text-blue-400 transition-colors lg:text-[18px]"}
+                        onClick={() => navigate(account ? "/profile" : "/")}
+                    />
                     <div className={"relative cursor-pointer"} onClick={() => navigate("/cart")}>
                         <FaCartShopping size={20} />
                         <span

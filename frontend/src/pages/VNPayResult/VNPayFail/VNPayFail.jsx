@@ -1,8 +1,9 @@
 import {FiXCircle} from "react-icons/fi";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {IoMdArrowBack} from "react-icons/io";
 
 const VNPayFail = () => {
+    const navigate = useNavigate();
     return (
         <div className="w-full flex justify-center px-4 pt-6 mb-[36px]">
             <div
@@ -45,8 +46,10 @@ const VNPayFail = () => {
                 </p>
 
                 <div className="mt-6 space-y-3">
-                    <Link
-                        to="/products"
+                    <button
+                        onClick={() => {
+                            navigate(-1);
+                        }}
                         className="
                             flex items-center justify-center gap-2 w-full
                             bg-gray-900 text-white py-3 rounded-xl
@@ -59,17 +62,8 @@ const VNPayFail = () => {
                             className="text-[20px] group-hover:-translate-x-1 transition"
                         />
                         Back to Home
-                    </Link>
+                    </button>
 
-                    {/* Optional future */}
-                    {/*
-                    <Link
-                        to="/orders"
-                        className="block text-sm text-gray-500 hover:underline"
-                    >
-                        View My Orders
-                    </Link>
-                    */}
                 </div>
 
                 <p className="text-xs text-gray-400 mt-6">

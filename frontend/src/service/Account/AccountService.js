@@ -64,3 +64,25 @@ export async function verifyEmail(token) {
         throw new Error(msg);
     }
 }
+
+export async function getProfile(token) {
+    try {
+        const res = await axios.get(`${apiUrl}/profile`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return res.data;
+    } catch (e) {
+        throw new Error(e.response?.data || "Failed to fetch profile");
+    }
+}
+
+export async function updateProfile(data, token) {
+    try {
+        const res = await axios.put(`${apiUrl}/profile`, data, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return res.data;
+    } catch (e) {
+        throw new Error(e.response?.data || "Failed to update profile");
+    }
+}

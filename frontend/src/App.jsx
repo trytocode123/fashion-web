@@ -20,6 +20,7 @@ import NotFound from "./pages/404/NotFound.jsx";
 import Verify from "./pages/Verify/Verify.jsx";
 import Product from "./pages/Product/Product.jsx";
 import Cart from "./pages/Cart/Cart.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
 
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
                         <Route path={"/paypalFail"} element={<PaypalFail />} />
                         <Route path={"/products"} element={<Product />} />
                         <Route path={"/cart"} element={<Cart />} />
+                        <Route path={"/profile"} element={<Profile />} />
 
                     </Route>
                 </Route>
