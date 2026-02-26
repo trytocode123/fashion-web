@@ -3,7 +3,7 @@ import {useSelector} from "react-redux";
 
 
 const PreventToHome = () => {
-    const auth = useSelector(state => state.auth.account);
+    const auth = useSelector(state => state.auth.account.token);
 
     if (auth) {
         return <Navigate to={"/home"} replace/>
