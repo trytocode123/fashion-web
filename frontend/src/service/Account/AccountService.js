@@ -12,7 +12,7 @@ export async function logIn(account) {
     } catch (e) {
         const errData = e.response?.data;
         return {
-            message: (typeof errData === 'string') ? errData : (errData?.message || "Login failed"),
+            message: (typeof errData === 'string') ? errData : (errData),
         };
     }
 }

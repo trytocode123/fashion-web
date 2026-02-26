@@ -163,7 +163,7 @@ public class AccountController {
     public ResponseEntity<?> verifyEmail(@RequestParam("token") String token) {
         Account account = accountService.findByVerificationToken(token);
         if (account == null) {
-            return ResponseEntity.badRequest().body("Link xác thực không hợp lệ hoặc đã hết hạn.");
+            return ResponseEntity.badRequest().body("Invalid or expired link.");
         }
 
         if (!Boolean.TRUE.equals(account.getEnabled())) {
