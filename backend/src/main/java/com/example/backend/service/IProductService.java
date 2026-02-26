@@ -11,6 +11,6 @@ public interface IProductService {
     Page<Product> findAll(Pageable pageable);
     List<Product> trailerTop8Tops();
     Product findById(Long id);
-    List<Product> findProductByName(String name);
+    Page<Product> findProductByName(String name, Pageable pageable);
     Page<Product> filterProducts(List<String> categories, List<String> genders, List<String> sizes, Long minPrice, Long maxPrice, Pageable pageable);
 }

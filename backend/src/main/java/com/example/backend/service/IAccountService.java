@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 
 public interface IAccountService extends UserDetailsService {
-    List<AccountDTO> findAll();
+    org.springframework.data.domain.Page<AccountDTO> findAll(org.springframework.data.domain.Pageable pageable);
     AccountDTO findById(Long id);
     Account findByUsername(String username);
     void delete(Long id);

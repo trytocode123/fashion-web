@@ -22,7 +22,7 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
     List<Product> get8ProductTrailer();
 
     @Query(value = "SELECT * FROM products p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
-    List<Product> findProductByName(@Param("name") String name);
+    Page<Product> findProductByName(@Param("name") String name, Pageable pageable);
 
     @Query("SELECT p FROM Product p WHERE " +
            "(:hasCategories = false OR p.subCategory.category.name IN :categories) AND " +

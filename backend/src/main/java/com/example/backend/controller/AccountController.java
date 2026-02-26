@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin("*")
@@ -59,8 +60,10 @@ public class AccountController {
 
     /* ---------------- GET ALL USER ------------------------ */
     @GetMapping("/users")
-    public ResponseEntity<List<AccountDTO>> getAllUser() {
-        return new ResponseEntity<>(accountService.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> getAllUser(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return new ResponseEntity<>(accountService.findAll(org.springframework.data.domain.PageRequest.of(page, size)), HttpStatus.OK);
     }
 
     /* ---------------- GET USER BY ID ------------------------ */

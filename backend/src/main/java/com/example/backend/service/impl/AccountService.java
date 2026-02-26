@@ -25,12 +25,9 @@ public class AccountService implements UserDetailsService, IAccountService {
     }
 
 
-    public List<AccountDTO> findAll() {
-        List<AccountDTO> accountDTOS = new ArrayList<>();
-        for (Account u : iAccountRepository.findAll()) {
-            accountDTOS.add(toDTO(u));
-        }
-        return accountDTOS;
+    @Override
+    public org.springframework.data.domain.Page<AccountDTO> findAll(org.springframework.data.domain.Pageable pageable) {
+        return iAccountRepository.findAll(pageable).map(this::toDTO);
     }
 
     public AccountDTO findById(Long id) {
