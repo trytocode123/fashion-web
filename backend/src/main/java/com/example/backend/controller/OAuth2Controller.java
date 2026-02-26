@@ -64,6 +64,7 @@ public class OAuth2Controller {
                 .username(account.getUsername())
                 .fullName(customer.getFullName())
                 .roles(roles)
+                .imgUrl(customer.getImgUrl())
                 .build();
     }
 }

@@ -74,6 +74,7 @@ public class GoogleOAuthService {
                 customer.getAccount().getUsername(),
                 customer.getFullName(),
                 userInfo.getEmail(),
+                customer.getImgUrl(),
                 roles
         );
     }
