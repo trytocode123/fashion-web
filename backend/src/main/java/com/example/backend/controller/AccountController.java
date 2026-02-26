@@ -44,11 +44,13 @@ public class AccountController {
     private final PasswordEncoder passwordEncoder;
     private final IEmailService emailService;
     private final CloudinaryService cloudinaryService;
+    private final com.example.backend.service.IAdminService adminService;
 
     public AccountController(AuthenticationManager authenticationManager, JwtService jwtService,
                              IAccountService accountService, ICustomerService customerService,
                              PasswordEncoder passwordEncoder, IEmailService emailService,
-                             CloudinaryService cloudinaryService) {
+                             CloudinaryService cloudinaryService,
+                             com.example.backend.service.IAdminService adminService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.accountService = accountService;
@@ -56,6 +58,7 @@ public class AccountController {
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
         this.cloudinaryService = cloudinaryService;
+        this.adminService = adminService;
     }
 
     /* ---------------- GET ALL USER ------------------------ */
@@ -103,9 +106,34 @@ public class AccountController {
             String jwt = jwtService.generateTokenLogin(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             Account userInfo = accountService.findByUsername(user.getUsername());
-            Customer customer = customerService.findCustomerByAccount(userInfo);
+            
+            String fullName = "";
+            String email = "";
+            String imgUrl = "";
+            
+            // Logic dùng Stream và Lambda kiểm tra Admin như bạn đã mô tả
+            boolean isAdmin = userInfo.getRoles().stream()
+                    .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+            
+            if (isAdmin) {
+                com.example.backend.entity.Admin admin = adminService.findByAccount(userInfo);
+                if (admin != null) {
+                    fullName = admin.getName();
+                } else {
+                    fullName = "Admin"; // Fallback nếu chưa có record trong bảng admins
+                }
+                email = userInfo.getUsername(); // Admin thường dùng username làm email chính
+            } else {
+                Customer customer = customerService.findCustomerByAccount(userInfo);
+                if (customer != null) {
+                    fullName = customer.getFullName();
+                    email = customer.getEmail();
+                    imgUrl = customer.getImgUrl();
+                }
+            }
+
             return ResponseEntity.ok(new JwtResponseService(userInfo.getId(), jwt,
-                    userInfo.getUsername(), customer.getFullName(), customer.getEmail(), customer.getImgUrl(), userDetails.getAuthorities()));
+                    userInfo.getUsername(), fullName, email, imgUrl, userDetails.getAuthorities()));
         } catch (DisabledException e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Account not verified. Please check your email.");
         } catch (BadCredentialsException e) {
