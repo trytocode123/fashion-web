@@ -14,5 +14,5 @@ COPY --from=build /app/build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
 # Auto-configure RAM usage based on container limits
-ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -jar app.jar"]
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=65.0 -XX:MaxMetaspaceSize=256m -Xss512k -XX:+UseSerialGC -jar app.jar"]
 
