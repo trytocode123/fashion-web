@@ -36,7 +36,7 @@ const PaymentFail = () => {
                 <div className="mt-6 space-y-3">
                     <button
                         onClick={() => {
-                            navigate(-1)
+                            navigate("/products")
                         }}
                         className="
                             flex items-center justify-center gap-2 w-full
