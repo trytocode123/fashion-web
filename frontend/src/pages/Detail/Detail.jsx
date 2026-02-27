@@ -146,7 +146,7 @@ const Detail = () => {
                             </div>
 
                             <div className="flex flex-wrap gap-2">
-                                {products?.map((p, i) => (
+                                {products.content?.map((p, i) => (
                                     p.size && (
                                         <button
                                             key={i}
