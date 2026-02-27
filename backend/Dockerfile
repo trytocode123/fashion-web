@@ -13,7 +13,7 @@ WORKDIR /app
 COPY --from=build /app/build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
-# Auto-configure RAM usage based on container limits
-# Aggressive limits: 50% RAM for heap, strict Metaspace and Stack limits, disable Class Data Sharing
-ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0 -XX:MaxMetaspaceSize=128m -Xss512k -XX:ReservedCodeCacheSize=64m -Xshare:off -XX:+UseSerialGC -jar app.jar"]
+# Runtime: Give Spring Boot enough heap (75% of container RAM)
+# Build stage above uses only 512MB (GRADLE_OPTS). Runtime is a separate JVM process.
+ENTRYPOINT ["sh", "-c", "java -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0 -XX:MaxMetaspaceSize=128m -Xss512k -XX:ReservedCodeCacheSize=64m -XX:+UseSerialGC -jar app.jar"]
 
