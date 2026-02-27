@@ -3,9 +3,9 @@ FROM gradle:8-jdk17-alpine AS build
 WORKDIR /app
 COPY . .
 
-# Set Gradle memory limit and build without daemon to save RAM
-ENV GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx1024m -Dorg.gradle.daemon=false"
-RUN chmod +x ./gradlew && ./gradlew clean build -x test --no-daemon
+# Set Gradle memory limit - keep as low as possible for Railway build container
+ENV GRADLE_OPTS="-Dorg.gradle.jvmargs=-Xmx512m -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC -Dorg.gradle.daemon=false"
+RUN chmod +x ./gradlew && ./gradlew clean build -x test --no-daemon --no-build-cache
 
 FROM amazoncorretto:17-alpine
 WORKDIR /app
