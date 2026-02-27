@@ -32,7 +32,6 @@ export async function findProductByName(name, token) {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-
         });
 
         return res.data;

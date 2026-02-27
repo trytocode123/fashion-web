@@ -40,7 +40,6 @@ const Detail = () => {
                 const res = await findProductByName(data.name, token);
                 setProducts(res);
             }
-
         };
 
         fetchData();
@@ -146,7 +145,7 @@ const Detail = () => {
                             </div>
 
                             <div className="flex flex-wrap gap-2">
-                                {products.content?.map((p, i) => (
+                                {products?.map((p, i) => (
                                     p.size && (
                                         <button
                                             key={i}

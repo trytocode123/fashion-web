@@ -41,12 +41,8 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> getProductBy(
-            @RequestParam String name,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productService.findProductByName(name, pageable);
+    public ResponseEntity<?> getProductBy(@RequestParam String name) {
+        List<Product> products = productService.findProductByName(name);
         return ResponseEntity.ok(products);
     }
 
