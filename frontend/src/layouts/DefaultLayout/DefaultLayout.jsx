@@ -16,11 +16,11 @@ const DefaultLayout = () => {
     }, [dispatch, token]);
 
     return (
-        <div className={"w-[100%]"}>
+        <div className="w-full min-h-screen bg-white">
             <Header />
-            <div className={"w-[100%] flex items-center justify-center lg:mt-[110px]"}>
+            <main className="w-full pt-[70px] lg:pt-[80px]">
                 <Outlet />
-            </div>
+            </main>
             <Footer />
         </div>
     )

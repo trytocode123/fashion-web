@@ -21,7 +21,7 @@ const LogIn = () => {
     };
 
     const handleLogin = async (value) => {
-        setDisable(prevState => !prevState);
+        setDisable(true);
         const data = await logIn(value);
         if (data.message) {
             setError(data.message);
@@ -30,7 +30,7 @@ const LogIn = () => {
             toast.success(`Login successfully. Welcome, ${data.fullName}!`);
             navigate("/home");
         }
-        setDisable(prevState => !prevState);
+        setDisable(false);
     }
 
     const handleOnchange = () => {
@@ -47,81 +47,98 @@ const LogIn = () => {
     })
 
     return (
-        <div
-            className={"w-[100%] flex flex-col items-center justify-center mt-[140px] mb-[120px] md:mt-[300px] md:mb-[345px] lg:mt-[300px] lg:mb-[320px] xl:mt-[50px] xl:mb-[20px]"}>
-            <h2 className={"font-bold text-2xl align-middle"}>Login</h2>
-            <Formik initialValues={user} onSubmit={handleLogin} validationSchema={validation} validateOnChange={false}>
-                <Form className={"lg:mt-4"}>
-                    <div className={"flex flex-col w-[300px] lg:w-[500px] xl:w-[400px]"}>
-                        <label className={"font-bold"}>Username</label>
-                        <div className={"w-[100%] border-2 rounded-2xl py-[10px] px-[10px]"}>
-                            <Field onFocus={handleOnchange}
-                                className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                name={"username"}
-                                placeholder="Enter user name..." />
-                        </div>
-                        <ErrorMessage name={"username"} component={"small"}
-                            className={"text-red-800 text-[13px] font-bold"} />
-                    </div>
+        <div className="min-h-[calc(100vh-70px)] lg:min-h-[calc(100vh-80px)] flex items-center justify-center bg-zinc-50 px-4 py-4 lg:py-8">
+            <div className="w-full max-w-[420px] bg-white rounded-3xl shadow-2xl shadow-zinc-200 border border-zinc-100 p-6 md:p-8 animate-scale-in">
+                <div className="text-center mb-6">
+                    <h2 className="text-2xl font-black text-zinc-900 tracking-tight mb-1">Welcome Back</h2>
+                    <p className="text-zinc-500 text-xs font-medium">Log in to your Fashion Hub account</p>
+                </div>
 
-                    <div className={"flex flex-col lg:w-[500px] lg:w-[300px] xl:w-[400px] lg:mt-2"}>
-                        <label className={"font-bold"}>Password</label>
-                        <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                            <Field onFocus={handleOnchange} type={"password"}
-                                className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                name={"password"}
-                                placeholder="Enter password..." />
+                <Formik initialValues={user} onSubmit={handleLogin} validationSchema={validation} validateOnChange={false}>
+                    <Form className="space-y-4">
+                        <div className="space-y-2">
+                            <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Username</label>
+                            <div className="group transition-all duration-300">
+                                <Field
+                                    onFocus={handleOnchange}
+                                    className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 
+                                             text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-indigo-500 
+                                             focus:bg-white transition-all shadow-sm group-hover:border-zinc-200"
+                                    name="username"
+                                    placeholder="your_username"
+                                />
+                            </div>
+                            <ErrorMessage name="username" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
                         </div>
-                        <ErrorMessage name={"password"} component={"small"}
-                            className={"text-red-800 text-[13px] font-bold"} />
-                    </div>
-                    {error && <p className={"text-red-800 text-[13px] font-bold"}>{error}</p>}
-                    {disable ?
-                        <div className={"flex items-center justify-center mt-5 lg:h-[50px]"}>
-                            <FaSpinner className={"animate-spin text-[20px]"} />
-                        </div>
-                        : <Button
-                            type={"submit"}
-                            className={"w-[100%] bg-gray-900 mt-4 h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700 "}>
-                            Continue
-                        </Button>
-                    }
 
-                    <div className={"mt-3"}>
-                        <p>New user? <Link to={"/register"} className={"text-blue-600"}>Create an account!</Link></p>
-                    </div>
-
-                    <div>
-                        <div className={"border-b-gray-500 h-[2px] flex items-center gap-4 my-6"}>
-                            <div className="flex-1 h-px bg-gray-300" />
-                            <span className="text-xs text-gray-400 uppercase">or</span>
-                            <div className="flex-1 h-px bg-gray-300" />
+                        <div className="space-y-2">
+                            <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Password</label>
+                            <div className="group transition-all duration-300">
+                                <Field
+                                    onFocus={handleOnchange}
+                                    type="password"
+                                    className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 
+                                             text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-indigo-500 
+                                             focus:bg-white transition-all shadow-sm group-hover:border-zinc-200"
+                                    name="password"
+                                    placeholder="••••••••"
+                                />
+                            </div>
+                            <ErrorMessage name="password" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
                         </div>
-                    </div>
-                    <Button
-                        type="button"
-                        onClick={handleLoginWithGoogle}
-                        className="
-              w-[100%]
-              h-[50px]
-              rounded-full
-              border
-              border-gray-300
-              bg-white
-              flex items-center justify-center gap-3
-              text-gray-700
-              cursor-pointer
-              hover:bg-gray-100
-              transition
-            "
-                    >
-                        <FcGoogle className="text-xl" />
-                        <span className="font-medium">Continue with Google</span>
-                    </Button>
-                </Form>
-            </Formik>
+
+                        {error && (
+                            <div className="bg-red-50 border border-red-100 rounded-xl p-3 animate-pulse">
+                                <p className="text-red-600 text-[12px] font-bold text-center">{error}</p>
+                            </div>
+                        )}
+
+                        <div className="pt-2">
+                            {disable ? (
+                                <div className="flex items-center justify-center h-[54px] bg-zinc-900 rounded-2xl">
+                                    <FaSpinner className="animate-spin text-white text-xl" />
+                                </div>
+                            ) : (
+                                <Button
+                                    type="submit"
+                                    className="w-full bg-zinc-900 py-4 rounded-2xl text-white font-black tracking-wide
+                                             hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer shadow-lg shadow-zinc-200"
+                                >
+                                    Continue
+                                </Button>
+                            )}
+                        </div>
+
+                        <div className="text-center pt-2">
+                            <p className="text-zinc-500 text-sm font-medium">
+                                New user? <Link to="/register" className="text-indigo-600 font-bold hover:underline">Create an account</Link>
+                            </p>
+                        </div>
+
+                        <div className="relative py-4">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-zinc-100"></div>
+                            </div>
+                            <div className="relative flex justify-center text-xs uppercase tracking-widest">
+                                <span className="bg-white px-4 text-zinc-400 font-bold">or</span>
+                            </div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handleLoginWithGoogle}
+                            className="w-full h-[50px] rounded-2xl border-2 border-zinc-100 bg-white
+                                     flex items-center justify-center gap-3 text-zinc-700 font-bold
+                                     hover:bg-zinc-50 active:scale-95 transition-all cursor-pointer shadow-sm"
+                        >
+                            <FcGoogle className="text-2xl" />
+                            <span>Continue with Google</span>
+                        </button>
+                    </Form>
+                </Formik>
+            </div>
         </div>
-    )
-}
+    );
+};
 
 export default LogIn;

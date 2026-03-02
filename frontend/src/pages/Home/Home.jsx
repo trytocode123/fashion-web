@@ -25,7 +25,6 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
     const dispatch = useDispatch();
     const [products, setProducts] = useState([]);
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -58,197 +57,181 @@ const Home = () => {
         navigate(`/detail/${id}`)
     }
 
-
-    return (<div className={"lg:w-[100%] md:w-[100%] w-[100%] lg:-mt-5 mt-[100px]"}>
-        <div>
-            <div>
-                <Swiper className={"lg-[300px]"}
+    return (
+        <div className="bg-white min-h-screen w-full overflow-x-hidden">
+            {/* Hero Section with Swiper */}
+            <div className="relative w-full min-w-0 overflow-hidden">
+                <Swiper
                     modules={[Pagination, Navigation, Autoplay]}
-                    allowTouchMove={false}
+                    allowTouchMove={true}
                     centeredSlides={true}
                     loop={true}
-                    autoplay={{
-                        delay: 1500, disableOnInteraction: false, waitForTransition: false
-                    }}
-                    pagination={{
-                        clickable: true,
-                    }}
+                    autoplay={{ delay: 3000, disableOnInteraction: false }}
+                    pagination={{ clickable: true }}
                     navigation={true}
-                    slidesPerView={1}
-                    spaceBetween={30}
+                    className="h-[400px] md:h-[500px] lg:h-[650px] home-swiper w-full"
                 >
                     {[img1, img2, img3, img4].map((img, index) => (
-                        <SwiperSlide><img className={"lg:w-[100%] lg:h-[650px]"} src={img}
-                            alt={`Picture${index + 1}`} /></SwiperSlide>
+                        <SwiperSlide key={index}>
+                            <div className="relative w-full h-full overflow-hidden">
+                                <img
+                                    className="w-full h-full object-cover transition-transform duration-[2000ms] hover:scale-110"
+                                    src={img}
+                                    alt={`Banner ${index + 1}`}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-10 lg:p-20">
+                                    <div className="text-white animate-scale-in">
+                                        <h1 className="text-4xl lg:text-6xl font-black tracking-tighter mb-4">NEW COLLECTION</h1>
+                                        <p className="text-lg text-zinc-200 font-medium max-w-md">Discover the latest trends in modern fashion. Premium quality, timeless style.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </SwiperSlide>
                     ))}
                 </Swiper>
             </div>
 
-        </div>
-
-        <div className={"lg:px-[80px] mt-5"}>
-            <div
-                className={"lg:grid lg:grid-cols-3 lg:px-[30px] lg:h-[100px] lg:justify-between rounded-2xl border border-gray-500"}>
-
-                <div className={"lg:flex lg:items-center border-r-2 border-r-gray-600"}>
-                    <div className={"mr-2"}>
-                        <LuTruck className={"lg:text-[20px]"} />
-                    </div>
-                    <div>
-                        <p className={"font-bold"}>Free shipping</p>
-                        <p>On order over 500.000 VND</p>
-                    </div>
-                </div>
-
-                <div className={"lg:flex lg:items-center lg:pl-[25px] border-r-2 border-r-gray-600"}>
-                    <div className={"mr-2"}>
-                        <TbExchange className={"lg:text-[20px]"} />
-                    </div>
-                    <div>
-                        <p className={"font-bold"}>Very easy to return</p>
-                        <p>Just phone number</p>
-                    </div>
-                </div>
-
-                <div className={"lg:flex lg:items-center lg:pl-[25px]"}>
-                    <div className={"mr-2"}>
-                        <TbWorld className={"lg:text-[20px]"} />
-                    </div>
-                    <div>
-                        <p className={"font-bold"}>National delivery</p>
-                        <p>Fast delivery</p>
-                    </div>
-                </div>
-            </div>
-
-            <div className={"lg:mt-5"}>
-                <span className={"font-bold lg:text-[25px]"}>Start exploring.</span> <span
-                    className={"text-gray-400 font-bold lg:text-[25px]"}>Good things are waiting for you</span>
-
-                <div className={"lg:grid lg:grid-cols-2 lg:gap-4 lg:mt-5 mb-10"}>
-
-                    <div
-                        onClick={() => navigate('/products?gender=Men')}
-                        className={"flex justify-between items-center rounded-2xl bg-blue-100 h-[100px] p-6 cursor-pointer hover:shadow-md transition-shadow group"}
-                    >
-                        <div>
-                            <p className={"font-bold text-lg text-blue-900"}>
-                                For Men's
-                            </p>
-                            <p className="text-sm text-blue-700">Minimal & modern styles</p>
+            <div className="max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-12">
+                {/* Benefits Section */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+                    {[
+                        { icon: LuTruck, title: "Free Shipping", desc: "On orders over 500k VND" },
+                        { icon: TbExchange, title: "Easy Returns", desc: "Using only phone number" },
+                        { icon: TbWorld, title: "Global Reach", desc: "Fast national delivery" }
+                    ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-5 p-6 rounded-3xl bg-zinc-50 border border-zinc-100/50 hover:shadow-xl hover:shadow-zinc-100 transition-all duration-500 group">
+                            <div className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-zinc-900 group-hover:bg-indigo-600 group-hover:text-white transition-all">
+                                <item.icon size={24} />
+                            </div>
+                            <div>
+                                <h3 className="font-black text-zinc-900 tracking-tight">{item.title}</h3>
+                                <p className="text-zinc-500 text-sm font-medium">{item.desc}</p>
+                            </div>
                         </div>
-
-                        <div className={"flex items-center text-blue-900 font-semibold"}>
-                            <span>Shop now</span>
-                            <FaArrowRightLong
-                                className={"transition-transform duration-300 ml-[8px] group-hover:translate-x-2"}
-                            />
-                        </div>
-                    </div>
-
-                    <div
-                        onClick={() => navigate('/products?gender=Women')}
-                        className={"flex justify-between items-center rounded-2xl bg-purple-100 h-[100px] p-6 cursor-pointer hover:shadow-md transition-shadow group mt-4 lg:mt-0"}
-                    >
-                        <div>
-                            <p className={"font-bold text-lg text-purple-900"}>
-                                For Women's
-                            </p>
-                            <p className="text-sm text-purple-700">Elegant everyday wear</p>
-                        </div>
-
-                        <div className={"flex items-center text-purple-900 font-semibold"}>
-                            <span>Shop now</span>
-                            <FaArrowRightLong
-                                className={"transition-transform duration-300 ml-[8px] group-hover:translate-x-2"}
-                            />
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div className="mt-12">
-                <div className="flex justify-between items-end mb-6">
-                    <div>
-                        <h2 className={"text-2xl lg:text-[28px] font-bold text-gray-900"}>Featured Products</h2>
-                        <p className="text-gray-500 mt-1">Handpicked for you</p>
-                    </div>
-                    <button
-                        onClick={() => navigate('/products')}
-                        className="hidden sm:flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-800 transition-colors group"
-                    >
-                        View All
-                        <FaArrowRightLong className="transition-transform duration-300 group-hover:translate-x-1" />
-                    </button>
+                    ))}
                 </div>
 
-                {products.length === 0 ?
-                    <div className={"flex items-center justify-center"}>
-                        <FaSpinner className={"animate-spin text-[20px]"} />
-                    </div> :
+                {/* Explore Categories */}
+                <div className="mb-16">
+                    <div className="flex flex-col mb-8">
+                        <span className="text-indigo-600 font-black text-xs uppercase tracking-widest mb-2">Discovery</span>
+                        <h2 className="text-3xl lg:text-4xl font-black text-zinc-900 tracking-tighter">
+                            Start exploring. <span className="text-zinc-300">Wait no more.</span>
+                        </h2>
+                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {products.map(product => (
-                            <div
-                                key={product.id}
-                                onClick={() => handleDetail(product.id)}
-                                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer group flex flex-col h-full border border-gray-100"
-                            >
-                                {/* Product Image */}
-                                <div className="relative aspect-[4/5] overflow-hidden bg-gray-100">
-                                    <img
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                        src={product.img}
-                                        alt={product.name}
-                                        onError={(e) => {
-                                            e.target.src = 'https://via.placeholder.com/400x500?text=No+Image';
-                                        }}
-                                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div
+                            onClick={() => navigate('/products?gender=Men')}
+                            className="relative h-[180px] rounded-[2rem] bg-indigo-50 overflow-hidden cursor-pointer group flex items-center px-10 border border-indigo-100/30"
+                        >
+                            <div className="z-10 relative">
+                                <h3 className="text-2xl font-black text-indigo-950 mb-1">For Men's</h3>
+                                <p className="text-indigo-700 font-medium text-sm mb-4">Minimal & modern styles</p>
+                                <div className="flex items-center gap-2 text-indigo-950 font-black text-sm group-hover:gap-4 transition-all">
+                                    <span>Browse Shop</span>
+                                    <FaArrowRightLong />
                                 </div>
+                            </div>
+                            <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-indigo-100/50 -skew-x-12 translate-x-10 group-hover:translate-x-0 transition-transform duration-700"></div>
+                        </div>
 
-                                {/* Product Info */}
-                                <div className="p-4 flex flex-col flex-grow">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <h3 className="font-bold text-gray-800 text-lg line-clamp-1 flex-grow pr-2" title={product.name}>
-                                            {product.name}
-                                        </h3>
-                                        <span className="font-bold text-blue-600 whitespace-nowrap">
-                                            {product.price ? product.price.toLocaleString("vi-VN") : "0"} ₫
-                                        </span>
+                        <div
+                            onClick={() => navigate('/products?gender=Women')}
+                            className="relative h-[180px] rounded-[2rem] bg-violet-50 overflow-hidden cursor-pointer group flex items-center px-10 border border-violet-100/30"
+                        >
+                            <div className="z-10 relative">
+                                <h3 className="text-2xl font-black text-violet-950 mb-1">For Women's</h3>
+                                <p className="text-violet-700 font-medium text-sm mb-4">Elegant everyday wear</p>
+                                <div className="flex items-center gap-2 text-violet-950 font-black text-sm group-hover:gap-4 transition-all">
+                                    <span>Browse Shop</span>
+                                    <FaArrowRightLong />
+                                </div>
+                            </div>
+                            <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-violet-100/50 -skew-x-12 translate-x-10 group-hover:translate-x-0 transition-transform duration-700"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Featured Products */}
+                <div className="mt-20">
+                    <div className="flex justify-between items-end mb-10">
+                        <div>
+                            <span className="text-zinc-400 font-black text-xs uppercase tracking-widest mb-2 block">Curated</span>
+                            <h2 className="text-3xl lg:text-4xl font-black text-zinc-900 tracking-tighter">Featured Products</h2>
+                        </div>
+                        <button
+                            onClick={() => navigate('/products')}
+                            className="group flex items-center gap-2 text-zinc-900 font-black text-sm hover:text-indigo-600 transition-colors"
+                        >
+                            View All Collection
+                            <FaArrowRightLong className="transition-transform group-hover:translate-x-2" />
+                        </button>
+                    </div>
+
+                    {products.length === 0 ? (
+                        <div className="flex items-center justify-center py-20">
+                            <FaSpinner className="animate-spin text-3xl text-zinc-200" />
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+                            {products.map(product => (
+                                <div
+                                    key={product.id}
+                                    onClick={() => handleDetail(product.id)}
+                                    className="group cursor-pointer flex flex-col h-full animate-scale-in"
+                                >
+                                    <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden bg-zinc-100 mb-6 shadow-sm border border-zinc-100 transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-zinc-200 group-hover:-translate-y-2">
+                                        <img
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                            src={product.img}
+                                            alt={product.name}
+                                            onError={(e) => { e.target.src = 'https://via.placeholder.com/400x500?text=No+Image'; }}
+                                        />
+                                        <div className="absolute top-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                                            <div className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-zinc-900 hover:bg-indigo-600 hover:text-white shadow-lg transition-all">
+                                                <FaArrowRightLong className="-rotate-45" />
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <div className="mt-auto space-y-2">
-                                        <div className="flex justify-between items-center text-sm text-gray-500">
-                                            <span className="bg-gray-100 px-2 py-1 rounded-md">
-                                                {product.subCategory?.name || "Uncategorized"}
+                                    <div className="px-2">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <h3 className="font-black text-zinc-900 text-lg line-clamp-1 flex-grow uppercase tracking-tight" title={product.name}>
+                                                {product.name}
+                                            </h3>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-zinc-500 text-xs font-bold uppercase tracking-widest">
+                                                {product.subCategory?.name || "General"}
                                             </span>
-                                            <span className="capitalize text-gray-600 font-medium">
-                                                {product.gender?.toLowerCase() || "Unisex"}
+                                            <span className="font-black text-indigo-600 text-sm">
+                                                {product.price ? product.price.toLocaleString("vi-VN") : "0"} ₫
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                }
+                            ))}
+                        </div>
+                    )}
 
-                {/* Bottom View All Button */}
-                {products.length > 0 && (
-                    <div className="flex justify-center mt-10 mb-8 lg:mb-12">
-                        <button
-                            onClick={() => navigate('/products')}
-                            className="bg-gray-900 text-white px-8 py-3.5 rounded-full font-bold shadow-lg hover:bg-gray-800 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex items-center gap-3 group"
-                        >
-                            View All Products
-                            <FaArrowRightLong className="transition-transform duration-300 group-hover:translate-x-1.5" />
-                        </button>
-                    </div>
-                )}
+                    {products.length > 0 && (
+                        <div className="flex justify-center mt-20">
+                            <button
+                                onClick={() => navigate('/products')}
+                                className="bg-zinc-900 text-white px-10 py-4 rounded-2xl font-black tracking-widest uppercase text-xs 
+                                         shadow-2xl shadow-zinc-200 hover:bg-indigo-600 hover:shadow-indigo-200 hover:-translate-y-1 
+                                         active:scale-95 transition-all duration-300 flex items-center gap-4 group"
+                            >
+                                Shop the collection
+                                <FaArrowRightLong className="transition-transform group-hover:translate-x-2" />
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
-    </div>);
+    );
 }
 
 export default Home;

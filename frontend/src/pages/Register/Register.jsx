@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { addAccount } from "../../service/Account/AccountService.js";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import {FaSpinner, FaUserEdit} from "react-icons/fa";
+import { FaSpinner, FaUserEdit } from "react-icons/fa";
 
 const Register = () => {
     const user = {
@@ -35,7 +35,7 @@ const Register = () => {
 
     const handleRegister = (value) => {
         async function register() {
-            setDisable(prevState => !prevState);
+            setDisable(true);
             setServerError("");
             try {
                 const { passwordAgain, ...data } = value;
@@ -48,7 +48,7 @@ const Register = () => {
                 setServerError(e.message || "Registration failed. Please try again.");
                 toast.error(e.message || "Registration failed.");
             }
-            setDisable(prevState => !prevState);
+            setDisable(false);
         }
 
         register();
@@ -79,176 +79,126 @@ const Register = () => {
             reader.readAsDataURL(file);
         }
     };
+
     return (
-        <div className={"flex flex-col lg:w-[100%] items-center justify-center px-[80px]"}>
-            <h2 className={"font-bold text-2xl align-middle"}>Register</h2>
-            <Formik initialValues={user} onSubmit={handleRegister} validationSchema={validation}
-                validateOnChange={false}>
-                <Form className={"w-[100%]"}>
-                    <div className={"grid grid-cols-2 gap-28"}>
-                        {/*Column 1*/}
-                        <div className={"flex flex-col"}>
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Full name</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"fullName"} placeholder={"Enter full name..."} />
-                                </div>
-                                <ErrorMessage name={"fullName"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
+        <div className="min-h-[calc(100vh-70px)] lg:min-h-[calc(100vh-80px)] flex items-center justify-center bg-zinc-50 px-4 py-8 lg:py-12">
+            <div className="w-full max-w-[800px] bg-white rounded-[2.5rem] shadow-2xl shadow-zinc-200 border border-zinc-100 p-8 md:p-12 animate-scale-in">
+                <div className="text-center mb-10">
+                    <h2 className="text-3xl font-black text-zinc-900 tracking-tight mb-2 uppercase">Create Account</h2>
+                    <p className="text-zinc-500 text-sm font-medium">Join the Fashion Hub community today</p>
+                </div>
 
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Phone number</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"phoneNumber"} placeholder={"Enter phone number..."} />
+                <Formik initialValues={user} onSubmit={handleRegister} validationSchema={validation} validateOnChange={false}>
+                    <Form className="space-y-8">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                            {/* Column 1 */}
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Full Name</label>
+                                    <Field name="fullName" placeholder="Enter full name..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="fullName" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
                                 </div>
-                                <ErrorMessage name={"phoneNumber"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
 
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Date of Birth</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field type={"date"} className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"dob"} placeholder={"Enter date of birth..."} />
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Phone Number</label>
+                                    <Field name="phoneNumber" placeholder="Enter phone number..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="phoneNumber" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
                                 </div>
-                                <ErrorMessage name={"dob"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
 
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Address</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"address"} placeholder={"Enter address..."} />
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Date of Birth</label>
+                                    <Field type="date" name="dob" className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="dob" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
                                 </div>
-                                <ErrorMessage name={"address"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
 
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Profile Picture (Optional)</label>
-                                <div className="flex items-center gap-4 mt-2">
-                                    <div className="w-16 h-16 rounded-full border-2 border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center">
-                                        {previewUrl ? (
-                                            <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <FaUserEdit className="text-gray-300 text-2xl" />
-                                        )}
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Address</label>
+                                    <Field name="address" placeholder="Enter address..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="address" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Profile Image</label>
+                                    <div className="flex items-center gap-4 mt-2">
+                                        <div className="w-14 h-14 rounded-2xl border-2 border-zinc-100 overflow-hidden bg-zinc-50 flex items-center justify-center shadow-sm">
+                                            {previewUrl ? (
+                                                <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <FaUserEdit className="text-zinc-300 text-xl" />
+                                            )}
+                                        </div>
+                                        <label className="cursor-pointer bg-white border-2 border-zinc-100 rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:border-indigo-500 transition-all shadow-sm">
+                                            Choose File
+                                            <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                                        </label>
                                     </div>
-                                    <label className="cursor-pointer bg-white border border-gray-300 rounded-lg px-4 py-2 text-sm font-semibold hover:bg-gray-50 transition-colors">
-                                        Choose File
-                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-                                    </label>
                                 </div>
                             </div>
 
+                            {/* Column 2 */}
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Email</label>
+                                    <Field name="email" placeholder="Enter email..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="email" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
+                                    {serverError && <small className="text-red-500 text-[11px] font-bold ml-1 block">{serverError}</small>}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Gender</label>
+                                    <div className="flex gap-6 p-1">
+                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                            <Field type="radio" name="gender" value="MALE" className="w-4 h-4 accent-indigo-600" />
+                                            <span className="text-sm font-bold text-zinc-600 group-hover:text-zinc-900 transition-colors">Male</span>
+                                        </label>
+                                        <label className="flex items-center gap-2 cursor-pointer group">
+                                            <Field type="radio" name="gender" value="FEMALE" className="w-4 h-4 accent-indigo-600" />
+                                            <span className="text-sm font-bold text-zinc-600 group-hover:text-zinc-900 transition-colors">Female</span>
+                                        </label>
+                                    </div>
+                                    <ErrorMessage name="gender" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Username</label>
+                                    <Field name="username" placeholder="Enter username..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="username" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Password</label>
+                                    <Field type="password" name="password" placeholder="Enter password..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="password" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-xs font-black uppercase tracking-widest text-zinc-400 ml-1">Confirm Password</label>
+                                    <Field type="password" name="passwordAgain" placeholder="Confirm password..." className="w-full bg-zinc-50 border-2 border-zinc-100 rounded-2xl py-3 px-5 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all shadow-sm" />
+                                    <ErrorMessage name="passwordAgain" component="small" className="text-red-500 text-[11px] font-bold ml-1" />
+                                </div>
+                            </div>
                         </div>
 
-                        {/*Column 2*/}
-                        <div className={"flex flex-col lg:mt-2"}>
-
-                            <div className={"flex flex-col"}>
-                                <label className={"font-bold"}>Email</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"email"} placeholder={"Enter email..."} />
+                        <div className="pt-4">
+                            {disable ? (
+                                <div className="flex items-center justify-center h-[54px] bg-zinc-900 rounded-2xl">
+                                    <FaSpinner className="animate-spin text-white text-xl" />
                                 </div>
-                                <ErrorMessage name={"email"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                                {serverError &&
-                                    <small className="text-red-800 text-[13px] font-bold">{serverError}</small>}
-                            </div>
-
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold mb-2"}>Gender</label>
-
-                                <div className="flex gap-6">
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <Field
-                                            type="radio"
-                                            name="gender"
-                                            value="MALE"
-                                            className="w-4 h-4 accent-gray-900"
-                                        />
-                                        <span>Male</span>
-                                    </label>
-
-                                    <label className="flex items-center gap-2 cursor-pointer">
-                                        <Field
-                                            type="radio"
-                                            name="gender"
-                                            value="FEMALE"
-                                            className="w-4 h-4 accent-gray-900"
-                                        />
-                                        <span>Female</span>
-                                    </label>
-                                </div>
-                                <ErrorMessage name={"gender"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
-
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Username</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"username"} placeholder={"Enter username..."} />
-                                </div>
-                                <ErrorMessage name={"username"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
-
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Password</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field type={"password"}
-                                        className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"password"} placeholder={"Enter password..."} />
-                                </div>
-                                <ErrorMessage name={"password"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
-
-                            <div className={"flex flex-col lg:mt-2"}>
-                                <label className={"font-bold"}>Password (Again)</label>
-                                <div className={"border-2 rounded-2xl py-[10px] px-[10px]"}>
-                                    <Field type={"password"}
-                                        className={"w-full h-full focus:outline-hidden focus:bg-white"}
-                                        name={"passwordAgain"} placeholder={"Enter confirmed password..."} />
-                                </div>
-                                <ErrorMessage name={"passwordAgain"} component={"small"}
-                                    className={"text-red-800 text-[13px] font-bold"} />
-                            </div>
+                            ) : (
+                                <Button type="submit" className="w-full bg-zinc-900 py-4 rounded-2xl text-white font-black tracking-widest uppercase text-xs hover:bg-zinc-800 active:scale-95 transition-all cursor-pointer shadow-lg shadow-zinc-200">
+                                    Register Account
+                                </Button>
+                            )}
                         </div>
-                    </div>
 
-                    {disable ?
-                        <div className={"lg:flex items-center justify-center lg:mt-5 lg:h-[50px]"}>
-                            <FaSpinner className={"animate-spin text-[20px]"} />
+                        <div className="text-center pt-2">
+                            <p className="text-zinc-500 text-sm font-medium">
+                                Already a member? <Link to="/" className="text-indigo-600 font-bold hover:underline">Log in here</Link>
+                            </p>
                         </div>
-                        : (<Button type={"submit"}
-                            className={"w-[100%] bg-gray-900 h-[50px] rounded-full text-white lg:mt-5 cursor-pointer hover:bg-gray-700"}>
-                            Continue
-                        </Button>)
-                    }
-
-                    <div>
-                        <div className={"border-b-gray-500 h-[2px] flex items-center gap-4 my-6"}>
-                            <div className="flex-1 h-px bg-gray-300" />
-                            <span className="text-xs text-gray-400 uppercase">or</span>
-                            <div className="flex-1 h-px bg-gray-300" />
-                        </div>
-                    </div>
-                    <p className={"p-0 -mt-5"}>Already a member? <Link
-                        to={"/"}
-                        type="button"
-                    >
-                        <span className="font-medium text-blue-600">Log in</span>
-                    </Link></p>
-                </Form>
-            </Formik>
+                    </Form>
+                </Formik>
+            </div>
         </div>
     )
 }

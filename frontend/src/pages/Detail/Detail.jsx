@@ -1,313 +1,272 @@
-import {useNavigate, useParams} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
-import {findProductById, findProductByName} from "../../service/Product/ProductService.js";
-import {useSelector, useDispatch} from "react-redux";
-import {addToCart} from "../../redux/Reducer/cartSlice.js";
-import {toast} from "react-toastify";
-import {CiCircleMinus, CiCirclePlus} from "react-icons/ci";
-import {IoBagOutline} from "react-icons/io5";
-import {savePayment} from "../../service/VNPay/VNPayServer.js";
-import {progressPaypal} from "../../service/Paypal/PaypalService.js";
-import {FaSpinner, FaCheck} from "react-icons/fa";
-import {HiArrowLeft} from "react-icons/hi2";
-import {MdOutlineSecurity} from "react-icons/md";
-import {TbTruckReturn} from "react-icons/tb";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { findProductById, findProductByName } from "../../service/Product/ProductService.js";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart } from "../../redux/Reducer/cartSlice.js";
+import { toast } from "react-toastify";
+import { IoBagOutline } from "react-icons/io5";
+import { savePayment } from "../../service/VNPay/VNPayServer.js";
+import { progressPaypal } from "../../service/Paypal/PaypalService.js";
+import { FaSpinner, FaCheck, FaStar } from "react-icons/fa";
+import { HiArrowLeft } from "react-icons/hi2";
+import { MdOutlineSecurity } from "react-icons/md";
+import { TbTruckReturn } from "react-icons/tb";
+import { FiMinus, FiPlus } from "react-icons/fi";
 
 const Detail = () => {
-    const {id} = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
     const token = useSelector(state => state.auth?.account?.token);
     const [detail, setDetail] = useState(null);
     const [products, setProducts] = useState([]);
     const [currentSize, setCurrentSize] = useState("");
-    const [quantity, setQuantity] = useState(0);
+    const [quantity, setQuantity] = useState(1);
     const [paymentMethod, setPaymentMethod] = useState("VNPAY");
-    const quantityRef = useRef(null);
+    const [isProcessing, setIsProcessing] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (!token) {
-            navigate("/");
+            navigate("/login");
             return;
         }
 
         const fetchData = async () => {
-
-            const data = await findProductById(id, token);
-            setDetail(data);
-
-            if (data?.name) {
-                const res = await findProductByName(data.name, token);
-                setProducts(res);
+            try {
+                const data = await findProductById(id, token);
+                setDetail(data);
+                if (data?.name) {
+                    const res = await findProductByName(data.name, token);
+                    setProducts(res);
+                    if (res.length > 0) {
+                        setCurrentSize(res[0].size);
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching product:", error);
+                toast.error("Could not load product details.");
             }
         };
 
         fetchData();
     }, [id, token, navigate]);
 
-    const handleUpdateQuantity = (action) => {
-        if (action === "+") {
-            setQuantity(prevState => prevState + 1);
-        }
-        if (action === "-" && quantity > 0) {
-            setQuantity(prevState => prevState - 1);
-        }
-    };
+    const handleInputQuantity = (e) => {
+        const value = e.target.value;
 
-    const handleOnchangeQuantity = (value) => {
-        if (value >= 0) setQuantity(+value);
+        if (!/^\d*$/.test(value)) return;
+
+        if (value === "") {
+            setQuantity("");
+            return;
+        }
+
+        const num = parseInt(value, 10);
+        setQuantity(num < 1 ? 1 : num);
     };
 
     const handlePay = async () => {
+        if (!currentSize) return toast.warning("Please select a size");
+        setIsProcessing(true);
         const res = await savePayment(detail.price * quantity, token, detail.id, currentSize, quantity);
         if (res) window.location.href = res;
     };
 
     const handlePaypal = async () => {
+        if (!currentSize) return toast.warning("Please select a size");
+        setIsProcessing(true);
         const res = await progressPaypal((detail.price / 27000) * quantity, token, detail.id, currentSize, quantity);
         if (res) window.location.href = res;
     };
 
     const handleAddToCart = () => {
-        dispatch(addToCart({id: detail.id, size: currentSize, quantity: quantity}))
+        if (!currentSize) return toast.warning("Please select a size");
+        setIsProcessing(true);
+        dispatch(addToCart({ id: detail.id, size: currentSize, quantity: quantity }))
             .unwrap()
             .then(() => {
                 toast.success(`Added ${quantity} ${detail.name} (Size ${currentSize}) to cart!`);
-                setQuantity(0);
-                setCurrentSize("");
+                setQuantity(1);
             })
             .catch((error) => {
                 toast.error("Failed to add to cart: " + (error.message || "Unknown error"));
-            });
+            })
+            .finally(() => setIsProcessing(false));
     };
 
-    const isDisabled = currentSize === "" || quantity === 0;
+    const handleUpdateQuantity = (delta) => {
+        setQuantity(prev => {
+            const current = Number(prev) || 1;
+            return Math.max(1, current + delta);
+        });
+    };
+
+    if (!detail) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-white">
+                <FaSpinner className="animate-spin text-5xl text-indigo-600" />
+            </div>
+        );
+    }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 lg:py-4">
-            <button
-                onClick={() => navigate("/products")}
-                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors mb-2 group w-fit"
-            >
-                <HiArrowLeft className="transition-transform duration-300 group-hover:-translate-x-1" size={16}/>
-                <span className="font-medium text-sm">Back</span>
-            </button>
+        <div className="min-h-screen bg-white pt-[100px] lg:pt-[130px] pb-20 px-4 md:px-10 lg:px-20">
+            <div className="max-w-[1400px] mx-auto">
+                <button
+                    onClick={() => navigate("/products")}
+                    className="flex items-center gap-2 text-zinc-400 hover:text-indigo-600 transition-all group mb-8"
+                >
+                    <HiArrowLeft className="transition-transform duration-300 group-hover:-translate-x-1" size={18} />
+                    <span className="font-black text-[10px] uppercase tracking-[0.2em]">Back to products</span>
+                </button>
 
-            {detail === null ? (
-                <div className="flex items-center justify-center min-h-[405px]">
-                    <FaSpinner className="animate-spin text-[60px] text-gray-300"/>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-
-                    <div
-                        className="lg:col-span-5 xl:col-span-5 rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 shadow-sm relative group h-full max-h-[500px]">
-                        <img
-                            className="w-full h-[500px] object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                            src={detail?.img}
-                            alt={detail?.name}
-                            onError={(e) => {
-                                e.target.src = 'https://via.placeholder.com/800x1000?text=No+Image';
-                            }}
-                        />
-
-                        <div
-                            className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
-                            <span className="text-xs font-bold tracking-wider text-gray-900 uppercase">
-                                {detail?.subCategory?.name || "New Arrival"}
-                            </span>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+                    {/* Product Image */}
+                    <div className="animate-scale-in">
+                        <div className="aspect-[4/5] rounded-[3rem] overflow-hidden bg-zinc-50 border border-zinc-100 shadow-2xl shadow-zinc-100 group">
+                            <img src={detail.img} alt={detail.name} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
                         </div>
                     </div>
 
-                    <div className="lg:col-span-7 xl:col-span-7 flex flex-col h-full">
-
-                        <div className="mb-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="text-xs font-medium text-gray-500 uppercase tracking-widest">
-                                    {detail?.gender || "Unisex"}
+                    {/* Product Info */}
+                    <div className="flex flex-col justify-center animate-scale-in" style={{ animationDelay: '0.1s' }}>
+                        <div className="mb-8">
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full font-black text-[10px] uppercase tracking-widest border border-indigo-100/50">
+                                    {detail.subCategory?.name || "Premium Collection"}
                                 </span>
                             </div>
-                            <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-2 leading-tight">
-                                {detail?.name}
+                            <h1 className="text-4xl lg:text-6xl font-black text-zinc-900 leading-tight mb-4 uppercase tracking-tighter">
+                                {detail.name}
                             </h1>
-                            <p className="text-2xl font-bold text-blue-600">
-                                {detail?.price?.toLocaleString("vi-VN")} <span
-                                className="text-xl text-blue-500">₫</span>
-                            </p>
+                            <div className="flex items-center gap-4">
+                                <p className="text-4xl font-black text-indigo-600">
+                                    {detail.price?.toLocaleString('vi-VN')} ₫
+                                </p>
+                                <span className="text-zinc-400 text-sm font-bold uppercase tracking-widest border-l border-zinc-200 pl-4 py-1">
+                                    In Stock
+                                </span>
+                            </div>
                         </div>
 
-                        <hr className="border-gray-100 mb-4"/>
-
-                        <div className="mb-4">
-                            <div className="flex justify-between items-center mb-2">
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider">Select
-                                    Size</h3>
-                            </div>
-
-                            <div className="flex flex-wrap gap-2">
-                                {products?.map((p, i) => (
-                                    p.size && (
-                                        <button
-                                            key={i}
-                                            onClick={() => setCurrentSize(p.size)}
-                                            className={`relative w-10 h-10 rounded-lg text-sm font-bold transition-all duration-200 flex items-center justify-center
-                                                ${p.size === currentSize
-                                                ? "bg-gray-900 text-white ring-2 ring-gray-900 ring-offset-1"
-                                                : "bg-white text-gray-700 border border-gray-200 hover:border-gray-900 hover:text-gray-900"
-                                            }`}
-                                        >
-                                            {p.size}
-                                            {p.size === currentSize && (
-                                                <span
-                                                    className="absolute -top-1 -right-1 bg-blue-500 text-white rounded-full p-0.5">
-                                                    <FaCheck size={8}/>
-                                                </span>
-                                            )}
-                                        </button>
-                                    )
-                                ))}
-                                {(!products || products.length === 0) && (
-                                    <p className="text-gray-500 italic text-sm">No sizes available</p>
-                                )}
-                            </div>
-                            {currentSize === "" && (
-                                <p className="text-red-500 text-xs mt-1 font-medium">* Please select a size</p>
-                            )}
-                        </div>
-
-                        <div className="flex gap-6 mb-4">
-
-                            <div className="flex-1">
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2">Quantity</h3>
-                                <div
-                                    className="flex items-center bg-gray-50 border border-gray-200 rounded-lg w-28 p-1">
-                                    <button
-                                        onClick={() => handleUpdateQuantity("-")}
-                                        className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-md transition-all"
-                                    >
-                                        <CiCircleMinus size={20}/>
-                                    </button>
-                                    <input
-                                        ref={quantityRef}
-                                        value={quantity}
-                                        onChange={(e) => handleOnchangeQuantity(e.target.value)}
-                                        className="w-10 h-8 text-center bg-transparent font-bold text-sm text-gray-900 focus:outline-none"
-                                    />
-                                    <button
-                                        onClick={() => handleUpdateQuantity("+")}
-                                        className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-white rounded-md transition-all"
-                                    >
-                                        <CiCirclePlus size={20}/>
-                                    </button>
+                        <div className="space-y-10">
+                            <div>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-4 text-left">Select Size</h3>
+                                <div className="flex flex-wrap gap-3">
+                                    {products?.map((p, i) => (
+                                        p.size && (
+                                            <button
+                                                key={i}
+                                                onClick={() => setCurrentSize(p.size)}
+                                                className={`w-14 h-14 rounded-2xl font-black text-sm transition-all duration-300 border-2 relative
+                                                         ${currentSize === p.size
+                                                        ? 'border-zinc-900 bg-zinc-900 text-white shadow-xl shadow-zinc-200'
+                                                        : 'border-zinc-100 text-zinc-400 hover:border-zinc-900 hover:text-zinc-900'}`}
+                                            >
+                                                {p.size}
+                                                {currentSize === p.size && (
+                                                    <span className="absolute -top-1 -right-1 bg-indigo-600 text-white rounded-full p-1 shadow-md animate-scale-in">
+                                                        <FaCheck size={8} />
+                                                    </span>
+                                                )}
+                                            </button>
+                                        )
+                                    ))}
                                 </div>
                             </div>
 
-                            <div className="flex-2">
-                                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-2">Payment
-                                    Method</h3>
-                                <div className="grid grid-cols-2 gap-2">
+                            <div>
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-4 text-left">Payment Method</h3>
+                                <div className="grid grid-cols-2 gap-4">
                                     <button
                                         onClick={() => setPaymentMethod("VNPAY")}
-                                        className={`relative p-2 rounded-xl border-2 transition-all duration-300 flex items-center justify-center gap-2 font-semibold text-sm
-                                            ${paymentMethod === "VNPAY"
-                                            ? "border-blue-500 bg-blue-50/50 text-blue-700"
-                                            : "border-gray-100 bg-white text-gray-500 hover:border-gray-300 hover:shadow-sm"}`}
+                                        className={`flex items-center justify-center gap-3 p-4 rounded-2xl border-2 transition-all duration-300
+                                                 ${paymentMethod === "VNPAY"
+                                                ? 'border-indigo-600 bg-indigo-50/50 text-indigo-900 shadow-lg shadow-indigo-100'
+                                                : 'border-zinc-100 grayscale hover:grayscale-0 hover:border-zinc-200'}`}
                                     >
-                                        <img src="https://vnpay.vn/assets/images/logo-icon/logo-primary.svg" alt="VNPay"
-                                             className="h-4 object-contain" onError={(e) => {
-                                            e.target.style.display = 'none'
-                                        }}/>
-                                        <span>VNPay</span>
-                                        {paymentMethod === "VNPAY" && (
-                                            <div className="absolute top-1 right-1 text-blue-500"><FaCheck size={10}/>
-                                            </div>
-                                        )}
+                                        <img src="https://vnpay.vn/assets/images/logo-icon/logo-primary.svg" className="h-4" alt="VNPay" />
+                                        <span className="text-xs font-black uppercase tracking-widest">VNPay</span>
                                     </button>
-
                                     <button
                                         onClick={() => setPaymentMethod("PAYPAL")}
-                                        className={`relative p-2 rounded-xl border-2 transition-all duration-300 flex items-center justify-center gap-2 font-semibold text-sm
-                                            ${paymentMethod === "PAYPAL"
-                                            ? "border-[#003087] bg-blue-50/50 text-[#003087]"
-                                            : "border-gray-100 bg-white text-gray-500 hover:border-gray-300 hover:shadow-sm"}`}
+                                        className={`flex items-center justify-center gap-3 p-4 rounded-2xl border-2 transition-all duration-300
+                                                 ${paymentMethod === "PAYPAL"
+                                                ? 'border-[#003087] bg-blue-50/50 text-[#003087] shadow-lg shadow-blue-100'
+                                                : 'border-zinc-100 grayscale hover:grayscale-0 hover:border-zinc-200'}`}
                                     >
-                                        <img
-                                            src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg"
-                                            alt="PayPal" className="h-4 object-contain mix-blend-multiply"
-                                            onError={(e) => {
-                                                e.target.style.display = 'none'
-                                            }}/>
-                                        <span>PayPal</span>
-                                        {paymentMethod === "PAYPAL" && (
-                                            <div className="absolute top-1 right-1 text-[#003087]"><FaCheck size={10}/>
-                                            </div>
-                                        )}
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" className="h-4" alt="PayPal" />
+                                        <span className="text-xs font-black uppercase tracking-widest text-[#003087]">PayPal</span>
                                     </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="mt-auto bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                            <div className="flex justify-between items-end mb-4">
-                                <span className="text-gray-500 text-sm font-medium">Total Price</span>
-                                <div className="text-right">
-                                    {paymentMethod === "PAYPAL" ? (
-                                        <span
-                                            className="text-2xl font-extrabold text-gray-900">${((detail?.price / 27000) * quantity).toFixed(2)}</span>
-                                    ) : (
-                                        <div className="flex items-end gap-1">
-                                            <span
-                                                className="text-2xl font-extrabold text-gray-900">{(detail?.price * quantity).toLocaleString("vi-VN")}</span>
-                                            <span className="text-lg font-bold text-gray-700 mb-1">₫</span>
-                                        </div>
-                                    )}
+                            <div className="pt-4 space-y-4">
+                                <div className="flex flex-col sm:flex-row items-center gap-4">
+                                    <div className="flex items-center bg-zinc-50 rounded-2xl p-1 border border-zinc-100 w-full sm:w-auto">
+                                        <button
+                                            onClick={() => handleUpdateQuantity(-1)}
+                                            className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white text-zinc-500 hover:text-indigo-600 transition-all"
+                                        >
+                                            <FiMinus />
+                                        </button>
+                                        <input
+                                            type="text"
+                                            value={quantity}
+                                            onChange={handleInputQuantity}
+                                            onBlur={() => {
+                                                if (!quantity || quantity < 1) setQuantity(1);
+                                            }}
+                                            className="w-12 text-center font-black text-zinc-900 text-lg outline-none"
+                                        />
+                                        <button
+                                            onClick={() => handleUpdateQuantity(1)}
+                                            className="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white text-zinc-500 hover:text-indigo-600 transition-all"
+                                        >
+                                            <FiPlus />
+                                        </button>
+                                    </div>
+
+                                    <button
+                                        disabled={isProcessing}
+                                        onClick={handleAddToCart}
+                                        className="flex-grow w-full bg-zinc-100 text-zinc-900 py-4.5 rounded-2xl font-black uppercase tracking-widest text-[11px]
+                                                 hover:bg-zinc-200 transition-all duration-300 flex items-center justify-center gap-3"
+                                    >
+                                        <IoBagOutline size={18} />
+                                        Add to bag
+                                    </button>
+                                </div>
+
+                                <button
+                                    disabled={isProcessing}
+                                    onClick={() => paymentMethod === "PAYPAL" ? handlePaypal() : handlePay()}
+                                    className="w-full bg-zinc-900 text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs
+                                             shadow-2xl shadow-zinc-200 hover:bg-indigo-600 hover:shadow-indigo-100 hover:-translate-y-1 
+                                             active:scale-95 transition-all duration-300"
+                                >
+                                    Proceed to payment • {(detail.price * quantity).toLocaleString('vi-VN')} ₫
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 pt-6 border-t border-zinc-50">
+                                <div className="flex items-center gap-4 p-4 rounded-3xl bg-zinc-50 border border-zinc-100/50">
+                                    <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-zinc-900 shadow-sm">
+                                        <TbTruckReturn />
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">30 Day Return Policy</span>
+                                </div>
+                                <div className="flex items-center gap-4 p-4 rounded-3xl bg-zinc-50 border border-zinc-100/50">
+                                    <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-zinc-900 shadow-sm">
+                                        <MdOutlineSecurity />
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Fully Secure Payment</span>
                                 </div>
                             </div>
-
-                            <div className="flex flex-col gap-3">
-                                <button
-                                    disabled={isDisabled}
-                                    onClick={handleAddToCart}
-                                    className={`w-full flex items-center justify-center gap-2 py-3 sm:py-3 rounded-xl text-base font-bold bg-white text-gray-900 border-2 transition-all duration-300 shadow-sm hover:shadow-md
-                                        ${isDisabled
-                                        ? "border-gray-200 text-gray-400 opacity-70 cursor-not-allowed shadow-none"
-                                        : "border-gray-900 hover:bg-gray-50 hover:-translate-y-0.5"
-                                    }`}
-                                >
-                                    <IoBagOutline size={20}/>
-                                    Add to Cart
-                                </button>
-
-                                <button
-                                    disabled={isDisabled}
-                                    onClick={() => paymentMethod === "PAYPAL" ? handlePaypal() : handlePay()}
-                                    className={`w-full flex items-center justify-center gap-2 py-3 sm:py-3 rounded-xl text-base font-bold text-white transition-all duration-300 shadow-lg hover:shadow-xl
-                                        ${isDisabled
-                                        ? "bg-gray-300 opacity-70 cursor-not-allowed shadow-none"
-                                        : paymentMethod === "PAYPAL"
-                                            ? "bg-gradient-to-r from-[#003087] to-[#009cde] hover:scale-[1.02]"
-                                            : "bg-gradient-to-r from-blue-600 to-blue-500 hover:scale-[1.02]"
-                                    }`}
-                                >
-                                    Checkout with {paymentMethod === "PAYPAL" ? "PayPal" : "VNPay"}
-                                </button>
-                            </div>
                         </div>
-
-                        <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
-                            <div className="flex items-center gap-1.5 text-gray-500">
-                                <TbTruckReturn size={16} className="text-gray-700"/>
-                                <span className="text-[11px] font-medium">30 Days Return</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-gray-500">
-                                <MdOutlineSecurity size={16} className="text-gray-700"/>
-                                <span className="text-[11px] font-medium">Secure Payment</span>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 };
