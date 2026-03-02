@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import axiosClient from "../../config/axiosClient";
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 export async function progressPaypal(amount, token, productId = null, size = null, quantity = null) {
@@ -11,11 +11,7 @@ export async function progressPaypal(amount, token, productId = null, size = nul
             payload.quantity = quantity;
         }
 
-        const res = await axios.post(`${apiUrl}/paypal/save-paypal`, payload, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const res = await axiosClient.post(`${apiUrl}/paypal/save-paypal`);
 
         return res.data;
 

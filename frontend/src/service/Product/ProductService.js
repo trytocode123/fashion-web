@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosClient from "../../config/axiosClient";
 
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,11 +16,7 @@ export async function getTop8Trailer() {
 export async function findProductById(id, token) {
 
     try {
-        const res = await axios.get(`${apiUrl}/products/detail/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const res = await axiosClient.get(`${apiUrl}/products/detail/${id}`);
         return res.data;
     } catch (e) {
         console.error(e.message);
@@ -28,11 +25,7 @@ export async function findProductById(id, token) {
 
 export async function findProductByName(name, token) {
     try {
-        const res = await axios.get(`${apiUrl}/products/search?name=${name}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const res = await axiosClient.get(`${apiUrl}/products/search?name=${name}`);
 
         return res.data;
 
@@ -43,12 +36,7 @@ export async function findProductByName(name, token) {
 
 export async function findAllProduct(token, page = 0, size = 9) {
     try {
-        const res = await axios.get(`${apiUrl}/products?page=${page}&size=${size}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-
-        });
+        const res = await axiosClient.get(`${apiUrl}/products?page=${page}&size=${size}`);
 
         return res.data;
 

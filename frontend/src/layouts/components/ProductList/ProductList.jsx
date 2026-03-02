@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { findAllProduct, filterProducts } from "../../../service/Product/ProductService.js";
 import { useSelector } from "react-redux";
-import { FaSpinner } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { HiArrowRight } from "react-icons/hi2";
+import {FiFilter} from "react-icons/fi";
 
 const ProductList = ({ filters }) => {
     const [productList, setProductList] = useState([]);

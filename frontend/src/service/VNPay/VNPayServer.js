@@ -1,5 +1,5 @@
-import axios from "axios";
 
+import axiosClient from "../../config/axiosClient";
 const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 export async function savePayment(data, token, productId = null, size = null, quantity = null) {
@@ -14,11 +14,7 @@ export async function savePayment(data, token, productId = null, size = null, qu
             url += `?${params.toString()}`;
         }
 
-        const res = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const res = await axiosClient.get(url);
         return res.data;
     } catch (e) {
         console.error(e.message);
