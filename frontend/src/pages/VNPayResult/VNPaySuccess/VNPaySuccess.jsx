@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 
 const VNPaySuccess = () => {
     return (
-        <div className="w-full flex justify-center px-4 pt-6 mb-[36px]">
+        <div className="w-full flex justify-center px-4 pt-6 mb-[36px] mb-2">
             <div
                 className="
                     w-full max-w-md bg-white
