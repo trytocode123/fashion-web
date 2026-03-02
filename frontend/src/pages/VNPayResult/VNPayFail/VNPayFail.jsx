@@ -5,7 +5,7 @@ import {IoMdArrowBack} from "react-icons/io";
 const VNPayFail = () => {
     const navigate = useNavigate();
     return (
-        <div className="w-full flex justify-center px-4 pt-6 mb-[70px]">
+        <div className="w-full flex justify-center px-4 pt-6 mb-[100px]">
             <div
                 className="
                     w-full max-w-md bg-white
