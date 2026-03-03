@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
-import {dataFromGoogle} from "../../service/Account/AccountService.js";
-import {useDispatch} from "react-redux";
-import {logInByGoogle} from "../../redux/Reducer/authSlice.js";
-import {Swiper, SwiperSlide} from "swiper/react";
-import {Autoplay, Navigation, Pagination} from "swiper/modules";
+import { useEffect, useState } from "react";
+import { dataFromGoogle } from "../../service/Account/AccountService.js";
+import { useDispatch } from "react-redux";
+import { logInByGoogle } from "../../redux/Reducer/authSlice.js";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
@@ -13,13 +13,13 @@ import img1 from "../../assets/img/img1.jpg";
 import img2 from "../../assets/img/img2.jpg";
 import img3 from "../../assets/img/img3.jpg";
 import img4 from "../../assets/img/img4.jpg";
-import {LuTruck} from "react-icons/lu";
-import {TbExchange, TbWorld} from "react-icons/tb";
-import {FaArrowRightLong} from "react-icons/fa6";
-import {toast} from "react-toastify";
-import {FaSpinner} from "react-icons/fa";
-import {getTop8Trailer} from "../../service/Product/ProductService.js";
-import {useNavigate} from "react-router-dom";
+import { LuTruck } from "react-icons/lu";
+import { TbExchange, TbWorld } from "react-icons/tb";
+import { FaArrowRightLong } from "react-icons/fa6";
+import { toast } from "react-toastify";
+import { FaSpinner } from "react-icons/fa";
+import { getTop8Trailer } from "../../service/Product/ProductService.js";
+import { useNavigate } from "react-router-dom";
 
 
 const Home = () => {
@@ -65,8 +65,8 @@ const Home = () => {
                     allowTouchMove={true}
                     centeredSlides={true}
                     loop={true}
-                    autoplay={{delay: 3000, disableOnInteraction: false}}
-                    pagination={{clickable: true}}
+                    autoplay={{ delay: 3000, disableOnInteraction: false }}
+                    pagination={{ clickable: true }}
                     navigation={true}
                     className="h-[400px] md:h-[500px] lg:h-[650px] home-swiper w-full"
                 >
@@ -79,11 +79,11 @@ const Home = () => {
                                     alt={`Banner ${index + 1}`}
                                 />
                                 <div
-                                    className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-10 lg:p-20">
-                                    <div className="text-white animate-scale-in">
-                                        <h1 className="text-4xl lg:text-6xl font-black tracking-tighter mb-4">NEW
+                                    className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex items-end p-10 lg:p-20">
+                                    <div className="text-white animate-scale-in drop-shadow-2xl">
+                                        <h1 className="text-4xl lg:text-6xl font-black tracking-tighter mb-4 [text-shadow:_0_4px_20px_rgb(0_0_0_/_40%)]">NEW
                                             COLLECTION</h1>
-                                        <p className="text-lg text-zinc-200 font-medium max-w-md">Discover the latest
+                                        <p className="text-lg text-zinc-100 font-medium max-w-md [text-shadow:_0_2px_10px_rgb(0_0_0_/_30%)]">Discover the latest
                                             trends in modern fashion. Premium quality, timeless style.</p>
                                     </div>
                                 </div>
@@ -96,15 +96,15 @@ const Home = () => {
             <div className="max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                     {[
-                        {icon: LuTruck, title: "Free Shipping", desc: "On orders over 500k VND"},
-                        {icon: TbExchange, title: "Easy Returns", desc: "Using only phone number"},
-                        {icon: TbWorld, title: "Global Reach", desc: "Fast national delivery"}
+                        { icon: LuTruck, title: "Free Shipping", desc: "On orders over 500k VND" },
+                        { icon: TbExchange, title: "Easy Returns", desc: "Using only phone number" },
+                        { icon: TbWorld, title: "Global Reach", desc: "Fast national delivery" }
                     ].map((item, i) => (
                         <div key={i}
-                             className="flex items-center gap-5 p-6 rounded-3xl bg-zinc-50 border border-zinc-100/50 hover:shadow-xl hover:shadow-zinc-100 transition-all duration-500 group">
+                            className="flex items-center gap-5 p-6 rounded-3xl bg-zinc-50 border border-zinc-100/50 hover:shadow-xl hover:shadow-zinc-100 transition-all duration-500 group">
                             <div
                                 className="w-12 h-12 rounded-2xl bg-white shadow-sm flex items-center justify-center text-zinc-900 group-hover:bg-indigo-600 group-hover:text-white transition-all">
-                                <item.icon size={24}/>
+                                <item.icon size={24} />
                             </div>
                             <div>
                                 <h3 className="font-black text-zinc-900 tracking-tight">{item.title}</h3>
@@ -135,7 +135,7 @@ const Home = () => {
                                 <div
                                     className="flex items-center gap-2 text-indigo-950 font-black text-sm group-hover:gap-4 transition-all">
                                     <span>Browse Shop</span>
-                                    <FaArrowRightLong/>
+                                    <FaArrowRightLong />
                                 </div>
                             </div>
                             <div
@@ -152,7 +152,7 @@ const Home = () => {
                                 <div
                                     className="flex items-center gap-2 text-violet-950 font-black text-sm group-hover:gap-4 transition-all">
                                     <span>Browse Shop</span>
-                                    <FaArrowRightLong/>
+                                    <FaArrowRightLong />
                                 </div>
                             </div>
                             <div
@@ -175,16 +175,16 @@ const Home = () => {
                             className="group flex items-center gap-2 text-zinc-900 font-black text-sm hover:text-indigo-600 transition-colors"
                         >
                             View All Collection
-                            <FaArrowRightLong className="transition-transform group-hover:translate-x-2"/>
+                            <FaArrowRightLong className="transition-transform group-hover:translate-x-2" />
                         </button>
                     </div>
 
                     {products.length === 0 ? (
                         <div className="flex items-center justify-center py-20">
-                            <FaSpinner className="animate-spin text-3xl text-zinc-200"/>
+                            <FaSpinner className="animate-spin text-3xl text-zinc-200" />
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-12">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-10 md:gap-x-6 md:gap-y-12">
                             {products.map(product => (
                                 <div
                                     key={product.id}
@@ -205,7 +205,7 @@ const Home = () => {
                                             className="absolute top-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                                             <div
                                                 className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-zinc-900 hover:bg-indigo-600 hover:text-white shadow-lg transition-all">
-                                                <FaArrowRightLong className="-rotate-45"/>
+                                                <FaArrowRightLong className="-rotate-45" />
                                             </div>
                                         </div>
                                     </div>
@@ -240,7 +240,7 @@ const Home = () => {
                                          active:scale-95 transition-all duration-300 flex items-center gap-4 group"
                             >
                                 Shop the collection
-                                <FaArrowRightLong className="transition-transform group-hover:translate-x-2"/>
+                                <FaArrowRightLong className="transition-transform group-hover:translate-x-2" />
                             </button>
                         </div>
                     )}

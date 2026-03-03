@@ -3,7 +3,7 @@ import { findAllProduct, filterProducts } from "../../../service/Product/Product
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { HiArrowRight } from "react-icons/hi2";
-import {FiFilter} from "react-icons/fi";
+import { FiFilter } from "react-icons/fi";
 
 const ProductList = ({ filters }) => {
     const [productList, setProductList] = useState([]);
@@ -82,7 +82,7 @@ const ProductList = ({ filters }) => {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
                 </div>
             ) : productList.length === 0 ? (
@@ -95,7 +95,7 @@ const ProductList = ({ filters }) => {
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                         {productList.map(product => (
                             <div
                                 key={product.id}

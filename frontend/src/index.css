@@ -21,20 +21,6 @@ input:-webkit-autofill:focus {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Chrome, Edge, Safari */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* Firefox */
-html {
-  scrollbar-width: none;
-}
-
-/* IE, Edge cũ */
-body {
-  -ms-overflow-style: none;
-}
 
 @keyframes scale-in {
   0% {

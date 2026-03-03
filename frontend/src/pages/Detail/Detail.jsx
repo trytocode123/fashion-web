@@ -110,7 +110,7 @@ const Detail = () => {
     }
 
     return (
-        <div className="min-h-screen bg-white pt-[100px] lg:pt-[130px] pb-20 px-4 md:px-10 lg:px-20">
+        <div className="min-h-screen bg-white pt-[80px] lg:pt-[130px] pb-10 lg:pb-20 px-4 md:px-10 lg:px-20">
             <div className="max-w-[1400px] mx-auto">
                 <button
                     onClick={() => navigate("/products")}
@@ -136,7 +136,7 @@ const Detail = () => {
                                     {detail.subCategory?.name || "Premium Collection"}
                                 </span>
                             </div>
-                            <h1 className="text-4xl lg:text-6xl font-black text-zinc-900 leading-tight mb-4 uppercase tracking-tighter">
+                            <h1 className="text-3xl lg:text-6xl font-black text-zinc-900 leading-tight mb-2 uppercase tracking-tighter">
                                 {detail.name}
                             </h1>
                             <div className="flex items-center gap-4">

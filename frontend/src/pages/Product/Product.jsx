@@ -34,16 +34,52 @@ const Product = () => {
 
     return (
         <div className="bg-white min-h-screen">
-            {/* Mobile Filter Toggle */}
-            <div className="xl:hidden sticky top-[70px] z-30 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-4 py-4 flex items-center justify-between">
-                <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest font-mono">Found {filters.genders[0] || 'All'} Items</span>
-                <button
-                    onClick={() => setIsSidebarOpen(true)}
-                    className="flex items-center gap-2 bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-zinc-200"
-                >
-                    <FiFilter />
-                    Filters
-                </button>
+            {/* Mobile Filter & Quick Categories */}
+            <div className="xl:hidden sticky top-[70px] z-30 bg-white/95 backdrop-blur-md border-b border-zinc-100/50 pt-6 pb-2 shadow-sm transition-all">
+                <div className="px-4 flex items-center justify-between mb-4">
+                    <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest font-mono">
+                        {filters.categories.length > 0 ? `${filters.categories.length} Categories` : 'All Products'}
+                    </span>
+                    <button
+                        onClick={() => setIsSidebarOpen(true)}
+                        className="flex items-center gap-2 bg-zinc-900 text-white px-4 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-zinc-200"
+                    >
+                        <FiFilter />
+                        Filters
+                    </button>
+                </div>
+
+                {/* Horizontal Quick Filters */}
+                <div className="flex overflow-x-auto scrollbar gap-2 px-4 pb-2">
+                    {["All", "Tops", "Bottoms", "Outerwear", "Dresses", "Activewear", "Accessories"].map((cat) => {
+                        const isAll = cat === "All";
+                        const isActive = isAll
+                            ? filters.categories.length === 0
+                            : filters.categories.includes(cat);
+
+                        return (
+                            <button
+                                key={cat}
+                                onClick={() => {
+                                    if (isAll) {
+                                        handleApplyFilters({ ...filters, categories: [] });
+                                    } else {
+                                        const newCats = filters.categories.includes(cat)
+                                            ? filters.categories.filter(c => c !== cat)
+                                            : [...filters.categories, cat];
+                                        handleApplyFilters({ ...filters, categories: newCats });
+                                    }
+                                }}
+                                className={`whitespace-nowrap px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all border-2 shrink-0
+                                    ${isActive
+                                        ? 'bg-zinc-900 border-zinc-900 text-white shadow-md'
+                                        : 'bg-white border-zinc-100 text-zinc-400 hover:border-zinc-200'}`}
+                            >
+                                {cat}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
 
             <div className="max-w-[1400px] mx-auto px-4 md:px-10 lg:px-20 py-8 lg:py-12">
