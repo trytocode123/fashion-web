@@ -2,9 +2,12 @@ package com.example.backend.controller;
 
 
 import com.example.backend.config.VNPayConfig;
+import com.example.backend.entity.Order;
 import com.example.backend.entity.PaymentTransaction;
+import com.example.backend.repository.IOrderRepository;
 import com.example.backend.repository.PaymentTransactionRepository;
 import com.example.backend.service.IEmailService;
+import com.example.backend.service.IOrderService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,16 +25,14 @@ import java.util.*;
 public class VNPayReturnController {
     final IEmailService emailService;
     private final PaymentTransactionRepository paymentTransactionRepository;
-    private final com.example.backend.service.IOrderService orderService;
-    private final com.example.backend.config.VNPayConfig vnPayConfig;
-    private final com.example.backend.repository.IOrderRepository orderRepository;
+    private final IOrderService orderService;
+    private final VNPayConfig vnPayConfig;
 
-    public VNPayReturnController(IEmailService emailService, PaymentTransactionRepository paymentTransactionRepository, com.example.backend.service.IOrderService orderService, com.example.backend.config.VNPayConfig vnPayConfig, com.example.backend.repository.IOrderRepository orderRepository) {
+    public VNPayReturnController(IEmailService emailService, PaymentTransactionRepository paymentTransactionRepository, com.example.backend.service.IOrderService orderService, com.example.backend.config.VNPayConfig vnPayConfig) {
         this.emailService = emailService;
         this.paymentTransactionRepository = paymentTransactionRepository;
         this.orderService = orderService;
         this.vnPayConfig = vnPayConfig;
-        this.orderRepository = orderRepository;
     }
 
     @GetMapping
@@ -82,7 +83,7 @@ public class VNPayReturnController {
         if (signValue.equals(vnp_SecureHash) && "00".equals(vnp_ResponseCode) && "00".equals(vnp_TransactionStatus)) {
             String txnRef = request.getParameter("vnp_TxnRef");
             Optional<PaymentTransaction> transactionOptional = paymentTransactionRepository.findById(txnRef);
-            
+
             if (transactionOptional.isPresent()) {
                 PaymentTransaction transaction = transactionOptional.get();
                 // Create Order and Send Email
@@ -99,8 +100,8 @@ public class VNPayReturnController {
                 paymentTransactionRepository.delete(transaction);
             } else {
                 // Fallback: Check if Order already exists (processed by IPN)
-                Optional<com.example.backend.entity.Order> existingOrder = orderRepository.findByPaymentRef(txnRef);
-                if (existingOrder.isPresent()) {
+                Order existingOrder = orderService.findByPaymentRef(txnRef);
+                if (existingOrder != null) {
                     System.out.println("DEBUG: Order already exists (likely processed by IPN), redirecting to success");
                 } else {
                     System.err.println("DEBUG: Transaction NOT found and no existing Order with txnRef: " + txnRef);

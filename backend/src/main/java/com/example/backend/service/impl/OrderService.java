@@ -17,7 +17,6 @@ import java.util.Optional;
 public class OrderService implements IOrderService {
 
     private final IOrderRepository orderRepository;
-    private final IOrderItemRepository orderItemRepository;
     private final ICartRepository cartRepository;
     private final ICartItemRepository cartItemRepository;
     private final IAccountRepository accountRepository;
@@ -34,10 +33,10 @@ public class OrderService implements IOrderService {
     @Transactional
     public Order createOrderFromCart(String username, String paymentRef) {
         // 1. Deduplication check
-        Optional<Order> existingOrder = orderRepository.findByPaymentRef(paymentRef);
-        if (existingOrder.isPresent()) {
+        Order existingOrder = orderRepository.findByPaymentRef(paymentRef);
+        if (existingOrder != null) {
             System.out.println("DEBUG [OrderService]: Order with paymentRef=" + paymentRef + " already exists. Skipping.");
-            return existingOrder.get();
+            return existingOrder;
         }
 
         // 2. Get Transaction (for direct purchase detection)
@@ -109,17 +108,17 @@ public class OrderService implements IOrderService {
         final Order finalOrder = savedOrder;
         if (org.springframework.transaction.support.TransactionSynchronizationManager.isActualTransactionActive()) {
             org.springframework.transaction.support.TransactionSynchronizationManager.registerSynchronization(
-                new org.springframework.transaction.support.TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        try {
-                            emailService.sendOrderConfirmationMail(finalOrder);
-                            System.out.println("DEBUG [OrderService]: Email triggered after commit.");
-                        } catch (Exception e) {
-                            System.err.println("ERROR [OrderService]: Task commit-email failed: " + e.getMessage());
+                    new org.springframework.transaction.support.TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            try {
+                                emailService.sendOrderConfirmationMail(finalOrder);
+                                System.out.println("DEBUG [OrderService]: Email triggered after commit.");
+                            } catch (Exception e) {
+                                System.err.println("ERROR [OrderService]: Task commit-email failed: " + e.getMessage());
+                            }
                         }
                     }
-                }
             );
         } else {
             // Fallback for non-transactional calls (should not happen with @Transactional)
@@ -127,5 +126,15 @@ public class OrderService implements IOrderService {
         }
 
         return savedOrder;
+    }
+
+    @Override
+    public Order findByPaymentRef(String txnRef) {
+        return orderRepository.findByPaymentRef(txnRef);
+    }
+
+    @Override
+    public Order save(Order order) {
+        return orderRepository.save(order);
     }
 }

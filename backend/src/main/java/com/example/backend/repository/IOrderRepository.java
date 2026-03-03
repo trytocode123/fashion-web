@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface IOrderRepository extends JpaRepository<Order, Long> {
-    Optional<Order> findByPaymentRef(String paymentRef);
+    Order findByPaymentRef(String paymentRef);
 }
