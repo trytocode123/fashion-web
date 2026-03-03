@@ -1,5 +1,13 @@
-# Exclude everything except the pre-built JAR and its parent directories
-*
-!build/
-!build/libs/
-!build/libs/*.jar
+# Cho phép sao chép mã nguồn và cấu hình Gradle để build bên trong Docker
+.gradle
+build/
+bin/
+out/
+.idea
+.vscode
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+.DS_Store

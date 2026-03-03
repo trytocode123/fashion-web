@@ -1,20 +1,22 @@
-# Giai đoạn 1: Build - Tự động build JAR từ mã nguồn
-FROM amazoncorretto:17-alpine AS build
+# Giai đoạn 1: Build - Sử dụng Gradle image chuyên dụng để tránh lỗi định dạng file gradlew
+FROM gradle:8-jdk17-alpine AS build
+# Đặt thư mục làm việc trong container
 WORKDIR /app
+# Sao chép toàn bộ mã nguồn vào (bỏ qua tệp build/ theo .dockerignore)
 COPY . .
-# Cấp quyền thực thi cho gradlew và chạy build (không dùng daemon để tiết kiệm RAM)
-RUN chmod +x ./gradlew && ./gradlew build -x test --no-daemon
+# Chạy lệnh build Gradle trực tiếp (không dùng daemon để tiết kiệm RAM trong container build)
+RUN gradle build -x test --no-daemon
 
-# Giai đoạn 2: Runtime - Chạy ứng dụng với cấu hình tối ưu
+# Giai đoạn 2: Runtime - Chạy ứng dụng với cấu hình Metaspace đã tối ưu
 FROM amazoncorretto:17-alpine
 WORKDIR /app
-# Sao chép tệp JAR từ giai đoạn build
+# Sao chép tệp JAR từ giai đoạn build trước đó
 COPY --from=build /app/build/libs/backend-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
-# Cấu hình JVM tối ưu cho Railway (Container 512MB)
+# Cấu hình JVM tối ưu cho Railway (Container 512MB RAM)
 # -Xmx288m: Giới hạn Heap để nhường chỗ cho Metaspace và Stack
-# -XX:MaxMetaspaceSize=128m: Tăng không gian cho class metadata (tránh OOM Metaspace)
+# -XX:MaxMetaspaceSize=128m: Tăng không gian Metaspace để tránh lỗi OutOfMemory Metaspace khi gửi email
 ENTRYPOINT ["java", \
   "-XX:+UseContainerSupport", \
   "-Xmx288m", \
