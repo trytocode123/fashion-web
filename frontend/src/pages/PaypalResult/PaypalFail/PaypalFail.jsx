@@ -4,7 +4,7 @@ import {Link, useNavigate} from "react-router-dom";
 const PaymentFail = () => {
     const navigate = useNavigate();
     return (
-        <div className="w-full flex justify-center px-4 pt-6 mb-5">
+        <div className="w-full flex justify-center px-4 pt-6 mb-[104px]">
             <div
                 className="
                     w-full max-w-md bg-white

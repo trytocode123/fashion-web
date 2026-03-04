@@ -17,7 +17,7 @@ const PaypalSuccess = () => {
         excutePaypal();
     }, [payerID, paymentId]);
     return (
-        <div className="w-full flex justify-center px-4 pt-6 mb-3">
+        <div className="w-full flex justify-center px-4 pt-6 mb-[82px]">
             <div
                 className="
                     w-full max-w-md bg-white
