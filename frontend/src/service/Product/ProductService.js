@@ -48,7 +48,6 @@ export async function findAllProduct(token, page = 0, size = 9) {
             headers: {
                 Authorization: `Bearer ${token}`
             }
-
         });
 
         return res.data;

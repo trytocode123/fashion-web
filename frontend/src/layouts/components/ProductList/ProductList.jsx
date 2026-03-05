@@ -22,7 +22,15 @@ const ProductList = ({ filters }) => {
             setLoading(true);
             try {
                 let data;
-                if (filters) {
+
+                const isFilterEmpty =
+                    filters.categories.length === 0 &&
+                    filters.genders.length === 0 &&
+                    filters.sizes.length === 0 &&
+                    filters.minPrice === 0 &&
+                    filters.maxPrice === 400000;
+
+                if (!isFilterEmpty) {
                     data = await filterProducts(token, filters, page, 9);
                 } else {
                     data = await findAllProduct(token, page, 9);
@@ -30,7 +38,13 @@ const ProductList = ({ filters }) => {
 
                 if (data) {
                     setProductList(data.content || []);
-                    setTotalPages(data.totalPages || 0);
+                    if (data.page && data.page.totalPages) {
+                        setTotalPages(data.page.totalPages);
+                    } else if (data.totalPages) {
+                        setTotalPages(data.totalPages);
+                    } else {
+                        setTotalPages(0);
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching products:", error);
