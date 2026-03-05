@@ -106,15 +106,15 @@ public class AccountController {
             String jwt = jwtService.generateTokenLogin(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             Account userInfo = accountService.findByUsername(user.getUsername());
-            
+
             String fullName = "";
             String email = "";
             String imgUrl = "";
-            
+
             // Logic dùng Stream và Lambda kiểm tra Admin như bạn đã mô tả
             boolean isAdmin = userInfo.getRoles().stream()
                     .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
-            
+
             if (isAdmin) {
                 com.example.backend.entity.Admin admin = adminService.findByAccount(userInfo);
                 if (admin != null) {
@@ -267,7 +267,7 @@ public class AccountController {
     /* ---------------- UPDATE PROFILE ------------------------ */
     @PutMapping(value = "/profile", consumes = {"multipart/form-data"})
     public ResponseEntity<?> updateProfile(@RequestPart("profile") CustomerProfileDTO profileDTO,
-                                          @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
+                                           @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");

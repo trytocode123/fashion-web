@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import com.example.backend.entity.Product;
 import com.example.backend.service.IProductService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,16 +23,19 @@ public class ProductController {
     }
 
     @GetMapping()
+    @Cacheable(value = "products", key = "#page + '-' + #size")
     public ResponseEntity<?> getAll(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "9") int size) {
+        System.out.println("chạy lại lần 2 nếu có chuyển trang còn về lại trang thì không chạy");
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> products = productService.findAll(pageable);
         return ResponseEntity.ok(products);
     }
 
     @GetMapping("/top8Trailer")
-    public ResponseEntity<?> getTrailTop() {
-        List<Product> trailerTop4Tops = productService.trailerTop8Tops();
-        return ResponseEntity.ok(trailerTop4Tops);
+    @Cacheable("productsTrailer")
+    public ResponseEntity<?> getTrailerTop() {
+        List<Product> trailerTop8Tops = productService.trailerTop8Tops();
+        return ResponseEntity.ok(trailerTop8Tops);
     }
 
     @GetMapping("/detail/{id}")
