@@ -27,10 +27,9 @@ The project is built as a full-stack application with a clear separation between
 - Tailwind CSS
 - Formik & Yup
 - Headless UI
-- Swiper
 
 ### Backend
-- Spring Boot 3
+- Spring Boot 4
 - Spring Security
 - JWT (Stateless Authentication)
 - Google OAuth2
